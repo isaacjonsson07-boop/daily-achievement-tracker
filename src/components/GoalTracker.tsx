@@ -1,0 +1,457 @@
+import React, { useState, useMemo } from 'react';
+import { Target, Plus, Edit3, Trash2, CheckCircle, Clock, TrendingUp, Calendar } from 'lucide-react';
+import { Goal, Entry, Category, Converter } from '../types';
+import { formatSingleUnit } from '../utils/formatting';
+import { uid, fmtDateISO } from '../utils/dateUtils';
+import { parseAmountByType, amountPlaceholderByType } from '../utils/parsing';
+
+interface GoalTrackerProps {
+  goals: Goal[];
+  entries: Entry[];
+  categories: Category[];
+  converters: Converter[];
+  onAddGoal: (goal: Goal) => void;
+  onUpdateGoal: (goal: Goal) => void;
+  onDeleteGoal: (id: string) => void;
+}
+
+export function GoalTracker({ 
+  goals, 
+  entries, 
+  categories, 
+  converters, 
+  onAddGoal, 
+  onUpdateGoal, 
+  onDeleteGoal 
+}: GoalTrackerProps) {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [newGoal, setNewGoal] = useState({
+    title: '',
+    description: '',
+    category: categories[0]?.name || '',
+    targetAmount: '',
+    targetDate: ''
+  });
+
+  const isOverdue = (targetDate: string): boolean => {
+    return new Date(targetDate) < new Date();
+  };
+
+  // Calculate current progress for each goal based on entries
+  const goalsWithProgress = useMemo(() => {
+    return goals.map(goal => {
+      const categoryEntries = entries.filter(entry => entry.category === goal.category);
+      const totalAmount = categoryEntries.reduce((sum, entry) => sum + entry.amount, 0);
+      const progress = goal.targetAmount > 0 ? Math.min((totalAmount / goal.targetAmount) * 100, 100) : 0;
+      const isCompleted = totalAmount >= goal.targetAmount;
+      
+      // Auto-complete goal if target is reached
+      if (isCompleted && !goal.completed) {
+        const updatedGoal = { 
+          ...goal, 
+          completed: true, 
+          completedAt: new Date().toISOString(),
+          currentAmount: totalAmount 
+        };
+        onUpdateGoal(updatedGoal);
+        return updatedGoal;
+      }
+      
+      return { ...goal, currentAmount: totalAmount, progress, isCompleted };
+    });
+  }, [goals, entries, onUpdateGoal]);
+
+  const activeGoals = goalsWithProgress.filter(goal => !goal.completed);
+  const completedGoals = goalsWithProgress.filter(goal => goal.completed);
+
+  const handleAddGoal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGoal.title.trim() || !newGoal.targetAmount) return;
+
+    const category = categories.find(c => c.name === newGoal.category);
+    const categoryType = category?.type || 'Time';
+    const parsed = parseAmountByType(newGoal.targetAmount, categoryType, converters);
+    
+    if (!parsed) {
+      alert('Could not parse target amount. Please check the format.');
+      return;
+    }
+
+    const goal: Goal = {
+      id: uid(),
+      title: newGoal.title.trim(),
+      description: newGoal.description.trim() || undefined,
+      category: newGoal.category,
+      targetAmount: parsed.value,
+      currentAmount: 0,
+      unit: parsed.unit,
+      targetDate: newGoal.targetDate,
+      createdAt: new Date().toISOString(),
+      completed: false
+    };
+
+    onAddGoal(goal);
+    setNewGoal({
+      title: '',
+      description: '',
+      category: categories[0]?.name || '',
+      targetAmount: '',
+      targetDate: ''
+    });
+    setShowAddForm(false);
+  };
+
+  const handleEditGoal = (goal: Goal) => {
+    setEditingGoal(goal);
+    setNewGoal({
+      title: goal.title,
+      description: goal.description || '',
+      category: goal.category,
+      targetAmount: goal.targetAmount.toString(),
+      targetDate: goal.targetDate
+    });
+    setShowAddForm(true);
+  };
+
+  const handleUpdateGoal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGoal || !newGoal.title.trim() || !newGoal.targetAmount) return;
+
+    const category = categories.find(c => c.name === newGoal.category);
+    const categoryType = category?.type || 'Time';
+    const parsed = parseAmountByType(newGoal.targetAmount, categoryType, converters);
+    
+    if (!parsed) {
+      alert('Could not parse target amount. Please check the format.');
+      return;
+    }
+
+    const updatedGoal: Goal = {
+      ...editingGoal,
+      title: newGoal.title.trim(),
+      description: newGoal.description.trim() || undefined,
+      category: newGoal.category,
+      targetAmount: parsed.value,
+      unit: parsed.unit,
+      targetDate: newGoal.targetDate
+    };
+
+    onUpdateGoal(updatedGoal);
+    setEditingGoal(null);
+    setNewGoal({
+      title: '',
+      description: '',
+      category: categories[0]?.name || '',
+      targetAmount: '',
+      targetDate: ''
+    });
+    setShowAddForm(false);
+  };
+
+  const getCategoryType = (categoryName: string): string => {
+    const cat = categories.find(c => c.name === categoryName);
+    return cat?.type || 'Time';
+  };
+
+  const formatGoalAmount = (goal: Goal): string => {
+    const categoryType = getCategoryType(goal.category);
+    return formatSingleUnit(categoryType, goal.targetAmount, goal.unit, converters);
+  };
+
+  const formatCurrentAmount = (goal: Goal): string => {
+    const categoryType = getCategoryType(goal.category);
+    return formatSingleUnit(categoryType, goal.currentAmount, goal.unit, converters);
+  };
+
+  const stats = {
+    total: goals.length,
+    active: activeGoals.length,
+    completed: completedGoals.length,
+    completionRate: goals.length > 0 ? Math.round((completedGoals.length / goals.length) * 100) : 0
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Goal Stats Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-100 text-sm">Total Goals</p>
+              <p className="text-2xl font-bold">{stats.total}</p>
+            </div>
+            <Target className="w-6 h-6 text-blue-200" />
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-amber-100 text-sm">Active</p>
+              <p className="text-2xl font-bold">{stats.active}</p>
+            </div>
+            <Clock className="w-6 h-6 text-amber-200" />
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-green-100 text-sm">Completed</p>
+              <p className="text-2xl font-bold">{stats.completed}</p>
+            </div>
+            <CheckCircle className="w-6 h-6 text-green-200" />
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-100 text-sm">Success Rate</p>
+              <p className="text-2xl font-bold">{stats.completionRate}%</p>
+            </div>
+            <TrendingUp className="w-6 h-6 text-purple-200" />
+          </div>
+        </div>
+      </div>
+
+      {/* Add/Edit Goal Form */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+            <Target className="w-5 h-5 mr-2" />
+            {editingGoal ? 'Edit Goal' : 'Goals'}
+          </h3>
+          <button
+            onClick={() => {
+              setShowAddForm(!showAddForm);
+              if (showAddForm) {
+                setEditingGoal(null);
+                setNewGoal({
+                  title: '',
+                  description: '',
+                  category: categories[0]?.name || '',
+                  targetAmount: '',
+                  targetDate: ''
+                });
+              }
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {editingGoal ? 'Cancel Edit' : 'Add Goal'}
+          </button>
+        </div>
+
+        {showAddForm && (
+          <form onSubmit={editingGoal ? handleUpdateGoal : handleAddGoal} className="space-y-4 border-t pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Title</label>
+                <input
+                  type="text"
+                  value={newGoal.title}
+                  onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                  placeholder="e.g., Run 100km this month"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                <select
+                  value={newGoal.category}
+                  onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  {categories.map(cat => (
+                    <option key={cat.name} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Target Amount ({getCategoryType(newGoal.category)})
+                </label>
+                <input
+                  type="text"
+                  value={newGoal.targetAmount}
+                  onChange={(e) => setNewGoal({ ...newGoal, targetAmount: e.target.value })}
+                  placeholder={amountPlaceholderByType(getCategoryType(newGoal.category))}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date</label>
+                <input
+                  type="date"
+                  value={newGoal.targetDate}
+                  onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
+              <textarea
+                value={newGoal.description}
+                onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                placeholder="Describe your goal..."
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
+            >
+              <Target className="w-4 h-4 mr-2" />
+              {editingGoal ? 'Update Goal' : 'Create Goal'}
+            </button>
+          </form>
+        )}
+      </div>
+
+      {/* Active Goals */}
+      {activeGoals.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+            <Clock className="w-5 h-5 mr-2" />
+            Active Goals ({activeGoals.length})
+          </h3>
+          
+          <div className="space-y-4">
+            {activeGoals.map(goal => (
+              <div key={goal.id} className="border dark:border-gray-600 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 dark:text-white">{goal.title}</h4>
+                    {goal.description && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{goal.description}</p>
+                    )}
+                    <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{goal.category}</span>
+                      <span className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        {new Date(goal.targetDate).toLocaleDateString()}
+                        {isOverdue(goal.targetDate) && (
+                          <span className="ml-2 text-red-500 font-medium">Overdue</span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleEditGoal(goal)}
+                      className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm('Are you sure you want to delete this goal?')) {
+                          onDeleteGoal(goal.id);
+                        }
+                      }}
+                      className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600 dark:text-gray-400">Progress</span>
+                    <span className="font-medium text-gray-800 dark:text-white">
+                      {formatCurrentAmount(goal)} / {formatGoalAmount(goal)} ({Math.round(goal.progress)}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        goal.progress >= 100 ? 'bg-green-500' : 
+                        goal.progress >= 75 ? 'bg-blue-500' : 
+                        goal.progress >= 50 ? 'bg-yellow-500' : 'bg-gray-400'
+                      }`}
+                      style={{ width: `${Math.min(goal.progress, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Completed Goals */}
+      {completedGoals.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+            <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
+            Completed Goals ({completedGoals.length})
+          </h3>
+          
+          <div className="space-y-3">
+            {completedGoals.map(goal => (
+              <div key={goal.id} className="border dark:border-gray-600 rounded-lg p-4 bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 dark:text-white flex items-center">
+                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                      {goal.title}
+                    </h4>
+                    {goal.description && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 ml-6">{goal.description}</p>
+                    )}
+                    <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400 ml-6">
+                      <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{goal.category}</span>
+                      <span>{formatCurrentAmount(goal)} / {formatGoalAmount(goal)}</span>
+                      {goal.completedAt && (
+                        <span className="text-green-600 dark:text-green-400 font-medium">
+                          Completed {new Date(goal.completedAt).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      if (confirm('Are you sure you want to delete this completed goal?')) {
+                        onDeleteGoal(goal.id);
+                      }
+                    }}
+                    className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {goals.length === 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <Target className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 text-lg">No goals set yet.</p>
+          <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">Create your first goal to start tracking your progress!</p>
+        </div>
+      )}
+    </div>
+  );
+}
