@@ -1,122 +1,106 @@
-import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import { createHmac } from 'crypto';
+import { Handler } from "@netlify/functions";
+import { createHmac, timingSafeEqual } from "crypto";
 
-const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
-  const hasSignature = !!(
-    event.headers['x-whop-signature'] ||
-    event.headers['whop-signature'] ||
-    event.headers['x-whop-signature-v1'] ||
-    event.headers['x-whop-signature-v2']
-  );
-
-  console.log('[Whop Webhook] Incoming request', {
-    method: event.httpMethod,
-    headers: {
-      'content-type': event.headers['content-type'],
-      'user-agent': event.headers['user-agent'],
-      'has-signature': hasSignature ? '[REDACTED]' : 'none',
-    },
-    bodyLength: event.body?.length || 0,
-    timestamp: new Date().toISOString()
-  });
-
-  if (event.httpMethod !== 'POST') {
-    console.log('[Whop Webhook] Invalid method:', event.httpMethod);
+export const handler: Handler = async (event) => {
+  // 1. Only allow POST
+  if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' })
+      body: JSON.stringify({ error: "Method not allowed" }),
     };
   }
 
-  try {
-    const rawBody = event.body || '';
+  const rawBody = event.body || "";
 
-    const possibleSignatureHeaders = [
-      'x-whop-signature',
-      'whop-signature',
-      'x-whop-signature-v1',
-      'x-whop-signature-v2'
-    ];
+  // 2. READ WHOP HEADERS (LOWERCASE — THIS IS CRITICAL)
+  const webhookId = event.headers["webhook-id"];
+  const webhookTimestamp = event.headers["webhook-timestamp"];
+  const webhookSignature = event.headers["webhook-signature"];
 
-    let signature: string | undefined;
-    let signatureHeaderUsed: string | undefined;
+  console.log("[Whop Webhook] Incoming request", {
+    hasBody: rawBody.length > 0,
+    webhookId: !!webhookId,
+    webhookTimestamp: !!webhookTimestamp,
+    webhookSignature: !!webhookSignature,
+    availableHeaders: Object.keys(event.headers || {}),
+  });
 
-    for (const headerName of possibleSignatureHeaders) {
-      if (event.headers[headerName]) {
-        signature = event.headers[headerName];
-        signatureHeaderUsed = headerName;
-        break;
-      }
-    }
-
-    console.log('[Whop Webhook] Request received', {
-      bodyLength: rawBody.length,
-      hasBody: rawBody.length > 0,
-      hasSignature: !!signature,
-      signatureHeader: signatureHeaderUsed
-    });
-
-    const WHOP_WEBHOOK_SECRET = process.env.WHOP_WEBHOOK_SECRET;
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!WHOP_WEBHOOK_SECRET) {
-      console.error('[Whop Webhook] WHOP_WEBHOOK_SECRET not configured');
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Webhook secret not configured' })
-      };
-    }
-
-    if (!signature) {
-      const availableHeaders = Object.keys(event.headers || {});
-      console.log('[Whop Webhook] Missing signature header. Available headers:', availableHeaders);
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ error: 'Missing signature' })
-      };
-    }
-
-    const expectedSignature = createHmac('sha256', WHOP_WEBHOOK_SECRET)
-      .update(rawBody)
-      .digest('hex');
-
-    if (signature !== expectedSignature) {
-      console.log('[Whop Webhook] Invalid Whop signature');
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ error: 'Invalid signature' })
-      };
-    }
-
-    console.log('[Whop Webhook] Signature verified successfully');
-
-    const payload = JSON.parse(rawBody);
-    const eventType = payload.type || payload.event_type || 'unknown';
-
-    console.log('[Whop Webhook] Event type:', eventType);
-    console.log('[Whop Webhook] Payload data:', {
-      type: eventType,
-      action: payload.action,
-      hasData: !!payload.data
-    });
-
-    // TODO: Update user subscription status in Supabase based on event type
-
-    console.log('[Whop Webhook] Returning OK response');
-
+  // 3. Ensure headers exist
+  if (!webhookId || !webhookTimestamp || !webhookSignature) {
     return {
-      statusCode: 200,
-      body: 'ok'
+      statusCode: 401,
+      body: JSON.stringify({ error: "Missing signature" }),
     };
-  } catch (error) {
-    console.error('[Whop Webhook] Error processing webhook:', error);
+  }
 
+  // 4. Load secret
+  const WHOP_WEBHOOK_SECRET = process.env.WHOP_WEBHOOK_SECRET;
+  if (!WHOP_WEBHOOK_SECRET) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Internal server error' })
+      body: JSON.stringify({ error: "Webhook secret not configured" }),
     };
   }
-};
 
-export { handler };
+  // 5. Build signing string EXACTLY as Whop expects
+  const signingString = `${webhookId}.${webhookTimestamp}.${rawBody}`;
+
+  const expectedSignature = createHmac("sha256", WHOP_WEBHOOK_SECRET)
+    .update(signingString)
+    .digest("base64");
+
+  // 6. Extract v1 signatures (Whop formats)
+  const v1Signatures: string[] = [];
+  const parts = webhookSignature.split(",").map((p) => p.trim());
+
+  for (const part of parts) {
+    if (part.startsWith("v1=")) {
+      v1Signatures.push(part.slice(3));
+    }
+  }
+
+  if (parts.length === 2 && parts[0] === "v1") {
+    v1Signatures.push(parts[1]);
+  }
+
+  if (v1Signatures.length === 0) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "Invalid signature format" }),
+    };
+  }
+
+  // 7. Constant-time comparison
+  const expectedBuf = Buffer.from(expectedSignature, "utf8");
+  let valid = false;
+
+  for (const sig of v1Signatures) {
+    const providedBuf = Buffer.from(sig, "utf8");
+    if (
+      providedBuf.length === expectedBuf.length &&
+      timingSafeEqual(providedBuf, expectedBuf)
+    ) {
+      valid = true;
+      break;
+    }
+  }
+
+  if (!valid) {
+    console.log("[Whop Webhook] Invalid signature");
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ error: "Invalid signature" }),
+    };
+  }
+
+  // 8. SUCCESS
+  console.log("[Whop Webhook] Signature verified");
+
+  const payload = JSON.parse(rawBody);
+  console.log("[Whop Webhook] Event type:", payload.type || payload.event_type);
+
+  return {
+    statusCode: 200,
+    body: "ok",
+  };
+};
