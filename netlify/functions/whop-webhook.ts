@@ -142,4 +142,4 @@ await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?email=eq.${encodeURIComponent
 });
 
 return { statusCode: 200, body: "ok" };
-
+};
