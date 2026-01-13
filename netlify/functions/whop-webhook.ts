@@ -119,6 +119,19 @@ if (!whopUserId) {
   return { statusCode: 200, body: "ok" };
 }
 
+  // Try to pull email from payload
+const email =
+  payload?.data?.user?.email ||
+  payload?.data?.customer?.email ||
+  payload?.user?.email ||
+  payload?.customer?.email ||
+  null;
+
+if (!email) {
+  console.log("[Whop Webhook] No email in payload, skipping plan update");
+  return { statusCode: 200, body: "ok" };
+}
+
 let plan: "free" | "paid" = "free";
 if (eventType === "membership.activated" || eventType === "invoice.paid") plan = "paid";
 if (eventType === "membership.deactivated" || eventType === "membership.canceled") plan = "free";
