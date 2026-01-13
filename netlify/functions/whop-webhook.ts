@@ -118,11 +118,6 @@ if (!whopUserId) {
   return { statusCode: 200, body: "ok" };
 }
 
-if (!email) {
-  console.log("[Whop Webhook] No email in payload, skipping plan update");
-  return { statusCode: 200, body: "ok" };
-}
-
 let plan: "free" | "paid" = "free";
 if (eventType === "membership.activated" || eventType === "invoice.paid") plan = "paid";
 if (eventType === "membership.deactivated" || eventType === "membership.canceled") plan = "free";
