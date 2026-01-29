@@ -29,7 +29,8 @@
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Register Service Worker -->
-    <script>
+   <!--
+   <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
@@ -42,5 +43,20 @@
         });
       }
     </script>
+    -->
+
+    <script>
+  // DEV ONLY: remove old Service Worker + cached assets on localhost
+  if (location.hostname === 'localhost' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      regs.forEach((r) => r.unregister());
+    });
+
+    if (window.caches) {
+      caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+    }
+  }
+</script>
+
   </body>
 </html>

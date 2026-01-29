@@ -87,7 +87,16 @@ function App() {
   const loadDataFromCloud = async () => {
     setSyncing(true);
     try {
-      const { data, error } = await loadFromCloud();
+     let data: any = null;
+let error: any = null;
+
+if (window.location.search.includes("nocloud=1")) {
+  console.log("NO CLOUD LOAD MODE");
+} else {
+  const res = await loadFromCloud();
+  data = res.data;
+  error = res.error;
+}
       setEntries(data?.entries || []);
       setCategories(data?.categories || DEFAULT_CATEGORIES);
       setConverters(data?.converters || DEFAULT_CONVERTERS);
@@ -430,6 +439,7 @@ function App() {
 
       {showAuthModal && (
         <AuthModal
+        isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
           onSignIn={signIn}
           onSignUp={signUp}

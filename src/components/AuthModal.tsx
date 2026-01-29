@@ -17,10 +17,10 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
 
   if (!isOpen) return null
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  setError('')
 
     try {
       const { error } = isSignUp 
@@ -123,7 +123,7 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
             ) : (
               <>
                 <User className="w-5 h-5 mr-2" />
-                {isSignUp ? 'Create Account' : 'Sign In'}
+                {isSignUp ? 'Create Account' : 'SIGN IN'}
               </>
             )}
           </button>
