@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpenCheck, BarChart3, CheckSquare, BookOpen, Calendar, Settings, Info, LogOut, User } from 'lucide-react';
+import { BookOpenCheck, BarChart3, CheckSquare, BookOpen, Calendar, Settings, Info, User } from 'lucide-react';
 import { TabType } from '../types';
 
 interface NavigationProps {
@@ -69,32 +69,15 @@ export function Navigation({
           </div>
           
           {/* Actions */}
-          
-            {user ? (
-              <>
-
-<button
-  onClick={() => {
-    if (window.confirm("Are you sure you want to log out?")) {
-      onSignOut()
-    }
-  }}
-  className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors"
-  title="Sign out"
->
-  <LogOut className="w-4 h-4" />
-</button>
-
-              </>
-            ) : (
-              <button
-                onClick={onShowAuth}
-                className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium flex items-center"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Sign In
-              </button>
-            )}
+          {!user && (
+            <button
+              onClick={onShowAuth}
+              className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium flex items-center"
+            >
+              <User className="w-4 h-4 mr-2" />
+              Sign In
+            </button>
+          )}
           </div>
         
         {/* Mobile Navigation */}
