@@ -12,7 +12,7 @@ interface NavigationProps {
   categories: Array<{ name: string }>;
   user?: { email?: string } | null;
   plan?: 'free' | 'paid';
-  onSignOut?: () => void;
+  onSignOut: () => void;
   onShowAuth?: () => void;
 }
 
@@ -42,11 +42,12 @@ export function Navigation({
     <div className="bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Navigation */}
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
+        <div className="flex items-center h-16 justify-between">
+          <div className="flex items-center gap-10">
+
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Daily Achievement Tracker</h1>
             
-            <nav className="hidden md:flex space-x-1">
+            <nav className="hidden md:flex space-x-4">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -68,19 +69,22 @@ export function Navigation({
           </div>
           
           {/* Actions */}
-          <div className="flex items-center space-x-3">
+          
             {user ? (
               <>
-                <span className="text-sm text-gray-600 dark:text-gray-300 hidden md:block">
-                  {user.email}
-                </span>
-                <button
-                  onClick={onSignOut}
-                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors"
-                  title="Sign out"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
+
+<button
+  onClick={() => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      onSignOut()
+    }
+  }}
+  className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors"
+  title="Sign out"
+>
+  <LogOut className="w-4 h-4" />
+</button>
+
               </>
             ) : (
               <button
@@ -92,7 +96,6 @@ export function Navigation({
               </button>
             )}
           </div>
-        </div>
         
         {/* Mobile Navigation */}
         <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3">
