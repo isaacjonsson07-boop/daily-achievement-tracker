@@ -48,18 +48,18 @@ export function Navigation({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Navigation */}
         <div className="flex items-center h-16 justify-between">
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-4 lg:gap-10 min-w-0">
 
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Daily Achievement Tracker</h1>
-            
-            <nav className="hidden md:flex space-x-4">
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white whitespace-nowrap flex-shrink-0">Daily Achievement Tracker</h1>
+
+            <nav className="hidden md:flex space-x-2 lg:space-x-4 flex-shrink-0">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2 ${
+                    className={`px-3 lg:px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2 whitespace-nowrap ${
                       currentTab === tab.id
                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                         : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
