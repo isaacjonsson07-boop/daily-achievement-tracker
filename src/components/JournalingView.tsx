@@ -506,14 +506,6 @@ export function JournalingView({
         </div>
       )}
 
-      {/* Trial Banner */}
-      {trialDaysRemaining > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3">
-          <p className="text-sm text-center text-gray-700 dark:text-gray-300">
-            ⏳ <span className="font-semibold">Trial: {trialDaysRemaining} {trialDaysRemaining === 1 ? 'day' : 'days'} left</span> — Unlock full 21 days anytime
-          </p>
-        </div>
-      )}
 
       {/* Locked State for Free Users */}
       {plan === 'free' && journalAccessDays === 0 && (
@@ -558,7 +550,7 @@ export function JournalingView({
                   className="px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold text-lg rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl inline-flex items-center"
                 >
                   <Crown className="w-6 h-6 mr-2" />
-                  Start 7-Day Free Trial
+                  Start Free Access
                 </button>
               )}
               <button
@@ -566,12 +558,12 @@ export function JournalingView({
                 className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl inline-flex items-center"
               >
                 <Crown className="w-6 h-6 mr-2" />
-                Upgrade Now
+                Upgrade to Full Access
               </button>
             </div>
 
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-6">
-              {onStartTrial && "Try it free for 7 days, or "}upgrade for full access to all 21 days
+              {onStartTrial && "Start with free access to Days 1-7, or "}upgrade for full access to all 21 days
             </p>
           </div>
         </div>
@@ -710,7 +702,7 @@ export function JournalingView({
                 className="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-semibold rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg inline-flex items-center"
               >
                 <Crown className="w-5 h-5 mr-2" />
-                Unlock with Free Trial
+                Start Free Access
               </button>
             )}
           </div>

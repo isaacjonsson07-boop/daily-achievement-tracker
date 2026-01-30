@@ -1,6 +1,7 @@
 export function isTrialActive(trialEndsAt: string | null): boolean {
-  if (!trialEndsAt) return false;
-  return new Date(trialEndsAt) > new Date();
+  // Trial is active if the user has started it (trialEndsAt is set)
+  // It lasts forever, providing access to 7 days until they upgrade
+  return trialEndsAt !== null;
 }
 
 export function getJournalAccessDays(
@@ -13,12 +14,6 @@ export function getJournalAccessDays(
 }
 
 export function getTrialDaysRemaining(trialEndsAt: string | null): number {
-  if (!trialEndsAt || !isTrialActive(trialEndsAt)) return 0;
-
-  const now = new Date();
-  const endsAt = new Date(trialEndsAt);
-  const diffTime = endsAt.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  return Math.max(0, diffDays);
+  // Trial never expires - return 0 to indicate no countdown
+  return 0;
 }

@@ -29,8 +29,7 @@ export function SettingsView({
   devStartTrial,
   devSetPaidPlan
 }: SettingsViewProps) {
-  const trialDaysRemaining = getTrialDaysRemaining(trialEndsAt);
-  const isTrialActive = trialDaysRemaining > 0;
+  const isTrialActive = trialEndsAt !== null;
   const isDevMode = isDevEnvironment();
   const showDevTools = isDevMode && devSetFreePlan && devStartTrial && devSetPaidPlan;
 
@@ -57,14 +56,9 @@ export function SettingsView({
                 isTrialActive ? 'text-amber-600 dark:text-amber-400' :
                 'text-gray-600 dark:text-gray-400'
               }`}>
-                {plan === 'paid' ? 'Paid' : isTrialActive ? 'Trial' : 'Free'}
+                {plan === 'paid' ? 'Paid' : isTrialActive ? 'Free Access (Days 1-7)' : 'Free'}
               </span>
             </div>
-            {isTrialActive && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Trial: {trialDaysRemaining} {trialDaysRemaining === 1 ? 'day' : 'days'} remaining
-              </p>
-            )}
           </div>
 
           {/* Primary CTA */}
@@ -75,7 +69,7 @@ export function SettingsView({
                 className="w-full px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-semibold rounded-lg hover:from-amber-700 hover:to-orange-700 transition-all shadow-md hover:shadow-lg inline-flex items-center justify-center"
               >
                 <Crown className="w-5 h-5 mr-2" />
-                Start 7-Day Free Trial
+                Start Free Access
               </button>
             )}
             {plan === 'free' && isTrialActive && (
@@ -150,7 +144,7 @@ export function SettingsView({
               </span>
               {trialEndsAt && isTrialActive && (
                 <span className="text-gray-600 dark:text-gray-400">
-                  Trial: <strong className="text-amber-600">{trialDaysRemaining} days remaining</strong>
+                  Trial: <strong className="text-amber-600">Active (Days 1-7)</strong>
                 </span>
               )}
             </div>
@@ -183,7 +177,7 @@ export function SettingsView({
               className="flex items-center justify-center px-4 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all shadow-md hover:shadow-lg"
             >
               <Crown className="w-4 h-4 mr-2" />
-              Start 7-Day Trial
+              Start Free Access
             </button>
 
             <button
