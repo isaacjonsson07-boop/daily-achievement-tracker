@@ -35,7 +35,7 @@ function App() {
     devStartTrial,
     devSetPaidPlan
   } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   useCapacitor();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
@@ -433,8 +433,6 @@ if (window.location.search.includes("nocloud=1")) {
         user={user}
         plan={plan}
         trialEndsAt={trialEndsAt}
-        theme={theme}
-        onThemeToggle={toggleTheme}
         onSignOut={handleSignOut}
         onShowAuth={() => setShowAuthModal(true)}
       />
