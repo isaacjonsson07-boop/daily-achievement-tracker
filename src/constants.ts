@@ -6,7 +6,7 @@ export const WHOP_PAID_URL = "https://whop.com/checkout/plan_2XmKrYfV9RrsB";
 export const WHOP_TRIAL_URL = "https://whop.com/checkout/plan_Wwet4zcOCzriu";
 
 export const openWhopPaid = () => {
-  window.open(WHOP_PAID_URL, "_top");
+  window.open(WHOP_PAID_URL, "_blank");
 };
 
 export const openWhopTrial = () => {
