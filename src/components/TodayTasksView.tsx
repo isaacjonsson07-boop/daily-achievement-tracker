@@ -71,8 +71,6 @@ export function TodayTasksView({
   const [habits, setHabits] = useState<HabitWithCompletion[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const today = fmtDateISO(new Date());
-
   // Get current day of week
   function getCurrentDay() {
     const today = new Date();
@@ -81,6 +79,29 @@ export function TodayTasksView({
     const dayMap = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     return dayMap[adjustedIndex];
   }
+
+  // Calculate the actual date for the selected day of week
+  function getDateForDay(dayKey: string): string {
+    const today = new Date();
+    const currentDayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const currentAdjustedIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
+
+    const dayMap = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const selectedDayIndex = dayMap.indexOf(dayKey);
+
+    // Calculate the difference in days
+    const daysDifference = selectedDayIndex - currentAdjustedIndex;
+
+    // Create a new date based on the difference
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + daysDifference);
+
+    return fmtDateISO(targetDate);
+  }
+
+  // Get the date for the currently selected day
+  const selectedDate = getDateForDay(selectedDayForToday);
+  const today = fmtDateISO(new Date());
 
   const currentDay = selectedDayForToday;
 
@@ -104,7 +125,7 @@ export function TodayTasksView({
   // Load habits and completions for the selected day
   useEffect(() => {
     loadHabitsForDay();
-  }, [selectedDayForToday, today, allHabits, habitCompletions]);
+  }, [selectedDayForToday, selectedDate, allHabits, habitCompletions]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -124,12 +145,13 @@ export function TodayTasksView({
     console.log('Loading habits for day:', {
       selectedDay: selectedDayForToday,
       selectedDayIndex,
+      selectedDate,
       allHabitsCount: allHabits.length,
       habitsForDayCount: habitsForDay.length,
       habitsWithLinks: habitsForDay.filter(h => h.linked_goal_id).length
     });
 
-    const completionsForToday = habitCompletions.filter(c => c.completion_date === today);
+    const completionsForToday = habitCompletions.filter(c => c.completion_date === selectedDate);
 
     const habitsWithCompletions: HabitWithCompletion[] = habitsForDay.map(habit => {
       const completion = completionsForToday.find(c => c.habit_id === habit.id);
@@ -207,7 +229,7 @@ export function TodayTasksView({
             .from('habit_completions')
             .insert({
               habit_id: habit.id,
-              completion_date: today,
+              completion_date: selectedDate,
               completed_number: habit.target_number,
               user_id: user.id
             });
@@ -219,7 +241,7 @@ export function TodayTasksView({
             id: uid(),
             habit_id: habit.id,
             user_id: '',
-            completion_date: today,
+            completion_date: selectedDate,
             completed_number: habit.target_number,
             created_at: new Date().toISOString()
           };
@@ -271,7 +293,7 @@ export function TodayTasksView({
     return scheduleItems
       .filter(item => item.day === currentDay)
       .map(item => {
-        const completedCount = item.completedCounts?.[today] || 0;
+        const completedCount = item.completedCounts?.[selectedDate] || 0;
         const targetCount = item.targetNumber || 1;
         return {
           ...item,
@@ -280,7 +302,7 @@ export function TodayTasksView({
         };
       })
       .sort((a, b) => a.time.localeCompare(b.time));
-  }, [scheduleItems, selectedDayForToday, today, currentDay]);
+  }, [scheduleItems, selectedDayForToday, selectedDate, currentDay]);
 
   // Calculate today's stats (including habits)
   const todayStats = useMemo(() => {
@@ -302,7 +324,7 @@ export function TodayTasksView({
     const originalTask = scheduleItems.find(item => item.id === taskId);
     if (!originalTask) return;
 
-    const currentCount = originalTask.completedCounts?.[today] || 0;
+    const currentCount = originalTask.completedCounts?.[selectedDate] || 0;
     const targetCount = originalTask.targetNumber || 1;
     const wasCompleted = currentCount >= targetCount;
 
@@ -310,7 +332,7 @@ export function TodayTasksView({
 
     const newCompletedCounts = {
       ...originalTask.completedCounts,
-      [today]: newCount
+      [selectedDate]: newCount
     };
 
     const isNowCompleted = newCount >= targetCount;
@@ -318,6 +340,7 @@ export function TodayTasksView({
     console.log('[TASK TOGGLE]', {
       taskId: originalTask.id,
       taskTitle: originalTask.title,
+      selectedDate,
       wasCompleted,
       isNowCompleted,
       stateChanged: wasCompleted !== isNowCompleted,
@@ -332,10 +355,10 @@ export function TodayTasksView({
     }
 
     let newCompletedDates = [...originalTask.completedDates];
-    if (!wasCompleted && isNowCompleted && !newCompletedDates.includes(today)) {
-      newCompletedDates.push(today);
+    if (!wasCompleted && isNowCompleted && !newCompletedDates.includes(selectedDate)) {
+      newCompletedDates.push(selectedDate);
     } else if (wasCompleted && !isNowCompleted) {
-      newCompletedDates = newCompletedDates.filter(date => date !== today);
+      newCompletedDates = newCompletedDates.filter(date => date !== selectedDate);
     }
 
     if (originalTask.linkedGoalId) {
