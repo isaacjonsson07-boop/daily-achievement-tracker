@@ -43,7 +43,7 @@ export interface Goal {
   targetAmount: number;
   currentAmount: number;
   unit: string;
-  targetDate: string;
+  targetDate?: string;
   createdAt: string;
   completed: boolean;
   completedAt?: string;

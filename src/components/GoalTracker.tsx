@@ -44,6 +44,7 @@ export function GoalTracker({
   const [targetAmountError, setTargetAmountError] = useState<string>('');
 
   const isOverdue = (targetDate: string): boolean => {
+    if (!targetDate) return false;
     return new Date(targetDate) < new Date();
   };
 
@@ -136,7 +137,7 @@ export function GoalTracker({
       targetAmount: parsed.value,
       currentAmount: 0,
       unit: parsed.unit,
-      targetDate: newGoal.targetDate,
+      targetDate: newGoal.targetDate || undefined,
       createdAt: new Date().toISOString(),
       completed: false,
       goalType: categoryType === 'Distance' ? 'distance' : categoryType === 'Time' ? 'time' : 'task',
@@ -168,7 +169,7 @@ export function GoalTracker({
       description: goal.description || '',
       category: goal.category,
       targetAmount: targetAmountStr,
-      targetDate: goal.targetDate
+      targetDate: goal.targetDate || ''
     });
     setTargetAmountError('');
     setShowAddForm(true);
@@ -207,7 +208,7 @@ export function GoalTracker({
       category: newGoal.category,
       targetAmount: parsed.value,
       unit: parsed.unit,
-      targetDate: newGoal.targetDate,
+      targetDate: newGoal.targetDate || undefined,
       goalType: categoryType === 'Distance' ? 'distance' : categoryType === 'Time' ? 'time' : 'task',
       distance: categoryType === 'Distance' ? newGoal.targetAmount : undefined,
       duration: categoryType === 'Time' ? newGoal.targetAmount : undefined
@@ -277,7 +278,7 @@ export function GoalTracker({
   };
 
   const isFormValid = (): boolean => {
-    if (!newGoal.title.trim() || !newGoal.targetAmount || !newGoal.targetDate) return false;
+    if (!newGoal.title.trim() || !newGoal.targetAmount) return false;
 
     const categoryType = getCategoryType(newGoal.category);
     if (categoryType === 'Count') {
@@ -433,13 +434,12 @@ export function GoalTracker({
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date (optional)</label>
                 <input
                   type="date"
                   value={newGoal.targetDate}
                   onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
               </div>
             </div>
@@ -492,9 +492,15 @@ export function GoalTracker({
                       <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{goal.category}</span>
                       <span className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(goal.targetDate).toLocaleDateString()}
-                        {isOverdue(goal.targetDate) && (
-                          <span className="ml-2 text-red-500 font-medium">Overdue</span>
+                        {goal.targetDate ? (
+                          <>
+                            {new Date(goal.targetDate).toLocaleDateString()}
+                            {isOverdue(goal.targetDate) && (
+                              <span className="ml-2 text-red-500 font-medium">Overdue</span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="text-gray-400 dark:text-gray-500">No deadline</span>
                         )}
                       </span>
                     </div>
