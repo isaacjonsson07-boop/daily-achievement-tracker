@@ -437,7 +437,7 @@ export function GoalTracker({
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date (optional)</label>
                 <input
                   type="date"
-                  value={newGoal.targetDate}
+                  {...(newGoal.targetDate && { value: newGoal.targetDate })}
                   onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
