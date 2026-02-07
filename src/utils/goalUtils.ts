@@ -99,15 +99,21 @@ export const calculateScheduleAwareStreak = (
 
   const allDates = [...completedSet].sort();
   const earliest = allDates[0];
-  const todayStr = new Date().toISOString().split('T')[0];
+  const latest = allDates[allDates.length - 1];
 
-  const scheduledDates = getScheduledDatesBetween(earliest, todayStr, daysOfWeek);
+  // Use the latest completion date or today, whichever is later, to ensure we check up to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  const endDate = latest > todayStr ? latest : todayStr;
+
+  const scheduledDates = getScheduledDatesBetween(earliest, endDate, daysOfWeek);
 
   if (scheduledDates.length === 0) {
+    // If no scheduled dates match, treat each unique completion as a streak of 1
     const completedCount = completedSet.size;
-    return { current: completedCount > 0 ? 1 : 0, best: completedCount > 0 ? 1 : 0 };
+    return { current: completedCount, best: completedCount };
   }
 
+  // Calculate best streak
   let best = 0;
   let run = 0;
   for (const d of scheduledDates) {
@@ -123,12 +129,26 @@ export const calculateScheduleAwareStreak = (
     best = 1;
   }
 
+  // Calculate current streak - count backwards from the most recent scheduled date
+  // Current streak should only count if it's still active (includes today or yesterday)
   let current = 0;
-  for (let i = scheduledDates.length - 1; i >= 0; i--) {
-    if (completedSet.has(scheduledDates[i])) {
-      current++;
-    } else {
-      break;
+  const todayIndex = scheduledDates.indexOf(todayStr);
+
+  // Start from today if today is scheduled and completed, or from the last scheduled date
+  let startIndex = todayIndex >= 0 ? todayIndex : scheduledDates.length - 1;
+
+  // If today is scheduled but not completed, current streak is 0
+  if (todayIndex >= 0 && !completedSet.has(todayStr)) {
+    current = 0;
+  } else {
+    // Count backwards from the starting position
+    for (let i = startIndex; i >= 0; i--) {
+      if (completedSet.has(scheduledDates[i])) {
+        current++;
+      } else {
+        // Break on first missed scheduled day
+        break;
+      }
     }
   }
 

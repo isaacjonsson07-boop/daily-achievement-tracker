@@ -128,9 +128,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     const dateArray = Array.from(dates);
     if (dateArray.length === 0) return { current: 0, best: 0 };
 
-    const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-
-    console.log('[STREAK DEBUG] Calculating streaks for dates:', uniqueDates);
+    const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a + 'T00:00:00').getTime() - new Date(b + 'T00:00:00').getTime());
 
     // Single day counts as 1 day streak
     if (uniqueDates.length === 1) return { current: 1, best: 1 };
@@ -147,8 +145,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
         const daysDiff = Math.floor((currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
 
-        console.log(`[STREAK DEBUG] Checking ${uniqueDates[i-1]} to ${uniqueDates[i]}: ${daysDiff} days apart`);
-
         if (daysDiff === 1) {
           // Consecutive day
           tempStreak++;
@@ -163,27 +159,34 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     // Don't forget to check the final streak
     maxStreak = Math.max(maxStreak, tempStreak);
 
-    // Calculate current streak (counting backwards from most recent date)
-    let currentStreak = 0;
-    for (let i = uniqueDates.length - 1; i >= 0; i--) {
-      if (i === uniqueDates.length - 1) {
-        currentStreak = 1;
-      } else {
-        const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
-        const nextDate = new Date(uniqueDates[i + 1] + 'T00:00:00');
-        const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    // Calculate current streak - must include today or yesterday to be active
+    const today = new Date().toISOString().split('T')[0];
+    const mostRecent = uniqueDates[uniqueDates.length - 1];
+    const mostRecentDate = new Date(mostRecent + 'T00:00:00');
+    const todayDate = new Date(today + 'T00:00:00');
+    const daysSinceLast = Math.floor((todayDate.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
 
-        if (daysDiff === 1) {
-          // Consecutive day
-          currentStreak++;
+    // Only count as active streak if most recent completion is today or yesterday
+    let currentStreak = 0;
+    if (daysSinceLast <= 1) {
+      for (let i = uniqueDates.length - 1; i >= 0; i--) {
+        if (i === uniqueDates.length - 1) {
+          currentStreak = 1;
         } else {
-          // Gap in streak, stop counting
-          break;
+          const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
+          const nextDate = new Date(uniqueDates[i + 1] + 'T00:00:00');
+          const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+          if (daysDiff === 1) {
+            // Consecutive day
+            currentStreak++;
+          } else {
+            // Gap in streak, stop counting
+            break;
+          }
         }
       }
     }
-
-    console.log(`[STREAK DEBUG] Final result: current=${currentStreak}, best=${maxStreak}`);
 
     return { current: currentStreak, best: maxStreak };
   };
@@ -736,6 +739,21 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     });
 
     const categoryHabitSchedule = new Map<string, number[]>();
+    const habitStreaks = new Map<string, { current: number; best: number }>();
+
+    // First, calculate streaks per individual habit
+    habits.forEach(habit => {
+      const completions = habitCompletions.filter(c => c.habit_id === habit.id);
+      const completionDates = completions.map(c => c.completion_date);
+
+      if (completionDates.length > 0 && habit.days_of_week && habit.days_of_week.length > 0) {
+        const streakResult = calculateScheduleAwareStreak(completionDates, habit.days_of_week);
+        habitStreaks.set(habit.id, streakResult);
+      } else if (completionDates.length > 0) {
+        const streakResult = calculateStreaksFromDates(completionDates);
+        habitStreaks.set(habit.id, streakResult);
+      }
+    });
 
     habitCompletions.forEach(completion => {
       const habit = habits.find(h => h.id === completion.habit_id);
@@ -816,19 +834,41 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       const avgPerDay = activeDays > 0 ? total / activeDays : 0;
       const datesForCategory = categoryDays.get(name) || new Set();
       const schedule = categoryHabitSchedule.get(name);
+
+      // Check if this category represents a single habit
+      const uniqueActivities = categoryUniqueActivities.get(name) || new Set();
+      const habitIds = Array.from(uniqueActivities)
+        .filter(id => id.startsWith('habit-'))
+        .map(id => id.replace('habit-', ''));
+
       let bestStreak: number;
       let currentStreak = 0;
-      if (schedule && schedule.length > 0 && schedule.length < 7) {
-        const streakResult = calculateScheduleAwareStreak(Array.from(datesForCategory), schedule);
-        bestStreak = streakResult.best;
-        currentStreak = streakResult.current;
+
+      // If this is a single habit, use its pre-calculated streak
+      if (habitIds.length === 1 && uniqueActivities.size === 1) {
+        const habitId = habitIds[0];
+        const habitStreak = habitStreaks.get(habitId);
+        if (habitStreak) {
+          bestStreak = habitStreak.best;
+          currentStreak = habitStreak.current;
+        } else {
+          bestStreak = 0;
+          currentStreak = 0;
+        }
       } else {
-        const streakResult = calculateStreaksFromDates(datesForCategory);
-        bestStreak = streakResult.best;
-        currentStreak = streakResult.current;
+        // For categories with multiple sources or regular entries, calculate aggregate streak
+        if (schedule && schedule.length > 0 && schedule.length < 7) {
+          const streakResult = calculateScheduleAwareStreak(Array.from(datesForCategory), schedule);
+          bestStreak = streakResult.best;
+          currentStreak = streakResult.current;
+        } else {
+          const streakResult = calculateStreaksFromDates(datesForCategory);
+          bestStreak = streakResult.best;
+          currentStreak = streakResult.current;
+        }
       }
+
       const activityRecord = category?.activityRecord || 0;
-      const uniqueActivities = categoryUniqueActivities.get(name) || new Set();
       const isHabitOnly = categoryIsHabitOnly.get(name) === true;
       const scheduledDays = isHabitOnly && schedule && schedule.length > 0 && schedule.length < 7;
 
