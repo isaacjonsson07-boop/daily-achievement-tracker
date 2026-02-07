@@ -123,22 +123,23 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     return name;
   };
 
-  // Helper function to calculate best streak from a set of dates
-  const calculateBestStreakFromDates = (dates: Set<string> | string[]): number => {
+  // Helper function to calculate both current and best streak from a set of dates
+  const calculateStreaksFromDates = (dates: Set<string> | string[]): { current: number; best: number } => {
     const dateArray = Array.from(dates);
-    if (dateArray.length === 0) return 0;
+    if (dateArray.length === 0) return { current: 0, best: 0 };
 
     const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
     // Single day counts as 1 day streak
-    if (uniqueDates.length === 1) return 1;
+    if (uniqueDates.length === 1) return { current: 1, best: 1 };
 
     let maxStreak = 0;
-    let currentStreak = 0;
+    let tempStreak = 0;
 
+    // Calculate best streak
     for (let i = 0; i < uniqueDates.length; i++) {
       if (i === 0) {
-        currentStreak = 1;
+        tempStreak = 1;
       } else {
         const prevDate = new Date(uniqueDates[i - 1]);
         const currentDate = new Date(uniqueDates[i]);
@@ -146,19 +147,39 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
         if (daysDiff === 1) {
           // Consecutive day
-          currentStreak++;
+          tempStreak++;
         } else {
           // Gap in streak
-          maxStreak = Math.max(maxStreak, currentStreak);
-          currentStreak = 1;
+          maxStreak = Math.max(maxStreak, tempStreak);
+          tempStreak = 1;
         }
       }
     }
 
     // Don't forget to check the final streak
-    maxStreak = Math.max(maxStreak, currentStreak);
+    maxStreak = Math.max(maxStreak, tempStreak);
 
-    return maxStreak;
+    // Calculate current streak (counting backwards from most recent date)
+    let currentStreak = 0;
+    for (let i = uniqueDates.length - 1; i >= 0; i--) {
+      if (i === uniqueDates.length - 1) {
+        currentStreak = 1;
+      } else {
+        const currentDate = new Date(uniqueDates[i]);
+        const nextDate = new Date(uniqueDates[i + 1]);
+        const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (daysDiff === 1) {
+          // Consecutive day
+          currentStreak++;
+        } else {
+          // Gap in streak, stop counting
+          break;
+        }
+      }
+    }
+
+    return { current: currentStreak, best: maxStreak };
   };
 
   // Helper function to calculate activity record (highest single amount) from all entries
@@ -796,7 +817,9 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         bestStreak = streakResult.best;
         currentStreak = streakResult.current;
       } else {
-        bestStreak = calculateBestStreakFromDates(datesForCategory);
+        const streakResult = calculateStreaksFromDates(datesForCategory);
+        bestStreak = streakResult.best;
+        currentStreak = streakResult.current;
       }
       const activityRecord = category?.activityRecord || 0;
       const uniqueActivities = categoryUniqueActivities.get(name) || new Set();
@@ -830,10 +853,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         const datesForCategory = categoryDays.get(category.name) || new Set();
         const schedule = categoryHabitSchedule.get(category.name);
         let bestStreak: number;
+        let currentStreak = 0;
         if (schedule && schedule.length > 0 && schedule.length < 7) {
-          bestStreak = calculateScheduleAwareStreak(Array.from(datesForCategory), schedule).best;
+          const streakResult = calculateScheduleAwareStreak(Array.from(datesForCategory), schedule);
+          bestStreak = streakResult.best;
+          currentStreak = streakResult.current;
         } else {
-          bestStreak = calculateBestStreakFromDates(datesForCategory);
+          const streakResult = calculateStreaksFromDates(datesForCategory);
+          bestStreak = streakResult.best;
+          currentStreak = streakResult.current;
         }
         const activityRecord = category.activityRecord || 0;
         categoryStats.push({
@@ -848,7 +876,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           avgPerDay: 0,
           formattedAvgPerDay: formatSingleUnit(type, 0, baseUnit, converters),
           bestStreak,
-          currentStreak: 0,
+          currentStreak,
           scheduledDays: !!(categoryIsHabitOnly.get(category.name) === true && schedule && schedule.length > 0 && schedule.length < 7),
           activityRecord,
           formattedRecord: ''
