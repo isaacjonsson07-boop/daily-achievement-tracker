@@ -129,8 +129,7 @@ export const calculateScheduleAwareStreak = (
     best = 1;
   }
 
-  // Calculate current streak - count backwards from the most recent scheduled date
-  // Current streak should only count if it's still active (includes today or yesterday)
+  // Calculate current streak - find consecutive chain that includes today
   let current = 0;
   const todayIndex = scheduledDates.indexOf(todayStr);
   const todayCompleted = completedSet.has(todayStr);
@@ -138,26 +137,48 @@ export const calculateScheduleAwareStreak = (
   // Check if today is a non-scheduled day but was completed
   const todayIsNonScheduledCompletion = todayIndex < 0 && todayCompleted;
 
-  // Start from today if today is scheduled and completed, or from the last scheduled date
-  let startIndex = todayIndex >= 0 ? todayIndex : scheduledDates.length - 1;
+  // Find anchor point: today if scheduled, or find yesterday
+  let anchorIndex = todayIndex;
+  if (anchorIndex === -1) {
+    // Today not scheduled - check if yesterday is in the list and completed
+    const yesterday = new Date(todayStr + 'T00:00:00');
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayIndex = scheduledDates.indexOf(yesterdayStr);
+    if (yesterdayIndex >= 0 && completedSet.has(yesterdayStr)) {
+      anchorIndex = yesterdayIndex;
+    }
+  }
 
   // If today is scheduled but not completed, current streak is 0
   if (todayIndex >= 0 && !todayCompleted) {
     current = 0;
-  } else {
-    // If today is a non-scheduled day with a completion, start with 1
-    if (todayIsNonScheduledCompletion) {
+  } else if (anchorIndex >= 0) {
+    // Count from the anchor point
+    if (completedSet.has(scheduledDates[anchorIndex])) {
       current = 1;
-    }
-    // Count backwards from the starting position (scheduled days)
-    for (let i = startIndex; i >= 0; i--) {
-      if (completedSet.has(scheduledDates[i])) {
-        current++;
-      } else {
-        // Break on first missed scheduled day
-        break;
+
+      // Count backwards
+      for (let i = anchorIndex - 1; i >= 0; i--) {
+        if (completedSet.has(scheduledDates[i])) {
+          current++;
+        } else {
+          break;
+        }
+      }
+
+      // Count forwards (for future completions)
+      for (let i = anchorIndex + 1; i < scheduledDates.length; i++) {
+        if (completedSet.has(scheduledDates[i])) {
+          current++;
+        } else {
+          break;
+        }
       }
     }
+  } else if (todayIsNonScheduledCompletion) {
+    // Today is not scheduled but was completed - count as 1
+    current = 1;
   }
 
   return { current, best };

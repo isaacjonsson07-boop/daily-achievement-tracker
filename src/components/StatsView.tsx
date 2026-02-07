@@ -130,15 +130,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
     const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a + 'T00:00:00').getTime() - new Date(b + 'T00:00:00').getTime());
 
-    // Single day: best streak is 1, current streak depends on recency
+    // Single day: best streak is 1, current streak depends on proximity to today
     if (uniqueDates.length === 1) {
       const today = new Date().toISOString().split('T')[0];
       const singleDate = uniqueDates[0];
       const singleDateObj = new Date(singleDate + 'T00:00:00');
       const todayObj = new Date(today + 'T00:00:00');
-      const daysSince = Math.floor((todayObj.getTime() - singleDateObj.getTime()) / (1000 * 60 * 60 * 24));
-      // Current streak is 1 only if the date is today or yesterday
-      return { current: daysSince <= 1 ? 1 : 0, best: 1 };
+      const daysDiff = Math.floor((singleDateObj.getTime() - todayObj.getTime()) / (1000 * 60 * 60 * 24));
+      // Current streak is 1 if date is today, yesterday, or tomorrow (consecutive with today)
+      return { current: Math.abs(daysDiff) <= 1 ? 1 : 0, best: 1 };
     }
 
     let maxStreak = 0;
@@ -167,31 +167,47 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     // Don't forget to check the final streak
     maxStreak = Math.max(maxStreak, tempStreak);
 
-    // Calculate current streak - must include today or yesterday to be active
+    // Calculate current streak - find consecutive chain that includes today
     const today = new Date().toISOString().split('T')[0];
-    const mostRecent = uniqueDates[uniqueDates.length - 1];
-    const mostRecentDate = new Date(mostRecent + 'T00:00:00');
     const todayDate = new Date(today + 'T00:00:00');
-    const daysSinceLast = Math.floor((todayDate.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24));
 
-    // Only count as active streak if most recent completion is today or yesterday
+    // Find the index of today or the closest date to today in the sequence
+    let todayIndex = uniqueDates.indexOf(today);
+
+    // If today isn't in the list, check if yesterday is (streak still active)
+    if (todayIndex === -1) {
+      const yesterday = new Date(todayDate);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      todayIndex = uniqueDates.indexOf(yesterdayStr);
+    }
+
     let currentStreak = 0;
-    if (daysSinceLast <= 1) {
-      for (let i = uniqueDates.length - 1; i >= 0; i--) {
-        if (i === uniqueDates.length - 1) {
-          currentStreak = 1;
-        } else {
-          const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
-          const nextDate = new Date(uniqueDates[i + 1] + 'T00:00:00');
-          const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (todayIndex !== -1) {
+      // Count the consecutive chain that includes this anchor date
+      currentStreak = 1;
 
-          if (daysDiff === 1) {
-            // Consecutive day
-            currentStreak++;
-          } else {
-            // Gap in streak, stop counting
-            break;
-          }
+      // Count backwards from anchor
+      for (let i = todayIndex - 1; i >= 0; i--) {
+        const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
+        const nextDate = new Date(uniqueDates[i + 1] + 'T00:00:00');
+        const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysDiff === 1) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+
+      // Count forwards from anchor (for future completions)
+      for (let i = todayIndex + 1; i < uniqueDates.length; i++) {
+        const prevDate = new Date(uniqueDates[i - 1] + 'T00:00:00');
+        const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
+        const daysDiff = Math.floor((currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysDiff === 1) {
+          currentStreak++;
+        } else {
+          break;
         }
       }
     }
