@@ -31,32 +31,31 @@ export const formatCountdown = (targetDate: string): string => {
   }
 };
 
-export const calculateTargetDate = (preset: string, customDaysValue?: string): string => {
+export const calculateTargetDateFromDuration = (
+  days: number,
+  weeks: number,
+  months: number
+): string => {
   const now = new Date();
-  let targetDate = new Date(now);
-
-  switch (preset) {
-    case '1day':
-      targetDate.setDate(now.getDate() + 1);
-      break;
-    case '1week':
-      targetDate.setDate(now.getDate() + 7);
-      break;
-    case '1month':
-      targetDate.setMonth(now.getMonth() + 1);
-      break;
-    case '1year':
-      targetDate.setFullYear(now.getFullYear() + 1);
-      break;
-    case 'custom':
-      const days = parseInt(customDaysValue || '0', 10);
-      if (days > 0) {
-        targetDate.setDate(now.getDate() + days);
-      }
-      break;
-  }
-
+  const targetDate = new Date(now);
+  targetDate.setMonth(targetDate.getMonth() + months);
+  targetDate.setDate(targetDate.getDate() + days + weeks * 7);
   return targetDate.toISOString().split('T')[0];
+};
+
+export const formatTargetDatePreview = (
+  days: number,
+  weeks: number,
+  months: number
+): string | null => {
+  if (days === 0 && weeks === 0 && months === 0) return null;
+  const dateStr = calculateTargetDateFromDuration(days, weeks, months);
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 };
 
 export const isOverdue = (targetDate: string): boolean => {

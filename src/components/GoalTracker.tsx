@@ -5,7 +5,8 @@ import { formatSingleUnit } from '../utils/formatting';
 import { uid, fmtDateISO } from '../utils/dateUtils';
 import { parseAmountByType, amountPlaceholderByType } from '../utils/parsing';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
-import { formatCountdown, calculateTargetDate, isOverdue } from '../utils/goalUtils';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+import { formatCountdown, calculateTargetDateFromDuration, formatTargetDatePreview, isOverdue } from '../utils/goalUtils';
 
 interface GoalTrackerProps {
   goals: Goal[];
@@ -43,9 +44,10 @@ export function GoalTracker({
     targetDate: ''
   });
   const [targetAmountError, setTargetAmountError] = useState<string>('');
-  const [deadlineMode, setDeadlineMode] = useState<'exact' | 'fromNow'>('fromNow');
-  const [selectedPreset, setSelectedPreset] = useState<string>('1week');
-  const [customDays, setCustomDays] = useState<string>('');
+  const [deadlineMode, setDeadlineMode] = useState<'exact' | 'duration'>('duration');
+  const [durDays, setDurDays] = useState(0);
+  const [durWeeks, setDurWeeks] = useState(1);
+  const [durMonths, setDurMonths] = useState(0);
 
   // Calculate current progress for each goal based on entries or task/habit completions
   const goalsWithProgress = useMemo(() => {
@@ -107,18 +109,12 @@ export function GoalTracker({
     if (!newGoal.title.trim() || !newGoal.targetAmount) return;
 
     let targetDate = newGoal.targetDate;
-    if (deadlineMode === 'fromNow') {
-      if (selectedPreset === 'custom' && !customDays.trim()) {
-        alert('Please enter the number of days');
-        return;
-      }
-      targetDate = calculateTargetDate(selectedPreset, customDays);
+    if (deadlineMode === 'duration') {
+      if (durDays === 0 && durWeeks === 0 && durMonths === 0) return;
+      targetDate = calculateTargetDateFromDuration(durDays, durWeeks, durMonths);
     }
 
-    if (!targetDate) {
-      alert('Please select a target date');
-      return;
-    }
+    if (!targetDate) return;
 
     const category = categories.find(c => c.name === newGoal.category);
     const categoryType = category?.type || 'Time';
@@ -167,9 +163,10 @@ export function GoalTracker({
       targetDate: ''
     });
     setTargetAmountError('');
-    setDeadlineMode('fromNow');
-    setSelectedPreset('1week');
-    setCustomDays('');
+    setDeadlineMode('duration');
+    setDurDays(0);
+    setDurWeeks(1);
+    setDurMonths(0);
     setShowAddForm(false);
   };
 
@@ -189,12 +186,22 @@ export function GoalTracker({
     });
     setTargetAmountError('');
     setDeadlineMode('exact');
+    setDurDays(0);
+    setDurWeeks(0);
+    setDurMonths(0);
     setShowAddForm(true);
   };
 
   const handleUpdateGoal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingGoal || !newGoal.title.trim() || !newGoal.targetAmount) return;
+
+    let targetDate = newGoal.targetDate;
+    if (deadlineMode === 'duration') {
+      if (durDays === 0 && durWeeks === 0 && durMonths === 0) return;
+      targetDate = calculateTargetDateFromDuration(durDays, durWeeks, durMonths);
+    }
+    if (!targetDate) return;
 
     const category = categories.find(c => c.name === newGoal.category);
     const categoryType = category?.type || 'Time';
@@ -225,7 +232,7 @@ export function GoalTracker({
       category: newGoal.category,
       targetAmount: parsed.value,
       unit: parsed.unit,
-      targetDate: newGoal.targetDate,
+      targetDate,
       goalType: categoryType === 'Distance' ? 'distance' : categoryType === 'Time' ? 'time' : 'task',
       distance: categoryType === 'Distance' ? newGoal.targetAmount : undefined,
       duration: categoryType === 'Time' ? newGoal.targetAmount : undefined
@@ -241,9 +248,10 @@ export function GoalTracker({
       targetDate: ''
     });
     setTargetAmountError('');
-    setDeadlineMode('fromNow');
-    setSelectedPreset('1week');
-    setCustomDays('');
+    setDeadlineMode('duration');
+    setDurDays(0);
+    setDurWeeks(1);
+    setDurMonths(0);
     setShowAddForm(false);
   };
 
@@ -301,7 +309,7 @@ export function GoalTracker({
     if (!newGoal.title.trim() || !newGoal.targetAmount) return false;
 
     if (deadlineMode === 'exact' && !newGoal.targetDate) return false;
-    if (deadlineMode === 'fromNow' && selectedPreset === 'custom' && !customDays.trim()) return false;
+    if (deadlineMode === 'duration' && durDays === 0 && durWeeks === 0 && durMonths === 0) return false;
 
     const categoryType = getCategoryType(newGoal.category);
     if (categoryType === 'Count') {
@@ -393,9 +401,10 @@ export function GoalTracker({
                   targetDate: ''
                 });
                 setTargetAmountError('');
-                setDeadlineMode('fromNow');
-                setSelectedPreset('1week');
-                setCustomDays('');
+                setDeadlineMode('duration');
+                setDurDays(0);
+                setDurWeeks(1);
+                setDurMonths(0);
               }
             }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
@@ -464,14 +473,14 @@ export function GoalTracker({
               <div className="flex space-x-2 mb-3">
                 <button
                   type="button"
-                  onClick={() => setDeadlineMode('fromNow')}
+                  onClick={() => setDeadlineMode('duration')}
                   className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    deadlineMode === 'fromNow'
+                    deadlineMode === 'duration'
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
                 >
-                  Time from now
+                  Duration from now
                 </button>
                 <button
                   type="button"
@@ -486,82 +495,41 @@ export function GoalTracker({
                 </button>
               </div>
 
-              {deadlineMode === 'fromNow' ? (
+              {deadlineMode === 'duration' ? (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPreset('1day')}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        selectedPreset === '1day'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      1 day
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPreset('1week')}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        selectedPreset === '1week'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      1 week
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPreset('1month')}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        selectedPreset === '1month'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      1 month
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPreset('1year')}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        selectedPreset === '1year'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      1 year
-                    </button>
-                  </div>
-
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPreset('custom')}
-                      className={`w-full px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        selectedPreset === 'custom'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      Custom
-                    </button>
-                    {selectedPreset === 'custom' && (
-                      <div className="mt-2 flex items-center space-x-2">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">In</span>
-                        <input
-                          type="number"
-                          min="1"
-                          value={customDays}
-                          onChange={(e) => setCustomDays(e.target.value)}
-                          placeholder="0"
-                          className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-600 dark:text-gray-400">days</span>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { label: 'Days', value: durDays, set: setDurDays },
+                      { label: 'Weeks', value: durWeeks, set: setDurWeeks },
+                      { label: 'Months', value: durMonths, set: setDurMonths },
+                    ].map(({ label, value, set }) => (
+                      <div key={label} className="flex flex-col items-center">
+                        <button
+                          type="button"
+                          onClick={() => set(value + 1)}
+                          className="w-full flex justify-center py-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                        >
+                          <ChevronUp className="w-5 h-5" />
+                        </button>
+                        <span className="text-2xl font-bold text-gray-800 dark:text-white tabular-nums py-1">
+                          {value}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => set(Math.max(0, value - 1))}
+                          className="w-full flex justify-center py-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                        >
+                          <ChevronDown className="w-5 h-5" />
+                        </button>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</span>
                       </div>
-                    )}
+                    ))}
                   </div>
+                  {formatTargetDatePreview(durDays, durWeeks, durMonths) && (
+                    <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                      Target date: <span className="font-medium text-gray-800 dark:text-gray-200">{formatTargetDatePreview(durDays, durWeeks, durMonths)}</span>
+                    </p>
+                  )}
                 </div>
               ) : (
                 <input
