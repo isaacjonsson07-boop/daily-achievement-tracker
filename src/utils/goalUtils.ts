@@ -184,17 +184,18 @@ export const calculateScheduleAwareStreak = (
       if (reachedEndOfSchedule) {
         const lastScheduled = scheduledDates[lastCountedScheduledIndex];
         const sortedCompletions = [...completedSet].sort();
-        const lastCompletedDate = sortedCompletions[sortedCompletions.length - 1];
+        const futureCompletions = sortedCompletions.filter(d => d > lastScheduled);
 
-        if (lastCompletedDate > lastScheduled) {
-          let cursor = new Date(lastScheduled + 'T00:00:00');
-          cursor.setDate(cursor.getDate() + 1);
+        if (futureCompletions.length > 0) {
+          let prevDate = lastScheduled;
+          for (const completion of futureCompletions) {
+            const prev = new Date(prevDate + 'T12:00:00');
+            const curr = new Date(completion + 'T12:00:00');
+            const diffDays = Math.round((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
 
-          while (cursor.toISOString().split('T')[0] <= lastCompletedDate) {
-            const cursorStr = cursor.toISOString().split('T')[0];
-            if (completedSet.has(cursorStr)) {
+            if (diffDays === 1) {
               current++;
-              cursor.setDate(cursor.getDate() + 1);
+              prevDate = completion;
             } else {
               break;
             }
