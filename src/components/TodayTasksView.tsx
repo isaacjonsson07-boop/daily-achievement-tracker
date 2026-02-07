@@ -53,7 +53,7 @@ export function TodayTasksView({
   habitCompletions,
   setHabitCompletions
 }: TodayTasksViewProps) {
-  const [selectedDayForToday, setSelectedDayForToday] = useState(getCurrentDay());
+  const [dayOffset, setDayOffset] = useState(0);
   const [showAddScheduleForm, setShowAddScheduleForm] = useState(false);
   const [editingScheduleItem, setEditingScheduleItem] = useState<ScheduleItem | null>(null);
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
@@ -72,61 +72,49 @@ export function TodayTasksView({
   const [habits, setHabits] = useState<HabitWithCompletion[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Get current day of week
-  function getCurrentDay() {
-    const today = new Date();
-    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    const adjustedIndex = dayIndex === 0 ? 6 : dayIndex - 1;
-    const dayMap = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    return dayMap[adjustedIndex];
+  function getDateFromOffset(offset: number): Date {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return d;
   }
 
-  // Calculate the actual date for the selected day of week
-  function getDateForDay(dayKey: string): string {
-    const today = new Date();
-    const currentDayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    const currentAdjustedIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
-
-    const dayMap = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    const selectedDayIndex = dayMap.indexOf(dayKey);
-
-    // Calculate the difference in days
-    const daysDifference = selectedDayIndex - currentAdjustedIndex;
-
-    // Create a new date based on the difference
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + daysDifference);
-
-    return fmtDateISO(targetDate);
+  function getDayKeyFromDate(d: Date): string {
+    const dayMap = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    return dayMap[d.getDay()];
   }
 
-  // Get the date for the currently selected day
-  const selectedDate = getDateForDay(selectedDayForToday);
+  const selectedDateObj = getDateFromOffset(dayOffset);
+  const selectedDate = fmtDateISO(selectedDateObj);
   const today = fmtDateISO(new Date());
+  const currentDay = getDayKeyFromDate(selectedDateObj);
+  const isToday = dayOffset === 0;
 
-  const currentDay = selectedDayForToday;
+  const selectedDayLabel = useMemo(() => {
+    if (dayOffset === 0) return 'Today';
+    if (dayOffset === -1) return 'Yesterday';
+    if (dayOffset === 1) return 'Tomorrow';
+    return DAYS.find(d => d.key === currentDay)?.label || '';
+  }, [dayOffset, currentDay]);
 
-  // Navigation functions for day switching
+  const selectedDateDisplay = useMemo(() => {
+    return selectedDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }, [selectedDate]);
+
   const goToPreviousDay = () => {
-    const currentIndex = DAYS.findIndex(day => day.key === selectedDayForToday);
-    const previousIndex = currentIndex === 0 ? DAYS.length - 1 : currentIndex - 1;
-    setSelectedDayForToday(DAYS[previousIndex].key);
+    setDayOffset(prev => Math.max(prev - 1, -7));
   };
 
   const goToNextDay = () => {
-    const currentIndex = DAYS.findIndex(day => day.key === selectedDayForToday);
-    const nextIndex = currentIndex === DAYS.length - 1 ? 0 : currentIndex + 1;
-    setSelectedDayForToday(DAYS[nextIndex].key);
+    setDayOffset(prev => Math.min(prev + 1, 7));
   };
 
   const goToToday = () => {
-    setSelectedDayForToday(getCurrentDay());
+    setDayOffset(0);
   };
 
-  // Load habits and completions for the selected day
   useEffect(() => {
     loadHabitsForDay();
-  }, [selectedDayForToday, selectedDate, allHabits, habitCompletions]);
+  }, [dayOffset, selectedDate, allHabits, habitCompletions]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -136,21 +124,11 @@ export function TodayTasksView({
   }, [newScheduleItem.description, showAddScheduleForm]);
 
   const loadHabitsForDay = () => {
-    const dayMap = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const selectedDayIndex = dayMap.indexOf(selectedDayForToday);
+    const jsDayIndex = selectedDateObj.getDay();
 
     const habitsForDay = allHabits.filter(habit =>
-      habit.days_of_week.includes(selectedDayIndex)
+      habit.days_of_week.includes(jsDayIndex)
     );
-
-    console.log('Loading habits for day:', {
-      selectedDay: selectedDayForToday,
-      selectedDayIndex,
-      selectedDate,
-      allHabitsCount: allHabits.length,
-      habitsForDayCount: habitsForDay.length,
-      habitsWithLinks: habitsForDay.filter(h => h.linked_goal_id).length
-    });
 
     const completionsForToday = habitCompletions.filter(c => c.completion_date === selectedDate);
 
@@ -286,9 +264,6 @@ export function TodayTasksView({
     }
   };
 
-
-  const isToday = selectedDayForToday === getCurrentDay();
-
   // Get today's tasks for the selected day
   const todaysTasks = useMemo(() => {
     return scheduleItems
@@ -303,7 +278,7 @@ export function TodayTasksView({
         };
       })
       .sort((a, b) => a.time.localeCompare(b.time));
-  }, [scheduleItems, selectedDayForToday, selectedDate, currentDay]);
+  }, [scheduleItems, dayOffset, selectedDate, currentDay]);
 
   // Calculate today's stats (including habits)
   const todayStats = useMemo(() => {
@@ -683,10 +658,15 @@ export function TodayTasksView({
               <ChevronLeft className="w-5 h-5" />
             </button>
             
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
-              <CheckSquare className="w-6 h-6 mr-3" />
-              {DAYS.find(d => d.key === currentDay)?.label}'s Tasks
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+                <CheckSquare className="w-6 h-6 mr-3" />
+                {selectedDayLabel}'s Tasks
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400 ml-9">
+                {DAYS.find(d => d.key === currentDay)?.label}, {selectedDateDisplay}
+              </p>
+            </div>
             
             <button
               onClick={goToNextDay}
@@ -852,7 +832,7 @@ export function TodayTasksView({
         {todaysTasks.length === 0 && habits.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <Calendar className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-            <p className="text-gray-500 dark:text-gray-400">No tasks or habits scheduled for {DAYS.find(d => d.key === currentDay)?.label.toLowerCase()}.</p>
+            <p className="text-gray-500 dark:text-gray-400">No tasks or habits scheduled for {selectedDayLabel.toLowerCase()} ({selectedDateDisplay}).</p>
             <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Add tasks above or create habits in the Daily Habits tab!</p>
           </div>
         ) : todaysTasks.length > 0 ? (
@@ -991,7 +971,7 @@ export function TodayTasksView({
           <div className="mt-6 p-4 bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg text-center">
             <div className="text-green-800 dark:text-green-200 font-semibold">🎉 Congratulations!</div>
             <div className="text-green-700 dark:text-green-300 text-sm mt-1">
-              You've completed all your tasks for {DAYS.find(d => d.key === currentDay)?.label.toLowerCase()}!
+              You've completed all your tasks for {selectedDayLabel.toLowerCase()}!
             </div>
           </div>
         )}
