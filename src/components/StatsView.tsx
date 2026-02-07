@@ -340,7 +340,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       completed: false,
       goalType: newGoal.goalType,
       duration: newGoal.goalType === 'time' ? newGoal.duration.trim() : undefined,
-      distance: newGoal.goalType === 'distance' ? newGoal.distance.trim() : undefined
+      distance: newGoal.goalType === 'distance' ? newGoal.distance.trim() : undefined,
+      durDays: deadlineMode === 'duration' ? durDays : undefined,
+      durWeeks: deadlineMode === 'duration' ? durWeeks : undefined,
+      durMonths: deadlineMode === 'duration' ? durMonths : undefined
     };
 
     onAddGoal(goal);
@@ -367,7 +370,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       ? String(Math.trunc(goal.targetAmount))
       : goal.targetAmount.toString();
 
-    const duration = calculateDurationFromTargetDate(goal.targetDate);
+    const hasSavedDuration = goal.durDays != null || goal.durWeeks != null || goal.durMonths != null;
+    const fallback = calculateDurationFromTargetDate(goal.targetDate);
 
     setNewGoal({
       title: goal.title,
@@ -379,10 +383,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       distance: goal.distance || ''
     });
     setTargetAmountError('');
-    setDeadlineMode('exact');
-    setDurDays(duration.days);
-    setDurWeeks(duration.weeks);
-    setDurMonths(duration.months);
+    setDeadlineMode(hasSavedDuration ? 'duration' : 'exact');
+    setDurDays(hasSavedDuration ? (goal.durDays ?? 0) : fallback.days);
+    setDurWeeks(hasSavedDuration ? (goal.durWeeks ?? 0) : fallback.weeks);
+    setDurMonths(hasSavedDuration ? (goal.durMonths ?? 0) : fallback.months);
     setShowAddGoalForm(true);
   };
 
@@ -454,7 +458,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       targetDate,
       goalType: newGoal.goalType,
       duration: newGoal.goalType === 'time' ? newGoal.duration.trim() : undefined,
-      distance: newGoal.goalType === 'distance' ? newGoal.distance.trim() : undefined
+      distance: newGoal.goalType === 'distance' ? newGoal.distance.trim() : undefined,
+      durDays: deadlineMode === 'duration' ? durDays : undefined,
+      durWeeks: deadlineMode === 'duration' ? durWeeks : undefined,
+      durMonths: deadlineMode === 'duration' ? durMonths : undefined
     };
 
     onUpdateGoal(updatedGoal);

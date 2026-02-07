@@ -151,7 +151,10 @@ export function GoalTracker({
       completed: false,
       goalType: categoryType === 'Distance' ? 'distance' : categoryType === 'Time' ? 'time' : 'task',
       distance: categoryType === 'Distance' ? newGoal.targetAmount : undefined,
-      duration: categoryType === 'Time' ? newGoal.targetAmount : undefined
+      duration: categoryType === 'Time' ? newGoal.targetAmount : undefined,
+      durDays: deadlineMode === 'duration' ? durDays : undefined,
+      durWeeks: deadlineMode === 'duration' ? durWeeks : undefined,
+      durMonths: deadlineMode === 'duration' ? durMonths : undefined
     };
 
     onAddGoal(goal);
@@ -177,7 +180,8 @@ export function GoalTracker({
       ? String(Math.trunc(goal.targetAmount))
       : goal.targetAmount.toString();
 
-    const duration = calculateDurationFromTargetDate(goal.targetDate);
+    const hasSavedDuration = goal.durDays != null || goal.durWeeks != null || goal.durMonths != null;
+    const fallback = calculateDurationFromTargetDate(goal.targetDate);
 
     setNewGoal({
       title: goal.title,
@@ -187,10 +191,10 @@ export function GoalTracker({
       targetDate: goal.targetDate
     });
     setTargetAmountError('');
-    setDeadlineMode('exact');
-    setDurDays(duration.days);
-    setDurWeeks(duration.weeks);
-    setDurMonths(duration.months);
+    setDeadlineMode(hasSavedDuration ? 'duration' : 'exact');
+    setDurDays(hasSavedDuration ? (goal.durDays ?? 0) : fallback.days);
+    setDurWeeks(hasSavedDuration ? (goal.durWeeks ?? 0) : fallback.weeks);
+    setDurMonths(hasSavedDuration ? (goal.durMonths ?? 0) : fallback.months);
     setShowAddForm(true);
   };
 
@@ -237,7 +241,10 @@ export function GoalTracker({
       targetDate,
       goalType: categoryType === 'Distance' ? 'distance' : categoryType === 'Time' ? 'time' : 'task',
       distance: categoryType === 'Distance' ? newGoal.targetAmount : undefined,
-      duration: categoryType === 'Time' ? newGoal.targetAmount : undefined
+      duration: categoryType === 'Time' ? newGoal.targetAmount : undefined,
+      durDays: deadlineMode === 'duration' ? durDays : undefined,
+      durWeeks: deadlineMode === 'duration' ? durWeeks : undefined,
+      durMonths: deadlineMode === 'duration' ? durMonths : undefined
     };
 
     onUpdateGoal(updatedGoal);

@@ -50,6 +50,9 @@ export interface Goal {
   goalType?: 'task' | 'time' | 'distance';
   duration?: string;
   distance?: string;
+  durDays?: number;
+  durWeeks?: number;
+  durMonths?: number;
 }
 
 export interface JournalEntry {
