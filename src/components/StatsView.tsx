@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react';
-import { BarChart3, TrendingUp, Clock, Target, Star, StarOff, ChevronDown, ChevronRight, Plus, Edit3, Trash2, CheckCircle, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, Clock, Target, Star, StarOff, ChevronDown, ChevronRight, ChevronUp, Plus, Edit3, Trash2, CheckCircle, Calendar } from 'lucide-react';
 import { Entry, Category, Converter, Goal, ScheduleItem, Habit, HabitCompletion } from '../types';
 import { formatSingleUnit, humanizeTime, humanizeDistance } from '../utils/formatting';
 import { formatDisplayDate, uid, fmtDateISO } from '../utils/dateUtils';
@@ -7,7 +7,7 @@ import { parseAmountByType, amountPlaceholderByType } from '../utils/parsing';
 import { UpgradePrompt } from './UpgradePrompt';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import { CreateItemModal } from './CreateItemModal';
-import { formatCountdown, isOverdue } from '../utils/goalUtils';
+import { formatCountdown, isOverdue, calculateTargetDateFromDuration, formatTargetDatePreview } from '../utils/goalUtils';
 
 interface StatsViewProps {
   entries: Entry[];
@@ -42,6 +42,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     distance: ''
   });
   const [targetAmountError, setTargetAmountError] = React.useState<string>('');
+  const [deadlineMode, setDeadlineMode] = React.useState<'exact' | 'duration'>('duration');
+  const [durDays, setDurDays] = React.useState(0);
+  const [durWeeks, setDurWeeks] = React.useState(1);
+  const [durMonths, setDurMonths] = React.useState(0);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -268,7 +272,13 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     e.preventDefault();
     if (!newGoal.title.trim()) return;
 
-    // Validate required fields based on goal type
+    let targetDate = newGoal.targetDate;
+    if (deadlineMode === 'duration') {
+      if (durDays === 0 && durWeeks === 0 && durMonths === 0) return;
+      targetDate = calculateTargetDateFromDuration(durDays, durWeeks, durMonths);
+    }
+    if (!targetDate) return;
+
     if (newGoal.goalType === 'time' && !newGoal.duration.trim()) {
       alert('Please enter a duration for time-based goals');
       return;
@@ -284,7 +294,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       return;
     }
 
-    // For task goals, enforce whole number validation
     if (newGoal.goalType === 'task') {
       const numValue = parseInt(newGoal.targetAmount, 10);
       if (!Number.isFinite(numValue) || numValue <= 0) {
@@ -293,14 +302,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       }
     }
 
-    // Parse based on goal type
     let parsed;
     if (newGoal.goalType === 'time') {
       parsed = parseAmountByType(newGoal.duration, 'Time', converters);
     } else if (newGoal.goalType === 'distance') {
       parsed = parseAmountByType(newGoal.distance, 'Distance', converters);
     } else {
-      // Task type - try Count first (for plain numbers), then other types
       parsed = parseAmountByType(newGoal.targetAmount, 'Count', converters) ||
                parseAmountByType(newGoal.targetAmount, 'Distance', converters) ||
                parseAmountByType(newGoal.targetAmount, 'Time', converters);
@@ -311,7 +318,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       return;
     }
 
-    // Final check: ensure task goals store integers
     if (newGoal.goalType === 'task') {
       const intVal = parseInt(newGoal.targetAmount, 10);
       if (!Number.isFinite(intVal) || intVal <= 0) {
@@ -325,11 +331,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       id: uid(),
       title: newGoal.title.trim(),
       description: newGoal.description.trim() || undefined,
-      category: 'General', // Default category since we removed the selector
+      category: 'General',
       targetAmount: parsed.value,
       currentAmount: 0,
       unit: parsed.unit,
-      targetDate: newGoal.targetDate,
+      targetDate,
       createdAt: new Date().toISOString(),
       completed: false,
       goalType: newGoal.goalType,
@@ -348,6 +354,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       distance: ''
     });
     setTargetAmountError('');
+    setDeadlineMode('duration');
+    setDurDays(0);
+    setDurWeeks(1);
+    setDurMonths(0);
     setShowAddGoalForm(false);
   };
 
@@ -367,6 +377,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       distance: goal.distance || ''
     });
     setTargetAmountError('');
+    setDeadlineMode('exact');
+    setDurDays(0);
+    setDurWeeks(0);
+    setDurMonths(0);
     setShowAddGoalForm(true);
   };
 
@@ -374,7 +388,13 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     e.preventDefault();
     if (!editingGoal || !newGoal.title.trim()) return;
 
-    // Validate required fields based on goal type
+    let targetDate = newGoal.targetDate;
+    if (deadlineMode === 'duration') {
+      if (durDays === 0 && durWeeks === 0 && durMonths === 0) return;
+      targetDate = calculateTargetDateFromDuration(durDays, durWeeks, durMonths);
+    }
+    if (!targetDate) return;
+
     if (newGoal.goalType === 'time' && !newGoal.duration.trim()) {
       alert('Please enter a duration for time-based goals');
       return;
@@ -390,7 +410,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       return;
     }
 
-    // For task goals, enforce whole number validation
     if (newGoal.goalType === 'task') {
       const numValue = parseInt(newGoal.targetAmount, 10);
       if (!Number.isFinite(numValue) || numValue <= 0) {
@@ -399,14 +418,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       }
     }
 
-    // Parse based on goal type
     let parsed;
     if (newGoal.goalType === 'time') {
       parsed = parseAmountByType(newGoal.duration, 'Time', converters);
     } else if (newGoal.goalType === 'distance') {
       parsed = parseAmountByType(newGoal.distance, 'Distance', converters);
     } else {
-      // Task type - try Count first (for plain numbers), then other types
       parsed = parseAmountByType(newGoal.targetAmount, 'Count', converters) ||
                parseAmountByType(newGoal.targetAmount, 'Distance', converters) ||
                parseAmountByType(newGoal.targetAmount, 'Time', converters);
@@ -417,7 +434,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       return;
     }
 
-    // Final check: ensure task goals store integers
     if (newGoal.goalType === 'task') {
       const intVal = parseInt(newGoal.targetAmount, 10);
       if (!Number.isFinite(intVal) || intVal <= 0) {
@@ -433,7 +449,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       description: newGoal.description.trim() || undefined,
       targetAmount: parsed.value,
       unit: parsed.unit,
-      targetDate: newGoal.targetDate,
+      targetDate,
       goalType: newGoal.goalType,
       duration: newGoal.goalType === 'time' ? newGoal.duration.trim() : undefined,
       distance: newGoal.goalType === 'distance' ? newGoal.distance.trim() : undefined
@@ -451,6 +467,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       distance: ''
     });
     setTargetAmountError('');
+    setDeadlineMode('duration');
+    setDurDays(0);
+    setDurWeeks(1);
+    setDurMonths(0);
     setShowAddGoalForm(false);
   };
 
@@ -1047,6 +1067,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                 distance: ''
               });
               setTargetAmountError('');
+              setDeadlineMode('duration');
+              setDurDays(0);
+              setDurWeeks(1);
+              setDurMonths(0);
               setShowAddGoalForm(true);
             }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
@@ -1066,6 +1090,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           setEditingGoal(null);
           setNewGoal({ title: '', description: '', targetAmount: '', targetDate: '', goalType: 'task', duration: '', distance: '' });
           setTargetAmountError('');
+          setDeadlineMode('duration');
+          setDurDays(0);
+          setDurWeeks(1);
+          setDurMonths(0);
         }}
         onSubmit={editingGoal ? handleUpdateGoal : handleAddGoal}
         submitLabel={editingGoal ? 'Update Goal' : 'Create Goal'}
@@ -1098,24 +1126,86 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Type</label>
-                  <select
-                    value={newGoal.goalType}
-                    onChange={(e) => {
-                      setNewGoal({ ...newGoal, goalType: e.target.value as 'task' | 'time' | 'distance' });
-                      setTargetAmountError('');
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Type</label>
+                <select
+                  value={newGoal.goalType}
+                  onChange={(e) => {
+                    setNewGoal({ ...newGoal, goalType: e.target.value as 'task' | 'time' | 'distance' });
+                    setTargetAmountError('');
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="task">Task</option>
+                  <option value="time">Time-based</option>
+                  <option value="distance">Distance-based</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Deadline</label>
+                <div className="flex space-x-2 mb-3">
+                  <button
+                    type="button"
+                    onClick={() => setDeadlineMode('duration')}
+                    className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      deadlineMode === 'duration'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
                   >
-                    <option value="task">Task</option>
-                    <option value="time">Time-based</option>
-                    <option value="distance">Distance-based</option>
-                  </select>
+                    Duration from now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeadlineMode('exact')}
+                    className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      deadlineMode === 'exact'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
+                  >
+                    Exact date
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date</label>
+
+                {deadlineMode === 'duration' ? (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: 'Days', value: durDays, set: setDurDays },
+                        { label: 'Weeks', value: durWeeks, set: setDurWeeks },
+                        { label: 'Months', value: durMonths, set: setDurMonths },
+                      ].map(({ label, value, set }) => (
+                        <div key={label} className="flex flex-col items-center">
+                          <button
+                            type="button"
+                            onClick={() => set(value + 1)}
+                            className="w-full flex justify-center py-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                          >
+                            <ChevronUp className="w-5 h-5" />
+                          </button>
+                          <span className="text-2xl font-bold text-gray-800 dark:text-white tabular-nums py-1">
+                            {value}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => set(Math.max(0, value - 1))}
+                            className="w-full flex justify-center py-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                          >
+                            <ChevronDown className="w-5 h-5" />
+                          </button>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {formatTargetDatePreview(durDays, durWeeks, durMonths) && (
+                      <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                        Target date: <span className="font-medium text-gray-800 dark:text-gray-200">{formatTargetDatePreview(durDays, durWeeks, durMonths)}</span>
+                      </p>
+                    )}
+                  </div>
+                ) : (
                   <input
                     type="date"
                     value={newGoal.targetDate}
@@ -1123,7 +1213,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
-                </div>
+                )}
               </div>
 
               {newGoal.goalType === 'task' && (
