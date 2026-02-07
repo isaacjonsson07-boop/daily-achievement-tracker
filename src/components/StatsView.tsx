@@ -44,7 +44,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
   const [targetAmountError, setTargetAmountError] = React.useState<string>('');
   const [deadlineMode, setDeadlineMode] = React.useState<'exact' | 'duration'>('duration');
   const [durDays, setDurDays] = React.useState(0);
-  const [durWeeks, setDurWeeks] = React.useState(1);
+  const [durWeeks, setDurWeeks] = React.useState(0);
   const [durMonths, setDurMonths] = React.useState(0);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -356,7 +356,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     setTargetAmountError('');
     setDeadlineMode('duration');
     setDurDays(0);
-    setDurWeeks(1);
+    setDurWeeks(0);
     setDurMonths(0);
     setShowAddGoalForm(false);
   };
@@ -469,7 +469,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     setTargetAmountError('');
     setDeadlineMode('duration');
     setDurDays(0);
-    setDurWeeks(1);
+    setDurWeeks(0);
     setDurMonths(0);
     setShowAddGoalForm(false);
   };
@@ -1069,7 +1069,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
               setTargetAmountError('');
               setDeadlineMode('duration');
               setDurDays(0);
-              setDurWeeks(1);
+              setDurWeeks(0);
               setDurMonths(0);
               setShowAddGoalForm(true);
             }}
@@ -1092,7 +1092,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           setTargetAmountError('');
           setDeadlineMode('duration');
           setDurDays(0);
-          setDurWeeks(1);
+          setDurWeeks(0);
           setDurMonths(0);
         }}
         onSubmit={editingGoal ? handleUpdateGoal : handleAddGoal}

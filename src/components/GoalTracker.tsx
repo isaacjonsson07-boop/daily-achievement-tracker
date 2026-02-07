@@ -46,7 +46,7 @@ export function GoalTracker({
   const [targetAmountError, setTargetAmountError] = useState<string>('');
   const [deadlineMode, setDeadlineMode] = useState<'exact' | 'duration'>('duration');
   const [durDays, setDurDays] = useState(0);
-  const [durWeeks, setDurWeeks] = useState(1);
+  const [durWeeks, setDurWeeks] = useState(0);
   const [durMonths, setDurMonths] = useState(0);
 
   // Calculate current progress for each goal based on entries or task/habit completions
@@ -165,7 +165,7 @@ export function GoalTracker({
     setTargetAmountError('');
     setDeadlineMode('duration');
     setDurDays(0);
-    setDurWeeks(1);
+    setDurWeeks(0);
     setDurMonths(0);
     setShowAddForm(false);
   };
@@ -250,7 +250,7 @@ export function GoalTracker({
     setTargetAmountError('');
     setDeadlineMode('duration');
     setDurDays(0);
-    setDurWeeks(1);
+    setDurWeeks(0);
     setDurMonths(0);
     setShowAddForm(false);
   };
@@ -403,7 +403,7 @@ export function GoalTracker({
                 setTargetAmountError('');
                 setDeadlineMode('duration');
                 setDurDays(0);
-                setDurWeeks(1);
+                setDurWeeks(0);
                 setDurMonths(0);
               }
             }}
