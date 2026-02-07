@@ -69,40 +69,45 @@ function App() {
     if (data.month) setMonth(data.month);
   }, []);
 
+  const userId = user?.id;
+
   // Load data from cloud when user signs in
   useEffect(() => {
-    if (user && !authLoading) {
+    if (userId && !authLoading) {
       loadDataFromCloud();
     }
-  }, [user, authLoading]);
+  }, [userId, authLoading]);
 
   // Save data to both localStorage and cloud when state changes
   useEffect(() => {
     saveToStorage({ entries, categories, converters, tasks, goals, journalEntries, scheduleItems, habits, habitCompletions, month });
-    if (user) {
+    if (userId) {
       saveDataToCloud();
     }
-  }, [entries, categories, converters, tasks, goals, journalEntries, scheduleItems, habits, habitCompletions, month, user]);
+  }, [entries, categories, converters, tasks, goals, journalEntries, scheduleItems, habits, habitCompletions, month, userId]);
 
   const loadDataFromCloud = async () => {
     setSyncing(true);
     try {
-     let data: any = null;
-let error: any = null;
+      if (window.location.search.includes("nocloud=1")) {
+        console.log("NO CLOUD LOAD MODE");
+        return;
+      }
 
-if (window.location.search.includes("nocloud=1")) {
-  console.log("NO CLOUD LOAD MODE");
-} else {
-  const res = await loadFromCloud();
-  data = res.data;
-  error = res.error;
-}
-      setEntries(data?.entries || []);
-      setCategories(data?.categories || DEFAULT_CATEGORIES);
-      setConverters(data?.converters || DEFAULT_CONVERTERS);
-      setTasks(data?.tasks || []);
-      setGoals(data?.goals || []);
-      setScheduleItems(data?.scheduleItems || []);
+      const res = await loadFromCloud();
+
+      if (res.error || !res.data) {
+        console.warn('Cloud load returned no data, keeping local state');
+        return;
+      }
+
+      const data = res.data;
+      if (data.entries) setEntries(data.entries);
+      if (data.categories) setCategories(data.categories);
+      if (data.converters) setConverters(data.converters);
+      if (data.tasks) setTasks(data.tasks);
+      if (data.goals) setGoals(data.goals);
+      if (data.scheduleItems) setScheduleItems(data.scheduleItems);
     } catch (error) {
       console.error('Failed to load from cloud:', error);
     } finally {

@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase'
-import { Entry, Category, Converter, Task, Goal, JournalEntry } from '../types'
+import { Entry, Category, Converter, Task, Goal, JournalEntry, ScheduleItem } from '../types'
 
 export interface CloudStorageData {
   entries: Entry[]
@@ -8,6 +8,7 @@ export interface CloudStorageData {
   tasks: Task[]
   goals: Goal[]
   journalEntries: JournalEntry[]
+  scheduleItems: ScheduleItem[]
   updated_at: string
 }
 
