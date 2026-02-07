@@ -130,6 +130,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
     const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+    console.log('[STREAK DEBUG] Calculating streaks for dates:', uniqueDates);
+
     // Single day counts as 1 day streak
     if (uniqueDates.length === 1) return { current: 1, best: 1 };
 
@@ -141,9 +143,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       if (i === 0) {
         tempStreak = 1;
       } else {
-        const prevDate = new Date(uniqueDates[i - 1]);
-        const currentDate = new Date(uniqueDates[i]);
+        const prevDate = new Date(uniqueDates[i - 1] + 'T00:00:00');
+        const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
         const daysDiff = Math.floor((currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        console.log(`[STREAK DEBUG] Checking ${uniqueDates[i-1]} to ${uniqueDates[i]}: ${daysDiff} days apart`);
 
         if (daysDiff === 1) {
           // Consecutive day
@@ -165,8 +169,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       if (i === uniqueDates.length - 1) {
         currentStreak = 1;
       } else {
-        const currentDate = new Date(uniqueDates[i]);
-        const nextDate = new Date(uniqueDates[i + 1]);
+        const currentDate = new Date(uniqueDates[i] + 'T00:00:00');
+        const nextDate = new Date(uniqueDates[i + 1] + 'T00:00:00');
         const daysDiff = Math.floor((nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
 
         if (daysDiff === 1) {
@@ -178,6 +182,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         }
       }
     }
+
+    console.log(`[STREAK DEBUG] Final result: current=${currentStreak}, best=${maxStreak}`);
 
     return { current: currentStreak, best: maxStreak };
   };
