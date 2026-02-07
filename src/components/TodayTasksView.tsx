@@ -650,7 +650,7 @@ export function TodayTasksView({
       {/* Today's Tasks Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <button
               onClick={goToPreviousDay}
               className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors"
@@ -658,7 +658,7 @@ export function TodayTasksView({
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            <div className="w-48 text-center">
+            <div className="w-72 text-center">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center justify-center">
                 <CheckSquare className="w-6 h-6 mr-2 flex-shrink-0" />
                 <span className="truncate">{selectedDayLabel}'s Tasks</span>
