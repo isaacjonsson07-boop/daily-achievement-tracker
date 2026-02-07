@@ -702,6 +702,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         const uniqueActivities = categoryUniqueActivities.get(categoryName) || new Set();
         uniqueActivities.add(`task-${task.id}`);
         categoryUniqueActivities.set(categoryName, uniqueActivities);
+
+        categoryIsHabitOnly.set(categoryName, false);
       });
     });
 
@@ -772,6 +774,9 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
       if (habit.days_of_week && habit.days_of_week.length > 0) {
         categoryHabitSchedule.set(categoryName, habit.days_of_week);
+        if (!categoryIsHabitOnly.has(categoryName)) {
+          categoryIsHabitOnly.set(categoryName, true);
+        }
       }
     });
 
@@ -794,7 +799,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       }
       const activityRecord = category?.activityRecord || 0;
       const uniqueActivities = categoryUniqueActivities.get(name) || new Set();
-      const scheduledDays = schedule && schedule.length > 0 && schedule.length < 7;
+      const isHabitOnly = categoryIsHabitOnly.get(name) === true;
+      const scheduledDays = isHabitOnly && schedule && schedule.length > 0 && schedule.length < 7;
 
       return {
         name,
@@ -842,7 +848,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           formattedAvgPerDay: formatSingleUnit(type, 0, baseUnit, converters),
           bestStreak,
           currentStreak: 0,
-          scheduledDays: !!(schedule && schedule.length > 0 && schedule.length < 7),
+          scheduledDays: !!(categoryIsHabitOnly.get(category.name) === true && schedule && schedule.length > 0 && schedule.length < 7),
           activityRecord,
           formattedRecord: ''
         });

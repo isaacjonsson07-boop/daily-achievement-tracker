@@ -102,7 +102,11 @@ export const calculateScheduleAwareStreak = (
   const todayStr = new Date().toISOString().split('T')[0];
 
   const scheduledDates = getScheduledDatesBetween(earliest, todayStr, daysOfWeek);
-  if (scheduledDates.length === 0) return { current: 0, best: 0 };
+
+  if (scheduledDates.length === 0) {
+    const completedCount = completedSet.size;
+    return { current: completedCount > 0 ? 1 : 0, best: completedCount > 0 ? 1 : 0 };
+  }
 
   let best = 0;
   let run = 0;
@@ -113,6 +117,10 @@ export const calculateScheduleAwareStreak = (
     } else {
       run = 0;
     }
+  }
+
+  if (best === 0 && completedSet.size > 0) {
+    best = 1;
   }
 
   let current = 0;
