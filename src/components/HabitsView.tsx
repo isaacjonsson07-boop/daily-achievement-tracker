@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { uid } from '../utils/dateUtils';
 import { formatDistanceDisplay, formatDurationDisplay } from '../utils/formatting';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { CreateItemModal } from './CreateItemModal';
 import { QuickGuide } from './QuickGuide';
 
 interface HabitsViewProps {
@@ -359,209 +360,150 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
           </button>
         </div>
 
-        {showAddForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {editContext ? 'Edit Habit' : 'Add New Habit'}
-                  </h4>
-                  <button
-                    onClick={handleCancel}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
+        <CreateItemModal
+          isOpen={showAddForm}
+          title={editContext ? 'Edit Habit' : 'Create Habit'}
+          onClose={handleCancel}
+          onSubmit={editContext ? handleUpdateHabit : handleAddHabit}
+          submitLabel={editContext ? 'Update Habit' : 'Create Habit'}
+          isSubmitting={isSubmitting}
+        >
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Habit Name</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="e.g., Morning workout, Run 5km, Study for 2 hours"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              autoFocus
+            />
+          </div>
 
-            <form onSubmit={editContext ? handleUpdateHabit : handleAddHabit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Morning workout, Run 5km, Study for 2 hours"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as 'task' | 'time' | 'distance' })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="task">Task</option>
-                    <option value="time">Time-based</option>
-                    <option value="distance">Distance-based</option>
-                  </select>
-                </div>
-              </div>
-
-              {formData.type === 'task' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Times</label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={formData.target_number}
-                    onChange={(e) => setFormData({ ...formData, target_number: e.target.value })}
-                    placeholder="e.g., 1, 2, 3"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    How many times to complete this task
-                  </p>
-                </div>
-              )}
-
-              {formData.type === 'time' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
-                  <input
-                    type="text"
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    placeholder="e.g., 30min, 1h 15m, 2 hours"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 30min, 1h 30m, 2 hours
-                  </p>
-                </div>
-              )}
-
-              {formData.type === 'distance' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distance</label>
-                  <input
-                    type="text"
-                    value={formData.distance}
-                    onChange={(e) => setFormData({ ...formData, distance: e.target.value })}
-                    placeholder="e.g., 5km, 3 miles, 2000m"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 5km, 3 miles, 2000m
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Repeat On
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {DAYS.map(day => (
-                    <button
-                      key={day.value}
-                      type="button"
-                      onClick={() => handleDayToggle(day.value)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                        formData.days_of_week.includes(day.value)
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500'
-                      }`}
-                    >
-                      {day.label}
-                    </button>
-                  ))}
-                </div>
-                {formData.days_of_week.length === 0 && (
-                  <p className="text-xs text-red-500 mt-1">Please select at least one day</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
-                <textarea
-                  ref={textareaRef}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Additional details..."
-                  rows={1}
-                  style={{ minHeight: '2.5rem', resize: 'none' }}
-                  onInput={(e) => {
-                    const target = e.target as HTMLTextAreaElement;
-                    target.style.height = 'auto';
-                    target.style.height = target.scrollHeight + 'px';
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link to Goal (optional)</label>
-                <select
-                  value={formData.linkedGoalId}
-                  onChange={(e) => setFormData({ ...formData, linkedGoalId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">No linked goal</option>
-                  {goals.filter(g => !g.completed).map(goal => (
-                    <option key={goal.id} value={goal.id}>
-                      {goal.title} ({goal.currentAmount}/{goal.targetAmount} {goal.unit})
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Auto-update goal progress when completing this habit
-                </p>
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                      {editContext ? 'Updating...' : 'Adding...'}
-                    </>
-                  ) : (
-                    <>
-                      {editContext ? <Save className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
-                      {editContext ? 'Update Habit' : 'Add Habit'}
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  disabled={isSubmitting}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Cancel
-                </button>
-              </div>
-            </form>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
+              <input
+                type="time"
+                value={formData.time}
+                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label>
+              <select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as 'task' | 'time' | 'distance' })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="task">Task</option>
+                <option value="time">Time-based</option>
+                <option value="distance">Distance-based</option>
+              </select>
             </div>
           </div>
-        )}
+
+          {formData.type === 'task' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Times</label>
+              <input
+                type="number"
+                min="1"
+                value={formData.target_number}
+                onChange={(e) => setFormData({ ...formData, target_number: e.target.value })}
+                placeholder="e.g., 1, 2, 3"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">How many times to complete this task</p>
+            </div>
+          )}
+
+          {formData.type === 'time' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
+              <input
+                type="text"
+                value={formData.duration}
+                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                placeholder="e.g., 30min, 1h 15m, 2 hours"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 30min, 1h 30m, 2 hours</p>
+            </div>
+          )}
+
+          {formData.type === 'distance' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distance</label>
+              <input
+                type="text"
+                value={formData.distance}
+                onChange={(e) => setFormData({ ...formData, distance: e.target.value })}
+                placeholder="e.g., 5km, 3 miles, 2000m"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 5km, 3 miles, 2000m</p>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Repeat On</label>
+            <div className="flex flex-wrap gap-2">
+              {DAYS.map(day => (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => handleDayToggle(day.value)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    formData.days_of_week.includes(day.value)
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500'
+                  }`}
+                >
+                  {day.label}
+                </button>
+              ))}
+            </div>
+            {formData.days_of_week.length === 0 && (
+              <p className="text-xs text-red-500 mt-1">Please select at least one day</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
+            <textarea
+              ref={textareaRef}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Additional details..."
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link to Goal (optional)</label>
+            <select
+              value={formData.linkedGoalId}
+              onChange={(e) => setFormData({ ...formData, linkedGoalId: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">No linked goal</option>
+              {goals.filter(g => !g.completed).map(goal => (
+                <option key={goal.id} value={goal.id}>
+                  {goal.title} ({goal.currentAmount}/{goal.targetAmount} {goal.unit})
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-update goal progress when completing this habit</p>
+          </div>
+        </CreateItemModal>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">

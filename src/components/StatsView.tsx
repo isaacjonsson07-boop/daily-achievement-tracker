@@ -6,6 +6,7 @@ import { formatDisplayDate, uid, fmtDateISO } from '../utils/dateUtils';
 import { parseAmountByType, amountPlaceholderByType } from '../utils/parsing';
 import { UpgradePrompt } from './UpgradePrompt';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { CreateItemModal } from './CreateItemModal';
 
 interface StatsViewProps {
   entries: Entry[];
@@ -1016,12 +1017,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         </div>
       </div>
 
-      {/* Add/Edit Goal Form */}
+      {/* Goals Header with New Goal button */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
             <Target className="w-5 h-5 mr-2" />
-            {editingGoal ? 'Edit Goal' : 'Goals'}
+            Goals
           </h3>
           <button
             onClick={() => {
@@ -1033,46 +1034,55 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                 return;
               }
 
-              setShowAddGoalForm(!showAddGoalForm);
-              if (showAddGoalForm) {
-                setEditingGoal(null);
-                setNewGoal({
-                  title: '',
-                  description: '',
-                  targetAmount: '',
-                  targetDate: '',
-                  goalType: 'task',
-                  duration: '',
-                  distance: ''
-                });
-                setTargetAmountError('');
-              }
+              setEditingGoal(null);
+              setNewGoal({
+                title: '',
+                description: '',
+                targetAmount: '',
+                targetDate: '',
+                goalType: 'task',
+                duration: '',
+                distance: ''
+              });
+              setTargetAmountError('');
+              setShowAddGoalForm(true);
             }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
           >
             <Plus className="w-4 h-4 mr-2" />
-            {editingGoal ? 'Cancel Edit' : 'New Goal'}
+            New Goal
           </button>
         </div>
+      </div>
 
-        {showAddGoalForm && (() => {
+      {/* Goal Create/Edit Modal */}
+      <CreateItemModal
+        isOpen={showAddGoalForm}
+        title={editingGoal ? 'Edit Goal' : 'Create Goal'}
+        onClose={() => {
+          setShowAddGoalForm(false);
+          setEditingGoal(null);
+          setNewGoal({ title: '', description: '', targetAmount: '', targetDate: '', goalType: 'task', duration: '', distance: '' });
+          setTargetAmountError('');
+        }}
+        onSubmit={editingGoal ? handleUpdateGoal : handleAddGoal}
+        submitLabel={editingGoal ? 'Update Goal' : 'Create Goal'}
+      >
+        {(() => {
           const activeGoalCount = goals.filter(g => !g.completed).length;
           const canAddGoal = plan === 'paid' || activeGoalCount < 2;
 
           if (!canAddGoal && !editingGoal) {
             return (
-              <div className="border-t pt-4">
-                <UpgradePrompt
-                  feature="Unlimited Goals"
-                  description="Free users can have up to 2 active goals. Upgrade to the paid plan to create unlimited goals and track all your ambitions."
-                />
-              </div>
+              <UpgradePrompt
+                feature="Unlimited Goals"
+                description="Free users can have up to 2 active goals. Upgrade to the paid plan to create unlimited goals and track all your ambitions."
+              />
             );
           }
 
           return (
-          <form onSubmit={editingGoal ? handleUpdateGoal : handleAddGoal} className="space-y-4 border-t pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Title</label>
                 <input
@@ -1080,32 +1090,43 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                   value={newGoal.title}
                   onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
                   placeholder="e.g., Run 100km this month"
-                  className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                  autoFocus
                 />
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Type</label>
-                <select
-                  value={newGoal.goalType}
-                  onChange={(e) => {
-                    setNewGoal({ ...newGoal, goalType: e.target.value as 'task' | 'time' | 'distance' });
-                    setTargetAmountError('');
-                  }}
-                  className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="task">Task</option>
-                  <option value="time">Time-based</option>
-                  <option value="distance">Distance-based</option>
-                </select>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Goal Type</label>
+                  <select
+                    value={newGoal.goalType}
+                    onChange={(e) => {
+                      setNewGoal({ ...newGoal, goalType: e.target.value as 'task' | 'time' | 'distance' });
+                      setTargetAmountError('');
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="task">Task</option>
+                    <option value="time">Time-based</option>
+                    <option value="distance">Distance-based</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date</label>
+                  <input
+                    type="date"
+                    value={newGoal.targetDate}
+                    onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
               </div>
 
               {newGoal.goalType === 'task' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Target Amount
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Amount</label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -1113,8 +1134,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                     value={newGoal.targetAmount}
                     onChange={(e) => handleTargetAmountChange(e.target.value)}
                     onBlur={handleTargetAmountBlur}
-                    placeholder="e.g., 100km, 50h, 30 times"
-                    className={`w-full px-2 py-2 text-sm border ${targetAmountError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 ${targetAmountError ? 'focus:ring-red-500' : 'focus:ring-blue-500'}`}
+                    placeholder="e.g., 30 times"
+                    className={`w-full px-3 py-2 border ${targetAmountError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 ${targetAmountError ? 'focus:ring-red-500' : 'focus:ring-blue-500'}`}
                     required
                   />
                   {targetAmountError && (
@@ -1131,15 +1152,13 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                     value={newGoal.duration}
                     onChange={(e) => setNewGoal({ ...newGoal, duration: e.target.value })}
                     placeholder="e.g., 30min, 1h 15m, 2 hours"
-                    className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 30min, 1h 30m, 2 hours
-                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 30min, 1h 30m, 2 hours</p>
                 </div>
               )}
-              
+
               {newGoal.goalType === 'distance' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distance</label>
@@ -1148,56 +1167,28 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                     value={newGoal.distance}
                     onChange={(e) => setNewGoal({ ...newGoal, distance: e.target.value })}
                     placeholder="e.g., 5km, 3 miles, 2000m"
-                    className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 5km, 3 miles, 2000m
-                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 5km, 3 miles, 2000m</p>
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Date</label>
-                <input
-                  type="date"
-                  value={newGoal.targetDate}
-                  onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
-                  className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
+                <textarea
+                  ref={textareaRef}
+                  value={newGoal.description}
+                  onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                  placeholder="Describe your goal..."
+                  rows={2}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
-              <textarea
-                ref={textareaRef}
-                value={newGoal.description}
-                onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
-                placeholder="Describe your goal..."
-                rows={1}
-                style={{ minHeight: '2.5rem', resize: 'none' }}
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = 'auto';
-                  target.style.height = target.scrollHeight + 'px';
-                }}
-                className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
-            >
-              <Target className="w-4 h-4 mr-2" />
-              {editingGoal ? 'Update Goal' : 'Create Goal'}
-            </button>
-          </form>
+            </>
           );
         })()}
-      </div>
+      </CreateItemModal>
 
       {/* Active Goals */}
       {activeNonOverdueGoals.length > 0 && (

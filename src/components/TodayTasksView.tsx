@@ -6,6 +6,7 @@ import { parseAmountByType } from '../utils/parsing';
 import { formatDistanceDisplay, formatDurationDisplay } from '../utils/formatting';
 import { supabase } from '../lib/supabase';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { CreateItemModal } from './CreateItemModal';
 import { QuickGuide } from './QuickGuide';
 
 interface TodayTasksViewProps {
@@ -550,189 +551,126 @@ export function TodayTasksView({
 
   return (
     <div className="space-y-6">
-      {/* Add Task Form for Today */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-            <Plus className="w-5 h-5 mr-2" />
-            Add Task for Today ({DAYS.find(d => d.key === currentDay)?.label})
-          </h3>
-          <button
-            onClick={() => {
-              if (showAddScheduleForm) {
-                handleCancelScheduleEdit();
-              } else {
-                setShowAddScheduleForm(true);
-              }
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            {showAddScheduleForm ? (editingScheduleItem ? 'Cancel Edit' : 'Cancel') : 'Add Task'}
-          </button>
+      <CreateItemModal
+        isOpen={showAddScheduleForm}
+        title={editingScheduleItem ? 'Edit Task' : 'Create Task'}
+        onClose={handleCancelScheduleEdit}
+        onSubmit={editingScheduleItem ? handleUpdateScheduleItem : handleAddScheduleItem}
+        submitLabel={editingScheduleItem ? 'Update Task' : 'Create Task'}
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task Title</label>
+          <input
+            type="text"
+            value={newScheduleItem.title}
+            onChange={(e) => setNewScheduleItem({ ...newScheduleItem, title: e.target.value })}
+            placeholder="e.g., Morning workout, Run 5km, Study for 2 hours"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoFocus
+          />
         </div>
 
-        {/* Add Schedule Form for Today */}
-        {showAddScheduleForm && (
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-600">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
-              {editingScheduleItem ? 'Edit Task' : `Add Task for ${DAYS.find(d => d.key === selectedDayForToday)?.label}`}
-            </h4>
-            
-            <form onSubmit={editingScheduleItem ? handleUpdateScheduleItem : handleAddScheduleItem} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task</label>
-                  <input
-                    type="text"
-                    value={newScheduleItem.title}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, title: e.target.value })}
-                    placeholder="e.g., Morning workout, Run 5km, Study for 2 hours"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Tip: Use similar titles to your goals to automatically track progress
-                  </p>
-                </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
+            <input
+              type="time"
+              value={newScheduleItem.time}
+              onChange={(e) => setNewScheduleItem({ ...newScheduleItem, time: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label>
+            <select
+              value={newScheduleItem.type}
+              onChange={(e) => setNewScheduleItem({ ...newScheduleItem, type: e.target.value as 'task' | 'time' | 'distance' })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="task">Task</option>
+              <option value="time">Time-based</option>
+              <option value="distance">Distance-based</option>
+            </select>
+          </div>
+        </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
-                  <input
-                    type="time"
-                    value={newScheduleItem.time}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, time: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label>
-                  <select
-                    value={newScheduleItem.type}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, type: e.target.value as 'task' | 'time' | 'distance' })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="task">Task</option>
-                    <option value="time">Time-based</option>
-                    <option value="distance">Distance-based</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Conditional fields based on type */}
-              {newScheduleItem.type === 'task' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Times</label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={newScheduleItem.targetNumber}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, targetNumber: e.target.value })}
-                    placeholder="e.g., 1, 3, 5"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    How many times to complete this task
-                  </p>
-                </div>
-              )}
-
-              {newScheduleItem.type === 'time' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
-                  <input
-                    type="text"
-                    value={newScheduleItem.duration}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, duration: e.target.value })}
-                    placeholder="e.g., 30min, 1h 15m, 2 hours"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 30min, 1h 30m, 2 hours
-                  </p>
-                </div>
-              )}
-              
-              {newScheduleItem.type === 'distance' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distance</label>
-                  <input
-                    type="text"
-                    value={newScheduleItem.distance}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, distance: e.target.value })}
-                    placeholder="e.g., 5km, 3 miles, 2000m"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   required
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Examples: 5km, 3 miles, 2000m
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
-                <textarea
-                  ref={textareaRef}
-                  value={newScheduleItem.description}
-                  onChange={(e) => setNewScheduleItem({ ...newScheduleItem, description: e.target.value })}
-                  placeholder="Additional details..."
-                  rows={1}
-                  style={{ minHeight: '2.5rem', resize: 'none' }}
-                  onInput={(e) => {
-                    const target = e.target as HTMLTextAreaElement;
-                    target.style.height = 'auto';
-                    target.style.height = target.scrollHeight + 'px';
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link to Goal (optional)</label>
-                <select
-                  value={newScheduleItem.linkedGoalId}
-                  onChange={(e) => setNewScheduleItem({ ...newScheduleItem, linkedGoalId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">No linked goal</option>
-                  {goals.filter(g => !g.completed).map(goal => (
-                    <option key={goal.id} value={goal.id}>
-                      {goal.title} ({goal.currentAmount}/{goal.targetAmount} {goal.unit})
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Auto-update goal progress when completing this task
-                </p>
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
-                >
-                  {editingScheduleItem ? <Save className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
-                  {editingScheduleItem ? 'Update Task' : 'Add Task'}
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={handleCancelScheduleEdit}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex items-center"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Cancel
-                </button>
-              </div>
-            </form>
+        {newScheduleItem.type === 'task' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Number of Times</label>
+            <input
+              type="number"
+              min="1"
+              value={newScheduleItem.targetNumber}
+              onChange={(e) => setNewScheduleItem({ ...newScheduleItem, targetNumber: e.target.value })}
+              placeholder="e.g., 1, 3, 5"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">How many times to complete this task</p>
           </div>
         )}
-      </div>
+
+        {newScheduleItem.type === 'time' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration</label>
+            <input
+              type="text"
+              value={newScheduleItem.duration}
+              onChange={(e) => setNewScheduleItem({ ...newScheduleItem, duration: e.target.value })}
+              placeholder="e.g., 30min, 1h 15m, 2 hours"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 30min, 1h 30m, 2 hours</p>
+          </div>
+        )}
+
+        {newScheduleItem.type === 'distance' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distance</label>
+            <input
+              type="text"
+              value={newScheduleItem.distance}
+              onChange={(e) => setNewScheduleItem({ ...newScheduleItem, distance: e.target.value })}
+              placeholder="e.g., 5km, 3 miles, 2000m"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Examples: 5km, 3 miles, 2000m</p>
+          </div>
+        )}
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
+          <textarea
+            ref={textareaRef}
+            value={newScheduleItem.description}
+            onChange={(e) => setNewScheduleItem({ ...newScheduleItem, description: e.target.value })}
+            placeholder="Additional details..."
+            rows={2}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link to Goal (optional)</label>
+          <select
+            value={newScheduleItem.linkedGoalId}
+            onChange={(e) => setNewScheduleItem({ ...newScheduleItem, linkedGoalId: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">No linked goal</option>
+            {goals.filter(g => !g.completed).map(goal => (
+              <option key={goal.id} value={goal.id}>
+                {goal.title} ({goal.currentAmount}/{goal.targetAmount} {goal.unit})
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-update goal progress when completing this task</p>
+        </div>
+      </CreateItemModal>
 
       {/* Today's Tasks Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -767,10 +705,19 @@ export function TodayTasksView({
             )}
           </div>
           
-          <div className="text-right">
-            <div className="text-sm text-gray-500 dark:text-gray-400">Progress</div>
-            <div className="text-2xl font-bold text-blue-600">
-              {todayStats.completed}/{todayStats.total}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setShowAddScheduleForm(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Task
+            </button>
+            <div className="text-right">
+              <div className="text-sm text-gray-500 dark:text-gray-400">Progress</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {todayStats.completed}/{todayStats.total}
+              </div>
             </div>
           </div>
         </div>

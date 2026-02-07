@@ -1,15 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { CheckSquare, Plus, Trash2, Check, Square, Calendar, Target, Clock, BookOpen as Edit3, Save, X } from 'lucide-react';
-import { Task, ScheduleItem } from '../types';
+import { Calendar, Plus, Trash2, Save, X, BookOpen as Edit3 } from 'lucide-react';
+import { ScheduleItem } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { CreateItemModal } from './CreateItemModal';
 import { QuickGuide } from './QuickGuide';
 
 interface TasksViewProps {
-  tasks: Task[];
+  tasks: never[];
   scheduleItems: ScheduleItem[];
-  onAddTask: (task: Task) => void;
-  onUpdateTask: (task: Task) => void;
+  onAddTask: (task: never) => void;
+  onUpdateTask: (task: never) => void;
   onDeleteTask: (id: string) => void;
   onAddScheduleItem: (item: ScheduleItem) => void;
   onUpdateScheduleItem: (item: ScheduleItem) => void;
@@ -26,34 +27,28 @@ const DAYS = [
   { key: 'sunday', label: 'Sunday' }
 ];
 
-export function TasksView({ 
-  tasks, 
-  scheduleItems, 
-  onAddTask, 
-  onUpdateTask, 
-  onDeleteTask,
+export function TasksView({
+  scheduleItems,
   onAddScheduleItem,
   onUpdateScheduleItem,
   onDeleteScheduleItem
 }: TasksViewProps) {
-  const [currentSlide, setCurrentSlide] = useState<'today' | 'weekly'>('today');
   const [selectedDayForToday, setSelectedDayForToday] = useState(getCurrentDay());
   const [selectedDay, setSelectedDay] = useState('monday');
-  const [showAddScheduleForm, setShowAddScheduleForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [editingScheduleItem, setEditingScheduleItem] = useState<ScheduleItem | null>(null);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
-  const [newScheduleItem, setNewScheduleItem] = useState({
+  const [formData, setFormData] = useState({
     time: '09:00',
     title: '',
     description: ''
   });
-  
+
   const today = fmtDateISO(new Date());
 
-  // Get current day of week
   function getCurrentDay() {
     const today = new Date();
-    const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const dayIndex = today.getDay();
     const adjustedIndex = dayIndex === 0 ? 6 : dayIndex - 1;
     const dayMap = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     return dayMap[adjustedIndex];
@@ -61,23 +56,6 @@ export function TasksView({
 
   const currentDay = selectedDayForToday;
 
-  // Navigation functions for day switching
-  const goToPreviousDay = () => {
-    const currentIndex = DAYS.findIndex(day => day.key === selectedDayForToday);
-    const previousIndex = currentIndex === 0 ? DAYS.length - 1 : currentIndex - 1;
-    setSelectedDayForToday(DAYS[previousIndex].key);
-  };
-
-  const goToNextDay = () => {
-    const currentIndex = DAYS.findIndex(day => day.key === selectedDayForToday);
-    const nextIndex = currentIndex === DAYS.length - 1 ? 0 : currentIndex + 1;
-    setSelectedDayForToday(DAYS[nextIndex].key);
-  };
-
-  const goToToday = () => {
-    setSelectedDayForToday(getCurrentDay());
-  };
-  // Get today's tasks from the weekly schedule
   const todaysTasks = useMemo(() => {
     return scheduleItems
       .filter(item => item.day === currentDay)
@@ -88,7 +66,6 @@ export function TasksView({
       .sort((a, b) => a.time.localeCompare(b.time));
   }, [scheduleItems, currentDay, today]);
 
-  // Group schedule items by day for weekly view
   const itemsByDay = useMemo(() => {
     const grouped: { [key: string]: ScheduleItem[] } = {};
     DAYS.forEach(day => {
@@ -99,105 +76,69 @@ export function TasksView({
     return grouped;
   }, [scheduleItems]);
 
-  // Calculate completion stats for today's tasks
-  const todayStats = useMemo(() => {
-    const total = todaysTasks.length;
-    const completed = todaysTasks.filter(task => task.completed).length;
-    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-    
-    return { total, completed, percentage };
-  }, [todaysTasks]);
-
-  // Calculate weekly schedule stats
   const weeklyStats = useMemo(() => {
     const totalItems = scheduleItems.length;
     const completedItems = scheduleItems.filter(item => item.completedDates.includes(today)).length;
     const completionRate = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
-    
     return { total: totalItems, completed: completedItems, percentage: completionRate };
   }, [scheduleItems, today]);
 
-  const handleToggleTodayTask = (item: ScheduleItem) => {
-    const isCompletedToday = item.completedDates.includes(today);
-    let newCompletedDates;
-    
-    if (isCompletedToday) {
-      // Remove today from completed dates
-      newCompletedDates = item.completedDates.filter(date => date !== today);
-    } else {
-      // Add today to completed dates
-      newCompletedDates = [...item.completedDates, today];
-    }
-    
-    onUpdateScheduleItem({ 
-      ...item, 
-      completedDates: newCompletedDates
-    });
+  const resetForm = () => {
+    setFormData({ time: '09:00', title: '', description: '' });
+    setSelectedDay('monday');
+    setEditingScheduleItem(null);
+    setShowModal(false);
   };
 
-  const handleAddScheduleItem = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newScheduleItem.title.trim()) return;
-
-    const item: ScheduleItem = {
-      id: uid(),
-      day: selectedDay,
-      time: newScheduleItem.time,
-      title: newScheduleItem.title.trim(),
-      description: newScheduleItem.description.trim() || undefined,
-      completed: false,
-      completedDates: [],
-      completedCounts: {},
-      createdAt: new Date().toISOString()
-    };
-
-    onAddScheduleItem(item);
-    setNewScheduleItem({ time: '09:00', title: '', description: '' });
-    setShowAddScheduleForm(false);
+  const openCreateModal = () => {
+    resetForm();
+    setShowModal(true);
   };
 
-  const handleEditScheduleItem = (item: ScheduleItem) => {
+  const openEditModal = (item: ScheduleItem) => {
     setEditingScheduleItem(item);
-    setNewScheduleItem({
+    setFormData({
       time: item.time,
       title: item.title,
       description: item.description || ''
     });
     setSelectedDay(item.day);
-    setShowAddScheduleForm(true);
+    setShowModal(true);
   };
 
-  const handleUpdateScheduleItem = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingScheduleItem || !newScheduleItem.title.trim()) return;
+    if (!formData.title.trim()) return;
 
-    const updatedItem: ScheduleItem = {
-      ...editingScheduleItem,
-      day: selectedDay,
-      time: newScheduleItem.time,
-      title: newScheduleItem.title.trim(),
-      description: newScheduleItem.description.trim() || undefined
-    };
+    if (editingScheduleItem) {
+      const updatedItem: ScheduleItem = {
+        ...editingScheduleItem,
+        day: selectedDay,
+        time: formData.time,
+        title: formData.title.trim(),
+        description: formData.description.trim() || undefined
+      };
+      onUpdateScheduleItem(updatedItem);
+    } else {
+      const item: ScheduleItem = {
+        id: uid(),
+        day: selectedDay,
+        time: formData.time,
+        title: formData.title.trim(),
+        description: formData.description.trim() || undefined,
+        completed: false,
+        completedDates: [],
+        completedCounts: {},
+        createdAt: new Date().toISOString()
+      };
+      onAddScheduleItem(item);
+    }
 
-    onUpdateScheduleItem(updatedItem);
-    setEditingScheduleItem(null);
-    setNewScheduleItem({ time: '09:00', title: '', description: '' });
-    setShowAddScheduleForm(false);
-  };
-
-  const handleDeleteScheduleItem = (id: string) => {
-    setDeletingItemId(id);
-  };
-
-  const handleCancelScheduleEdit = () => {
-    setEditingScheduleItem(null);
-    setNewScheduleItem({ time: '09:00', title: '', description: '' });
-    setShowAddScheduleForm(false);
+    resetForm();
   };
 
   return (
     <div className="space-y-6">
-      {/* Weekly Schedule Management */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
@@ -212,106 +153,19 @@ export function TasksView({
           </div>
         </div>
 
-        {/* Add Schedule Item Button */}
         <button
-          onClick={() => {
-            if (showAddScheduleForm) {
-              handleCancelScheduleEdit();
-            } else {
-              setShowAddScheduleForm(true);
-            }
-          }}
+          onClick={openCreateModal}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center mb-4"
         >
           <Plus className="w-4 h-4 mr-2" />
-          {showAddScheduleForm ? (editingScheduleItem ? 'Cancel Edit' : 'Cancel') : 'Add Task to Schedule'}
+          Add Task to Schedule
         </button>
 
-        {/* Add/Edit Schedule Form */}
-        {showAddScheduleForm && (
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-600">
-            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
-              {editingScheduleItem ? 'Edit Task' : `Add Task for ${DAYS.find(d => d.key === selectedDay)?.label}`}
-            </h4>
-            
-            <form onSubmit={editingScheduleItem ? handleUpdateScheduleItem : handleAddScheduleItem} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
-                  <input
-                    type="time"
-                    value={newScheduleItem.time}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, time: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task Title</label>
-                  <input
-                    type="text"
-                    value={newScheduleItem.title}
-                    onChange={(e) => setNewScheduleItem({ ...newScheduleItem, title: e.target.value })}
-                    placeholder="e.g., Morning workout, Team meeting, Grocery shopping"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Day</label>
-                  <select
-                    value={selectedDay}
-                    onChange={(e) => setSelectedDay(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {DAYS.map(day => (
-                      <option key={day.key} value={day.key}>{day.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
-                <textarea
-                  value={newScheduleItem.description}
-                  onChange={(e) => setNewScheduleItem({ ...newScheduleItem, description: e.target.value })}
-                  placeholder="Additional details..."
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
-                >
-                  {editingScheduleItem ? <Save className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
-                  {editingScheduleItem ? 'Update Task' : 'Add Task'}
-                </button>
-                
-                <button
-                  type="button"
-                  onClick={handleCancelScheduleEdit}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex items-center"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* All Days Schedule Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
           {DAYS.map(day => (
             <div key={day.key} className={`bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border-2 transition-all ${
-              day.key === currentDay 
-                ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900' 
+              day.key === currentDay
+                ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900'
                 : 'border-gray-200 dark:border-gray-600'
             }`}>
               <div className="flex items-center justify-between mb-3">
@@ -323,7 +177,7 @@ export function TasksView({
                   {itemsByDay[day.key].length}
                 </span>
               </div>
-              
+
               {itemsByDay[day.key].length === 0 ? (
                 <div className="text-center py-4">
                   <Calendar className="w-6 h-6 text-gray-300 dark:text-gray-600 mx-auto mb-1" />
@@ -352,17 +206,17 @@ export function TasksView({
                             </p>
                           )}
                         </div>
-                        
+
                         <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
                           <button
-                            onClick={() => handleEditScheduleItem(item)}
+                            onClick={() => openEditModal(item)}
                             className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded transition-colors"
                             title="Edit task"
                           >
                             <Edit3 className="w-3 h-3" />
                           </button>
                           <button
-                            onClick={() => handleDeleteScheduleItem(item.id)}
+                            onClick={() => setDeletingItemId(item.id)}
                             className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded transition-colors"
                             title="Delete task"
                           >
@@ -389,6 +243,63 @@ export function TasksView({
           ]}
         />
       )}
+
+      <CreateItemModal
+        isOpen={showModal}
+        title={editingScheduleItem ? 'Edit Task' : 'Create Task'}
+        onClose={resetForm}
+        onSubmit={handleSubmit}
+        submitLabel={editingScheduleItem ? 'Update Task' : 'Create Task'}
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task Title</label>
+          <input
+            type="text"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            placeholder="e.g., Morning workout, Team meeting"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoFocus
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
+            <input
+              type="time"
+              value={formData.time}
+              onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Day</label>
+            <select
+              value={selectedDay}
+              onChange={(e) => setSelectedDay(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {DAYS.map(day => (
+                <option key={day.key} value={day.key}>{day.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (optional)</label>
+          <textarea
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            placeholder="Additional details..."
+            rows={2}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </CreateItemModal>
 
       <ConfirmDeleteModal
         isOpen={deletingItemId !== null}
