@@ -1638,12 +1638,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                   {stat.currentStreak > 0 && (
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Current Streak:</span>
-                      <span className="font-medium text-green-600">{stat.currentStreak} days</span>
+                      <span className="font-medium text-green-600">{stat.currentStreak} {stat.currentStreak === 1 ? 'day' : 'days'}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Best Streak:</span>
-                    <span className="font-medium text-blue-600">{stat.bestStreak} days</span>
+                    <span className="font-medium text-blue-600">{stat.bestStreak} {stat.bestStreak === 1 ? 'day' : 'days'}</span>
                   </div>
                   {stat.activityRecord > 0 && (
                     <div className="flex justify-between">
