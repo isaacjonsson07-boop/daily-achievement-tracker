@@ -121,16 +121,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     return name;
   };
 
-  // Helper function to calculate current streak and activity record for a category
-  const calculateBestStreak = (categoryName: string): number => {
-    const categoryEntries = entries
-      .filter(entry => entry.category === categoryName)
-      .map(entry => entry.date)
-      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime()); // Sort ascending for chronological order
+  // Helper function to calculate best streak from a set of dates
+  const calculateBestStreakFromDates = (dates: Set<string> | string[]): number => {
+    const dateArray = Array.from(dates);
+    if (dateArray.length === 0) return 0;
 
-    if (categoryEntries.length === 0) return 0;
-
-    const uniqueDates = [...new Set(categoryEntries)].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
     // Single day counts as 1 day streak
     if (uniqueDates.length === 1) return 1;
@@ -673,7 +669,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       const category = categories.find(c => c.name === name);
       const activeDays = categoryDays.get(name)?.size || 0;
       const avgPerDay = activeDays > 0 ? total / activeDays : 0;
-      const bestStreak = calculateBestStreak(name);
+      const datesForCategory = categoryDays.get(name) || new Set();
+      const bestStreak = calculateBestStreakFromDates(datesForCategory);
       const activityRecord = category?.activityRecord || 0;
       const uniqueActivities = categoryUniqueActivities.get(name) || new Set();
 
@@ -699,7 +696,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       if (category.isHabit && !categoryStats.find(stat => stat.name === category.name)) {
         const type = category.type;
         const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : 'Times';
-        const bestStreak = calculateBestStreak(category.name);
+        const datesForCategory = categoryDays.get(category.name) || new Set();
+        const bestStreak = calculateBestStreakFromDates(datesForCategory);
         const activityRecord = category.activityRecord || 0;
         categoryStats.push({
           name: category.name,
