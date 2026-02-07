@@ -617,6 +617,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     const categoryTypes = new Map<string, string>();
     const categoryDays = new Map<string, Set<string>>();
     const categoryUniqueActivities = new Map<string, Set<string>>();
+    const categoryIsHabitOnly = new Map<string, boolean>();
 
     categories.forEach(cat => {
       categoryTypes.set(cat.name, cat.type);
