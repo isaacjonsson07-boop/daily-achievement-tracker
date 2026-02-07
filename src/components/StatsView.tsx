@@ -130,8 +130,16 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
     const uniqueDates = [...new Set(dateArray)].sort((a, b) => new Date(a + 'T00:00:00').getTime() - new Date(b + 'T00:00:00').getTime());
 
-    // Single day counts as 1 day streak
-    if (uniqueDates.length === 1) return { current: 1, best: 1 };
+    // Single day: best streak is 1, current streak depends on recency
+    if (uniqueDates.length === 1) {
+      const today = new Date().toISOString().split('T')[0];
+      const singleDate = uniqueDates[0];
+      const singleDateObj = new Date(singleDate + 'T00:00:00');
+      const todayObj = new Date(today + 'T00:00:00');
+      const daysSince = Math.floor((todayObj.getTime() - singleDateObj.getTime()) / (1000 * 60 * 60 * 24));
+      // Current streak is 1 only if the date is today or yesterday
+      return { current: daysSince <= 1 ? 1 : 0, best: 1 };
+    }
 
     let maxStreak = 0;
     let tempStreak = 0;

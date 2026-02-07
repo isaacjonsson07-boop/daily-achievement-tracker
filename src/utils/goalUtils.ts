@@ -133,15 +133,23 @@ export const calculateScheduleAwareStreak = (
   // Current streak should only count if it's still active (includes today or yesterday)
   let current = 0;
   const todayIndex = scheduledDates.indexOf(todayStr);
+  const todayCompleted = completedSet.has(todayStr);
+
+  // Check if today is a non-scheduled day but was completed
+  const todayIsNonScheduledCompletion = todayIndex < 0 && todayCompleted;
 
   // Start from today if today is scheduled and completed, or from the last scheduled date
   let startIndex = todayIndex >= 0 ? todayIndex : scheduledDates.length - 1;
 
   // If today is scheduled but not completed, current streak is 0
-  if (todayIndex >= 0 && !completedSet.has(todayStr)) {
+  if (todayIndex >= 0 && !todayCompleted) {
     current = 0;
   } else {
-    // Count backwards from the starting position
+    // If today is a non-scheduled day with a completion, start with 1
+    if (todayIsNonScheduledCompletion) {
+      current = 1;
+    }
+    // Count backwards from the starting position (scheduled days)
     for (let i = startIndex; i >= 0; i--) {
       if (completedSet.has(scheduledDates[i])) {
         current++;
