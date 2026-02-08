@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Entry, Category, Converter, Task, Goal, JournalEntry, ScheduleItem, TabType, Habit, HabitCompletion } from './types';
 import { DEFAULT_CATEGORIES, DEFAULT_CONVERTERS } from './constants';
 import { startOfMonth, endOfMonth, fmtDateISO, uid } from './utils/dateUtils';
@@ -54,7 +54,8 @@ function App() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [habitCompletions, setHabitCompletions] = useState<HabitCompletion[]>([]);
 
-  // Load data from localStorage on mount (fallback)
+  const initialLoadDone = useRef(false);
+
   useEffect(() => {
     const data = loadFromStorage();
     if (data.entries) setEntries(data.entries);
@@ -67,6 +68,7 @@ function App() {
     if (data.habits) setHabits(data.habits);
     if (data.habitCompletions) setHabitCompletions(data.habitCompletions);
     if (data.month) setMonth(data.month);
+    initialLoadDone.current = true;
   }, []);
 
   const userId = user?.id;
@@ -78,8 +80,8 @@ function App() {
     }
   }, [userId, authLoading]);
 
-  // Save data to both localStorage and cloud when state changes
   useEffect(() => {
+    if (!initialLoadDone.current) return;
     saveToStorage({ entries, categories, converters, tasks, goals, journalEntries, scheduleItems, habits, habitCompletions, month });
     if (userId) {
       saveDataToCloud();
@@ -110,12 +112,12 @@ function App() {
         return;
       }
 
-      if (data.entries) setEntries(data.entries);
-      if (data.categories) setCategories(data.categories);
-      if (data.converters) setConverters(data.converters);
-      if (data.tasks) setTasks(data.tasks);
-      if (data.goals) setGoals(data.goals);
-      if (data.scheduleItems) setScheduleItems(data.scheduleItems);
+      if (data.entries?.length) setEntries(data.entries);
+      if (data.categories?.length) setCategories(data.categories);
+      if (data.converters?.length) setConverters(data.converters);
+      if (data.tasks?.length) setTasks(data.tasks);
+      if (data.goals?.length) setGoals(data.goals);
+      if (data.scheduleItems?.length) setScheduleItems(data.scheduleItems);
     } catch (error) {
       console.error('Failed to load from cloud:', error);
     } finally {
