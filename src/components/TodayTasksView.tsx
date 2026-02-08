@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Repeat, Pencil, Trash2 } from 'lucide-react';
+import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Repeat, Pencil, Trash2, Star } from 'lucide-react';
 import { ScheduleItem, Goal, Habit, HabitCompletion, Converter } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 import { parseAmountByType } from '../utils/parsing';
@@ -27,6 +27,10 @@ interface TodayTasksViewProps {
 interface HabitWithCompletion extends Habit {
   completion?: HabitCompletion;
   isCompleted: boolean;
+}
+
+function isStarred(item: { starred?: boolean }): boolean {
+  return item.starred !== false;
 }
 
 const DAYS = [
@@ -132,14 +136,16 @@ export function TodayTasksView({
 
     const completionsForToday = habitCompletions.filter(c => c.completion_date === selectedDate);
 
-    const habitsWithCompletions: HabitWithCompletion[] = habitsForDay.map(habit => {
-      const completion = completionsForToday.find(c => c.habit_id === habit.id);
-      return {
-        ...habit,
-        completion,
-        isCompleted: !!completion
-      };
-    });
+    const habitsWithCompletions: HabitWithCompletion[] = habitsForDay
+      .map(habit => {
+        const completion = completionsForToday.find(c => c.habit_id === habit.id);
+        return {
+          ...habit,
+          completion,
+          isCompleted: !!completion
+        };
+      })
+      .filter(habit => habit.isCompleted || isStarred(habit));
 
     setHabits(habitsWithCompletions);
   };
@@ -277,6 +283,7 @@ export function TodayTasksView({
           completed: completedCount >= targetCount
         };
       })
+      .filter(item => item.completed || isStarred(item))
       .sort((a, b) => a.time.localeCompare(b.time));
   }, [scheduleItems, dayOffset, selectedDate, currentDay]);
 
@@ -469,12 +476,38 @@ export function TodayTasksView({
       completed: false,
       completedDates: [],
       completedCounts: {},
+      starred: true,
       createdAt: new Date().toISOString()
     };
 
     onAddScheduleItem(item);
     setNewScheduleItem({ time: '09:00', title: '', description: '', type: 'task', targetNumber: '', duration: '', distance: '', linkedGoalId: '' });
     setShowAddScheduleForm(false);
+  };
+
+  const handleToggleTaskStar = (taskId: string) => {
+    const task = scheduleItems.find(item => item.id === taskId);
+    if (!task) return;
+    onUpdateScheduleItem({ ...task, starred: !isStarred(task) });
+  };
+
+  const handleToggleHabitStar = async (habit: HabitWithCompletion) => {
+    const newStarred = !isStarred(habit);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('habits')
+          .update({ starred: newStarred, updated_at: new Date().toISOString() })
+          .eq('id', habit.id);
+        if (onHabitCompletionChange) onHabitCompletionChange();
+      }
+    } catch (error) {
+      console.error('Error toggling habit star:', error);
+    }
+    setHabits(prev => prev.map(h =>
+      h.id === habit.id ? { ...h, starred: newStarred } : h
+    ));
   };
 
   const handleEditScheduleItem = (item: ScheduleItem) => {
@@ -835,6 +868,16 @@ export function TodayTasksView({
                   </div>
 
                   <div className="flex items-center space-x-2 ml-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleHabitStar(habit);
+                      }}
+                      className="p-1 rounded transition-colors hover:bg-yellow-100 dark:hover:bg-yellow-900"
+                      title={isStarred(habit) ? 'Unstar habit' : 'Star habit'}
+                    >
+                      <Star className={`w-4 h-4 ${isStarred(habit) ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300 dark:text-gray-600'}`} />
+                    </button>
                     <div
                       className="cursor-pointer"
                       onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
@@ -954,6 +997,16 @@ export function TodayTasksView({
                 </div>
 
                 <div className="flex items-center space-x-2 ml-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleTaskStar(task.id);
+                    }}
+                    className="p-1 rounded transition-colors hover:bg-yellow-100 dark:hover:bg-yellow-900"
+                    title={isStarred(task) ? 'Unstar task' : 'Star task'}
+                  >
+                    <Star className={`w-4 h-4 ${isStarred(task) ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300 dark:text-gray-600'}`} />
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

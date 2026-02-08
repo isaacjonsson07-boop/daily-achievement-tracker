@@ -70,17 +70,18 @@ export type TabType = 'log' | 'stats' | 'tasks' | 'journaling' | 'settings' | 'h
 
 export interface ScheduleItem {
   id: string;
-  day: string; // 'monday', 'tuesday', etc.
-  time: string; // '09:00'
+  day: string;
+  time: string;
   title: string;
   description?: string;
-  targetNumber?: number; // For task-based items, how many times to complete
-  duration?: string; // For time-based tasks like "30min", "1h 30m"
-  distance?: string; // For distance-based tasks like "5km", "3 miles"
-  linkedGoalId?: string; // Link to a Goal ID to auto-update progress
-  completed: boolean; // This will track completion for the current week
-  completedDates: string[]; // Track which specific dates this was completed
-  completedCounts?: { [date: string]: number }; // Track how many times completed on each date
+  targetNumber?: number;
+  duration?: string;
+  distance?: string;
+  linkedGoalId?: string;
+  completed: boolean;
+  completedDates: string[];
+  completedCounts?: { [date: string]: number };
+  starred?: boolean;
   createdAt: string;
 }
 
@@ -89,12 +90,13 @@ export interface Habit {
   user_id: string;
   name: string;
   target_number: number;
-  days_of_week: number[]; // 0=Sunday, 1=Monday, 2=Tuesday, etc.
+  days_of_week: number[];
   time: string;
   description?: string;
   duration?: string;
   distance?: string;
   linked_goal_id?: string;
+  starred?: boolean;
   created_at: string;
   updated_at: string;
 }

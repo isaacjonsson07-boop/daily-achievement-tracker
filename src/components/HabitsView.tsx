@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Calendar, Plus, Trash2, Save, X, Pencil } from 'lucide-react';
+import { Calendar, Plus, Trash2, Save, X, Pencil, Star } from 'lucide-react';
 import { Habit, Goal } from '../types';
 import { supabase } from '../lib/supabase';
 import { uid } from '../utils/dateUtils';
@@ -307,6 +307,26 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
     setShowAddForm(false);
   };
 
+  const handleToggleStar = async (habit: Habit) => {
+    const newStarred = habit.starred === false ? true : false;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('habits')
+          .update({ starred: newStarred, updated_at: new Date().toISOString() })
+          .eq('id', habit.id);
+        onHabitsChange();
+      } else {
+        setHabits(prev => prev.map(h =>
+          h.id === habit.id ? { ...h, starred: newStarred } : h
+        ));
+      }
+    } catch (error) {
+      console.error('Error toggling star:', error);
+    }
+  };
+
   const getDayName = (dayNum: number) => {
     const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return dayMap[dayNum];
@@ -556,6 +576,9 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
                   Description
                 </th>
                 <th className="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 whitespace-nowrap">
+                  Star
+                </th>
+                <th className="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 whitespace-nowrap">
                   Actions
                 </th>
               </tr>
@@ -563,7 +586,7 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
             <tbody>
               {habits.length === 0 ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-12 text-center border border-gray-300 dark:border-gray-600">
+                  <td colSpan={13} className="px-4 py-12 text-center border border-gray-300 dark:border-gray-600">
                     <Calendar className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-500 dark:text-gray-400">No habits yet. Create your first habit to get started!</p>
                   </td>
@@ -693,6 +716,16 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
                         ) : (
                           '-'
                         )}
+                      </td>
+
+                      <td className="px-3 py-3 text-center border border-gray-300 dark:border-gray-600">
+                        <button
+                          onClick={() => handleToggleStar(habit)}
+                          className="p-1.5 rounded transition-colors hover:bg-yellow-100 dark:hover:bg-yellow-900 mx-auto"
+                          title={habit.starred !== false ? 'Unstar habit' : 'Star habit'}
+                        >
+                          <Star className={`w-4 h-4 ${habit.starred !== false ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300 dark:text-gray-600'}`} />
+                        </button>
                       </td>
 
                       <td className="px-3 py-3 border border-gray-300 dark:border-gray-600">
