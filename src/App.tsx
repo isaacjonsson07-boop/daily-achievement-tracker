@@ -112,12 +112,12 @@ function App() {
         return;
       }
 
-      if (data.entries?.length) setEntries(data.entries);
-      if (data.categories?.length) setCategories(data.categories);
-      if (data.converters?.length) setConverters(data.converters);
-      if (data.tasks?.length) setTasks(data.tasks);
-      if (data.goals?.length) setGoals(data.goals);
-      if (data.scheduleItems?.length) setScheduleItems(data.scheduleItems);
+      if (data.entries !== undefined) setEntries(data.entries);
+      if (data.categories !== undefined) setCategories(data.categories);
+      if (data.converters !== undefined) setConverters(data.converters);
+      if (data.tasks !== undefined) setTasks(data.tasks);
+      if (data.goals !== undefined) setGoals(data.goals);
+      if (data.scheduleItems !== undefined) setScheduleItems(data.scheduleItems);
     } catch (error) {
       console.error('Failed to load from cloud:', error);
     } finally {
@@ -424,15 +424,39 @@ function App() {
   };
 
   const handleAddScheduleItem = (item: ScheduleItem) => {
-    setScheduleItems(prev => [...prev, item]);
+    setScheduleItems(prev => {
+      const updated = [...prev, item];
+      const dataToSave = { entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated, habits, habitCompletions, month };
+      saveToStorage(dataToSave);
+      if (userId) {
+        saveToCloud({ entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated });
+      }
+      return updated;
+    });
   };
 
   const handleUpdateScheduleItem = (updatedItem: ScheduleItem) => {
-    setScheduleItems(prev => prev.map(item => item.id === updatedItem.id ? updatedItem : item));
+    setScheduleItems(prev => {
+      const updated = prev.map(item => item.id === updatedItem.id ? updatedItem : item);
+      const dataToSave = { entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated, habits, habitCompletions, month };
+      saveToStorage(dataToSave);
+      if (userId) {
+        saveToCloud({ entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated });
+      }
+      return updated;
+    });
   };
 
   const handleDeleteScheduleItem = (id: string) => {
-    setScheduleItems(prev => prev.filter(item => item.id !== id));
+    setScheduleItems(prev => {
+      const updated = prev.filter(item => item.id !== id);
+      const dataToSave = { entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated, habits, habitCompletions, month };
+      saveToStorage(dataToSave);
+      if (userId) {
+        saveToCloud({ entries, categories, converters, tasks, goals, journalEntries, scheduleItems: updated });
+      }
+      return updated;
+    });
   };
 
   if (authLoading) {
