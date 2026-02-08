@@ -667,6 +667,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
   };
 
   const stats = useMemo(() => {
+    const today = fmtDateISO(new Date());
     const categoryTotals = new Map<string, number>();
     const categoryTypes = new Map<string, string>();
     const categoryDays = new Map<string, Set<string>>();
@@ -904,6 +905,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         entryCount: uniqueActivities.size,
         formattedTotal: formatSingleUnit(type, total, baseUnit, converters),
         isHabit: category?.isHabit || false,
+        hasToday: categoryDays.get(name)?.has(today) || false,
         activeDays,
         avgPerDay,
         formattedAvgPerDay: formatSingleUnit(type, avgPerDay, baseUnit, converters),
@@ -942,6 +944,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           entryCount: 0,
           formattedTotal: formatSingleUnit(type, 0, baseUnit, converters),
           isHabit: true,
+          hasToday: categoryDays.get(category.name)?.has(today) || false,
           activeDays: 0,
           avgPerDay: 0,
           formattedAvgPerDay: formatSingleUnit(type, 0, baseUnit, converters),
@@ -1618,12 +1621,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           <TrendingUp className="w-5 h-5 mr-2" />
           Today's Achievements
         </h3>
-        
-        {stats.length === 0 ? (
+
+        {stats.filter(s => s.hasToday || s.isHabit).length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400 text-center py-8">No activities recorded yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {stats.map(stat => (
+            {stats.filter(s => s.hasToday || s.isHabit).map(stat => (
               <div key={stat.name} className="p-4 rounded-lg border-2 transition-all border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-semibold text-gray-800 dark:text-white">{stat.name}</h4>

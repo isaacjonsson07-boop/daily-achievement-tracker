@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Repeat, Pencil, Trash2, Star } from 'lucide-react';
+import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Repeat, Pencil, Trash2 } from 'lucide-react';
 import { ScheduleItem, Goal, Habit, HabitCompletion, Converter } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 import { parseAmountByType } from '../utils/parsing';
@@ -19,7 +19,6 @@ interface TodayTasksViewProps {
   onUpdateGoal: (goal: Goal) => void;
   onGoalUpdate?: () => void;
   onHabitCompletionChange?: () => void;
-  onHabitsChange?: () => void;
   allHabits: Habit[];
   habitCompletions: HabitCompletion[];
   setHabitCompletions: React.Dispatch<React.SetStateAction<HabitCompletion[]>>;
@@ -50,7 +49,6 @@ export function TodayTasksView({
   onUpdateGoal,
   onGoalUpdate,
   onHabitCompletionChange,
-  onHabitsChange,
   allHabits,
   habitCompletions,
   setHabitCompletions
@@ -72,7 +70,6 @@ export function TodayTasksView({
     linkedGoalId: ''
   });
   const [habits, setHabits] = useState<HabitWithCompletion[]>([]);
-  const [allDayHabits, setAllDayHabits] = useState<HabitWithCompletion[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function getDateFromOffset(offset: number): Date {
@@ -135,7 +132,7 @@ export function TodayTasksView({
 
     const completionsForToday = habitCompletions.filter(c => c.completion_date === selectedDate);
 
-    const allHabitsWithCompletions: HabitWithCompletion[] = habitsForDay.map(habit => {
+    const habitsWithCompletions: HabitWithCompletion[] = habitsForDay.map(habit => {
       const completion = completionsForToday.find(c => c.habit_id === habit.id);
       return {
         ...habit,
@@ -144,8 +141,7 @@ export function TodayTasksView({
       };
     });
 
-    setAllDayHabits(allHabitsWithCompletions);
-    setHabits(allHabitsWithCompletions.filter(h => h.isCompleted || h.starred !== false));
+    setHabits(habitsWithCompletions);
   };
 
   const handleToggleHabit = async (habit: HabitWithCompletion) => {
@@ -268,29 +264,7 @@ export function TodayTasksView({
     }
   };
 
-  const handleToggleHabitStar = async (habit: HabitWithCompletion) => {
-    const newStarred = !(habit.starred !== false);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { error } = await supabase
-        .from('habits')
-        .update({ starred: newStarred })
-        .eq('id', habit.id);
-      if (error) {
-        console.error('Error toggling habit star:', error);
-        return;
-      }
-      if (onHabitsChange) onHabitsChange();
-    }
-  };
-
-  const handleToggleTaskStar = (taskId: string) => {
-    const task = scheduleItems.find(item => item.id === taskId);
-    if (!task) return;
-    onUpdateScheduleItem({ ...task, starred: !(task.starred !== false) });
-  };
-
-  const allTasksForDay = useMemo(() => {
+  const todaysTasks = useMemo(() => {
     return scheduleItems
       .filter(item => item.day === currentDay)
       .map(item => {
@@ -305,23 +279,19 @@ export function TodayTasksView({
       .sort((a, b) => a.time.localeCompare(b.time));
   }, [scheduleItems, dayOffset, selectedDate, currentDay]);
 
-  const todaysTasks = useMemo(() => {
-    return allTasksForDay.filter(task => task.completed || task.starred !== false);
-  }, [allTasksForDay]);
-
   const todayStats = useMemo(() => {
-    const tasksTotal = allTasksForDay.length;
-    const habitsTotal = allDayHabits.length;
+    const tasksTotal = todaysTasks.length;
+    const habitsTotal = habits.length;
     const total = tasksTotal + habitsTotal;
 
-    const tasksCompleted = allTasksForDay.filter(task => task.completed).length;
-    const habitsCompleted = allDayHabits.filter(h => h.isCompleted).length;
+    const tasksCompleted = todaysTasks.filter(task => task.completed).length;
+    const habitsCompleted = habits.filter(h => h.isCompleted).length;
     const completed = tasksCompleted + habitsCompleted;
 
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return { total, completed, percentage };
-  }, [allTasksForDay, allDayHabits]);
+  }, [todaysTasks, habits]);
 
   // Handler for toggling task completion
   const handleToggleTaskCompletion = (taskId: string) => {
@@ -863,16 +833,6 @@ export function TodayTasksView({
                   </div>
 
                   <div className="flex items-center space-x-2 ml-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleHabitStar(habit);
-                      }}
-                      className="p-1 rounded transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
-                      title={habit.starred !== false ? 'Unstar habit' : 'Star habit'}
-                    >
-                      <Star className={`w-4 h-4 ${habit.starred !== false ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-500'}`} />
-                    </button>
                     <div
                       className="cursor-pointer"
                       onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
@@ -992,16 +952,6 @@ export function TodayTasksView({
                 </div>
 
                 <div className="flex items-center space-x-2 ml-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleTaskStar(task.id);
-                    }}
-                    className="p-1 rounded transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
-                    title={task.starred !== false ? 'Unstar task' : 'Star task'}
-                  >
-                    <Star className={`w-4 h-4 ${task.starred !== false ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-500'}`} />
-                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

@@ -81,7 +81,6 @@ export interface ScheduleItem {
   completed: boolean; // This will track completion for the current week
   completedDates: string[]; // Track which specific dates this was completed
   completedCounts?: { [date: string]: number };
-  starred?: boolean;
   createdAt: string;
 }
 

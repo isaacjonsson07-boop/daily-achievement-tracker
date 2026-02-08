@@ -482,7 +482,6 @@ function App() {
             onUpdateGoal={handleUpdateGoal}
             onGoalUpdate={loadGoals}
             onHabitCompletionChange={loadHabitCompletions}
-            onHabitsChange={loadHabits}
             allHabits={habits}
             habitCompletions={habitCompletions}
             setHabitCompletions={setHabitCompletions}
