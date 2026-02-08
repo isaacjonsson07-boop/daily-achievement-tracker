@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Entry, Category, Converter, Task, Goal, JournalEntry, ScheduleItem, TabType, Habit, HabitCompletion } from './types';
 import { DEFAULT_CATEGORIES, DEFAULT_CONVERTERS } from './constants';
 import { startOfMonth, endOfMonth, fmtDateISO, uid } from './utils/dateUtils';
-import { loadFromStorage, saveToStorage } from './utils/storage';
+import { loadFromStorage, saveToStorage, getLocalUpdatedAt } from './utils/storage';
 import { saveToCloud, loadFromCloud } from './utils/cloudStorage';
 import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
@@ -102,6 +102,14 @@ function App() {
       }
 
       const data = res.data;
+      const localUpdatedAt = getLocalUpdatedAt();
+      const cloudUpdatedAt = data.updated_at;
+
+      if (localUpdatedAt && cloudUpdatedAt && localUpdatedAt > cloudUpdatedAt) {
+        saveDataToCloud();
+        return;
+      }
+
       if (data.entries) setEntries(data.entries);
       if (data.categories) setCategories(data.categories);
       if (data.converters) setConverters(data.converters);

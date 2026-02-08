@@ -72,5 +72,21 @@ export function loadFromStorage(): Partial<StorageData> {
 }
 
 export function saveToStorage(data: StorageData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    ...data,
+    updated_at: new Date().toISOString()
+  }));
+}
+
+export function getLocalUpdatedAt(): string | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      return p.updated_at || null;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
 }
