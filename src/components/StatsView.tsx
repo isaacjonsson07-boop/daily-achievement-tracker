@@ -1654,7 +1654,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                     <span className="font-medium text-gray-800 dark:text-white">{stat.formattedTotal}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Activities:</span>
+                    <span className="text-gray-600 dark:text-gray-400">Amount:</span>
                     <span className="font-medium text-gray-800 dark:text-white">{stat.entryCount}</span>
                   </div>
                   <div className="flex justify-between">
@@ -1717,7 +1717,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                 <tr className="border-b border-gray-200 dark:border-gray-600">
                   <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Category</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Total</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Activities</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Amount</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Type</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">View</th>
                 </tr>

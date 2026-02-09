@@ -62,7 +62,7 @@ export function TodayTotals({ entries, categories, converters, scheduleItems }: 
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-100 dark:border-gray-700">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Total Activities</span>
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Total Amount</span>
           <Target className="w-4 h-4 text-blue-400" />
         </div>
         <div className="text-2xl font-bold text-gray-900 dark:text-white">
