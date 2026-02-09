@@ -674,6 +674,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     const categoryUniqueActivities = new Map<string, Set<string>>();
     const categoryEventCount = new Map<string, number>();
     const categoryIsHabitOnly = new Map<string, boolean>();
+    const categoryTodayTotal = new Map<string, number>();
+    const categoryTodayCount = new Map<string, number>();
 
     categories.forEach(cat => {
       categoryTypes.set(cat.name, cat.type);
@@ -682,7 +684,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       categoryEventCount.set(cat.name, 0);
     });
     
-    // Process regular entries
     entries.forEach(entry => {
       const current = categoryTotals.get(entry.category) || 0;
       categoryTotals.set(entry.category, current + entry.amount);
@@ -696,6 +697,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       categoryUniqueActivities.set(entry.category, uniqueActivities);
 
       categoryEventCount.set(entry.category, (categoryEventCount.get(entry.category) || 0) + 1);
+
+      if (entry.date === today) {
+        categoryTodayTotal.set(entry.category, (categoryTodayTotal.get(entry.category) || 0) + entry.amount);
+        categoryTodayCount.set(entry.category, (categoryTodayCount.get(entry.category) || 0) + 1);
+      }
     });
 
     // Process completed tasks and add them to stats
@@ -755,7 +761,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
         categoryTotals.set(categoryName, current + amountToAdd);
 
-        // Add to days and unique activities
         const days = categoryDays.get(categoryName) || new Set();
         days.add(completedDate);
         categoryDays.set(categoryName, days);
@@ -765,6 +770,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         categoryUniqueActivities.set(categoryName, uniqueActivities);
 
         categoryEventCount.set(categoryName, (categoryEventCount.get(categoryName) || 0) + completionCount);
+
+        if (completedDate === today) {
+          categoryTodayTotal.set(categoryName, (categoryTodayTotal.get(categoryName) || 0) + amountToAdd);
+          categoryTodayCount.set(categoryName, (categoryTodayCount.get(categoryName) || 0) + completionCount);
+        }
 
         categoryIsHabitOnly.set(categoryName, false);
       });
@@ -842,7 +852,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
       categoryTotals.set(categoryName, current + amountToAdd);
 
-      // Add to days and unique activities
       const days = categoryDays.get(categoryName) || new Set();
       days.add(completion.completion_date);
       categoryDays.set(categoryName, days);
@@ -852,6 +861,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       categoryUniqueActivities.set(categoryName, uniqueActivities);
 
       categoryEventCount.set(categoryName, (categoryEventCount.get(categoryName) || 0) + 1);
+
+      if (completion.completion_date === today) {
+        categoryTodayTotal.set(categoryName, (categoryTodayTotal.get(categoryName) || 0) + amountToAdd);
+        categoryTodayCount.set(categoryName, (categoryTodayCount.get(categoryName) || 0) + 1);
+      }
 
       if (habit.days_of_week && habit.days_of_week.length > 0) {
         categoryHabitSchedule.set(categoryName, habit.days_of_week);
@@ -906,6 +920,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       const activityRecord = category?.activityRecord || 0;
       const isHabitOnly = categoryIsHabitOnly.get(name) === true;
       const scheduledDays = isHabitOnly && schedule && schedule.length > 0 && schedule.length < 7;
+      const todayTotal = categoryTodayTotal.get(name) || 0;
+      const todayEntryCount = categoryTodayCount.get(name) || 0;
 
       return {
         name,
@@ -923,7 +939,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         currentStreak,
         scheduledDays,
         activityRecord,
-        formattedRecord: activityRecord > 0 ? formatSingleUnit(type, activityRecord, baseUnit, converters) : ''
+        formattedRecord: activityRecord > 0 ? formatSingleUnit(type, activityRecord, baseUnit, converters) : '',
+        todayTotal,
+        formattedTodayTotal: formatSingleUnit(type, todayTotal, baseUnit, converters),
+        todayEntryCount
       };
     });
 
@@ -962,7 +981,10 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           currentStreak,
           scheduledDays: !!(categoryIsHabitOnly.get(category.name) === true && schedule && schedule.length > 0 && schedule.length < 7),
           activityRecord,
-          formattedRecord: ''
+          formattedRecord: '',
+          todayTotal: 0,
+          formattedTodayTotal: formatSingleUnit(type, 0, baseUnit, converters),
+          todayEntryCount: 0
         });
       }
     });
@@ -1651,19 +1673,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Total:</span>
-                    <span className="font-medium text-gray-800 dark:text-white">{stat.formattedTotal}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{stat.formattedTodayTotal}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Amount:</span>
-                    <span className="font-medium text-gray-800 dark:text-white">{stat.entryCount}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Active Days:</span>
-                    <span className="font-medium text-gray-800 dark:text-white">{stat.activeDays}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Avg/Day:</span>
-                    <span className="font-medium text-gray-800 dark:text-white">{stat.formattedAvgPerDay}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{stat.todayEntryCount}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Current Streak:</span>
@@ -1677,12 +1691,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                       {stat.bestStreak > 0 ? `${stat.bestStreak} ${stat.bestStreak === 1 ? 'day' : 'days'}` : '—'}
                     </span>
                   </div>
-                  {stat.activityRecord > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Record:</span>
-                      <span className="font-medium text-green-600">{stat.formattedRecord}</span>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
