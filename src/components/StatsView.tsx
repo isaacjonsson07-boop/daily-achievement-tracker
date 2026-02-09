@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react';
-import { BarChart3, TrendingUp, Clock, Target, Star, StarOff, ChevronDown, ChevronRight, ChevronUp, Plus, Edit3, Trash2, CheckCircle, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, Clock, Target, Star, StarOff, ChevronDown, ChevronRight, ChevronUp, Plus, Edit3, Trash2, CheckCircle, Calendar, Search } from 'lucide-react';
 import { Entry, Category, Converter, Goal, ScheduleItem, Habit, HabitCompletion } from '../types';
 import { formatSingleUnit, humanizeTime, humanizeDistance } from '../utils/formatting';
 import { formatDisplayDate, uid, fmtDateISO } from '../utils/dateUtils';
@@ -30,7 +30,9 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
   const [editingGoal, setEditingGoal] = React.useState<Goal | null>(null);
   const [retryingGoal, setRetryingGoal] = React.useState<string | null>(null);
   const [newRetryDate, setNewRetryDate] = React.useState('');
-  const [allTimeFilter, setAllTimeFilter] = React.useState<'latest' | 'by-type' | 'most-completed'>('latest');
+  const [allTimeFilter, setAllTimeFilter] = React.useState<'latest' | 'highest-total' | 'best-streak'>('latest');
+  const [allTimeSearch, setAllTimeSearch] = React.useState('');
+  const [allTimeTypeFilter, setAllTimeTypeFilter] = React.useState<'all' | 'Distance' | 'Time' | 'Count'>('all');
   const [deletingGoalId, setDeletingGoalId] = React.useState<string | null>(null);
   const [newGoal, setNewGoal] = React.useState({
     title: '',
@@ -1015,14 +1017,16 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     const categoryTypes = new Map<string, string>();
     const categoryEntries = new Map<string, any[]>();
     const categoryEventCount = new Map<string, number>();
+    const categoryDaysAll = new Map<string, Set<string>>();
+    const categoryHabitScheduleAll = new Map<string, number[]>();
 
     categories.forEach(cat => {
       categoryTypes.set(cat.name, cat.type);
       categoryEntries.set(cat.name, []);
       categoryEventCount.set(cat.name, 0);
+      categoryDaysAll.set(cat.name, new Set());
     });
     
-    // Process regular entries
     entries.forEach(entry => {
       const current = categoryTotals.get(entry.category) || 0;
       categoryTotals.set(entry.category, current + entry.amount);
@@ -1032,9 +1036,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       categoryEntries.set(entry.category, entryList);
 
       categoryEventCount.set(entry.category, (categoryEventCount.get(entry.category) || 0) + 1);
+
+      const daysSet = categoryDaysAll.get(entry.category) || new Set();
+      daysSet.add(entry.date);
+      categoryDaysAll.set(entry.category, daysSet);
     });
 
-    // Process completed tasks
     scheduleItems.forEach(task => {
       task.completedDates.forEach(completedDate => {
         // Infer type from task properties - this takes precedence
@@ -1105,10 +1112,13 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         categoryEntries.set(categoryName, entryList);
 
         categoryEventCount.set(categoryName, (categoryEventCount.get(categoryName) || 0) + completionCount);
+
+        const daysSet = categoryDaysAll.get(categoryName) || new Set();
+        daysSet.add(completedDate);
+        categoryDaysAll.set(categoryName, daysSet);
       });
     });
 
-    // Process completed habits
     habitCompletions.forEach(completion => {
       const habit = habits.find(h => h.id === completion.habit_id);
       if (!habit) return;
@@ -1177,12 +1187,39 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       categoryEntries.set(categoryName, entryList);
 
       categoryEventCount.set(categoryName, (categoryEventCount.get(categoryName) || 0) + 1);
+
+      const daysSet = categoryDaysAll.get(categoryName) || new Set();
+      daysSet.add(completion.completion_date);
+      categoryDaysAll.set(categoryName, daysSet);
+
+      if (habit.days_of_week && habit.days_of_week.length > 0) {
+        categoryHabitScheduleAll.set(categoryName, habit.days_of_week);
+      }
     });
 
     const categoryStats = Array.from(categoryTotals.entries()).map(([name, total]) => {
       const type = categoryTypes.get(name) || 'Time';
       const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : 'Times';
       const allCategoryEntries = categoryEntries.get(name) || [];
+      const datesForCat = categoryDaysAll.get(name) || new Set();
+      const activeDays = datesForCat.size;
+      const avgPerDay = activeDays > 0 ? total / activeDays : 0;
+      const schedule = categoryHabitScheduleAll.get(name);
+
+      let currentStreak = 0;
+      let bestStreak = 0;
+      if (datesForCat.size > 0) {
+        if (schedule && schedule.length > 0 && schedule.length < 7) {
+          const streakResult = calculateScheduleAwareStreak(Array.from(datesForCat), schedule);
+          currentStreak = streakResult.current;
+          bestStreak = streakResult.best;
+        } else {
+          const streakResult = calculateStreaksFromDates(datesForCat);
+          currentStreak = streakResult.current;
+          bestStreak = streakResult.best;
+        }
+      }
+
       return {
         name,
         type,
@@ -1190,6 +1227,11 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         baseUnit,
         entryCount: categoryEventCount.get(name) || 0,
         formattedTotal: formatSingleUnit(type, total, baseUnit, converters),
+        activeDays,
+        avgPerDay,
+        formattedAvgPerDay: formatSingleUnit(type, avgPerDay, baseUnit, converters),
+        currentStreak,
+        bestStreak,
         entries: allCategoryEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       };
     });
@@ -1200,26 +1242,30 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
   const filteredAllTimeStats = useMemo(() => {
     let filtered = [...allTimeStats];
 
+    if (allTimeSearch.trim()) {
+      const q = allTimeSearch.trim().toLowerCase();
+      filtered = filtered.filter(s => s.name.toLowerCase().includes(q));
+    }
+
+    if (allTimeTypeFilter !== 'all') {
+      filtered = filtered.filter(s => s.type === allTimeTypeFilter);
+    }
+
     switch (allTimeFilter) {
       case 'latest':
         return filtered.sort((a, b) => {
-          const latestA = Math.max(...a.entries.map(e => new Date(e.date).getTime()));
-          const latestB = Math.max(...b.entries.map(e => new Date(e.date).getTime()));
+          const latestA = a.entries.length > 0 ? Math.max(...a.entries.map(e => new Date(e.date).getTime())) : 0;
+          const latestB = b.entries.length > 0 ? Math.max(...b.entries.map(e => new Date(e.date).getTime())) : 0;
           return latestB - latestA;
         });
-      case 'by-type':
-        return filtered.sort((a, b) => {
-          if (a.type === b.type) {
-            return b.total - a.total;
-          }
-          return a.type.localeCompare(b.type);
-        });
-      case 'most-completed':
-        return filtered.sort((a, b) => b.entryCount - a.entryCount);
+      case 'highest-total':
+        return filtered.sort((a, b) => b.total - a.total);
+      case 'best-streak':
+        return filtered.sort((a, b) => b.bestStreak - a.bestStreak);
       default:
         return filtered;
     }
-  }, [allTimeStats, allTimeFilter]);
+  }, [allTimeStats, allTimeFilter, allTimeSearch, allTimeTypeFilter]);
 
   const toggleHabit = (categoryName: string) => {
     const existingCategory = categories.find(cat => cat.name === categoryName);
@@ -1700,102 +1746,109 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
       {/* All Time Achievements */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
-            <BarChart3 className="w-5 h-5 mr-2" />
-            All Time Achievements
-          </h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+          <BarChart3 className="w-5 h-5 mr-2" />
+          All Time Achievements
+        </h3>
+
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={allTimeSearch}
+              onChange={(e) => setAllTimeSearch(e.target.value)}
+              placeholder="Search activities..."
+              className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <select
-            value={allTimeFilter}
-            onChange={(e) => setAllTimeFilter(e.target.value as 'latest' | 'by-type' | 'most-completed')}
+            value={allTimeTypeFilter}
+            onChange={(e) => setAllTimeTypeFilter(e.target.value as 'all' | 'Distance' | 'Time' | 'Count')}
             className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="latest">Latest First</option>
-            <option value="by-type">By Type</option>
-            <option value="most-completed">Most Completed</option>
+            <option value="all">All Types</option>
+            <option value="Distance">Distance</option>
+            <option value="Time">Time</option>
+            <option value="Count">Count</option>
+          </select>
+          <select
+            value={allTimeFilter}
+            onChange={(e) => setAllTimeFilter(e.target.value as 'latest' | 'highest-total' | 'best-streak')}
+            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="latest">Latest Activity</option>
+            <option value="highest-total">Highest Total</option>
+            <option value="best-streak">Best Streak</option>
           </select>
         </div>
 
         {filteredAllTimeStats.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400 text-center py-8">No activities recorded yet.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+            {allTimeSearch || allTimeTypeFilter !== 'all' ? 'No matching activities found.' : 'No activities recorded yet.'}
+          </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-600">
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Category</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Total</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Amount</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">Type</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-gray-300">View</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="space-y-2">
             {filteredAllTimeStats.map(stat => (
-              <React.Fragment key={stat.name}>
-                <tr className="border-b border-gray-100 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="py-3 px-4">
-                    <button
-                      onClick={() => toggleCategoryExpansion(stat.name)}
-                      className="flex items-center text-gray-800 dark:text-white hover:text-blue-600 transition-colors"
-                    >
-                      {expandedCategory === stat.name ? (
-                        <ChevronDown className="w-4 h-4 mr-2" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 mr-2" />
-                      )}
-                      <span className="font-medium">{stat.name}</span>
-                    </button>
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-blue-600">{stat.formattedTotal}</td>
-                  <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{stat.entryCount}</td>
-                  <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{stat.type}</td>
-                  <td className="py-3 px-4">
-                    <button
-                      onClick={() => toggleCategoryExpansion(stat.name)}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-                    >
-                      {expandedCategory === stat.name ? 'Hide' : 'Show'}
-                    </button>
-                  </td>
-                </tr>
-                
-                {expandedCategory === stat.name && (
-                  <tr>
-                    <td colSpan={5} className="py-0">
-                      <div className="bg-gray-50 dark:bg-gray-700 px-4 py-4">
-                        <div className="overflow-x-auto">
-                          <table className="w-full">
-                            <thead>
-                              <tr className="border-b border-gray-200 dark:border-gray-600">
-                                <th className="text-left py-2 px-3 text-sm font-medium text-gray-600 dark:text-gray-400">Date</th>
-                                <th className="text-left py-2 px-3 text-sm font-medium text-gray-600 dark:text-gray-400">Amount</th>
-                                <th className="text-left py-2 px-3 text-sm font-medium text-gray-600 dark:text-gray-400">Notes</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {stat.entries.map(entry => (
-                                <tr key={entry.id} className="border-b border-gray-100 dark:border-gray-600 last:border-b-0">
-                                  <td className="py-2 px-3 text-sm text-gray-700 dark:text-gray-300">{formatDisplayDate(entry.date)}</td>
-                                  <td className="py-2 px-3 text-sm font-medium text-gray-800 dark:text-white">
-                                    {formatSingleUnit(stat.type, entry.amount, entry.unit, converters)}
-                                  </td>
-                                  <td className="py-2 px-3 text-sm text-gray-600 dark:text-gray-400">
-                                    {entry.note || '—'}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+              <div key={stat.name} className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleCategoryExpansion(stat.name)}
+                  className="w-full text-left px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    {expandedCategory === stat.name ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
+                    )}
+                    <span className="font-semibold text-gray-800 dark:text-white truncate">{stat.name}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 shrink-0">{stat.type}</span>
+                  </div>
+                  <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0 ml-3">{stat.formattedTotal}</span>
+                </button>
+
+                <div className="px-4 pb-3 pt-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1 text-sm border-t border-gray-100 dark:border-gray-700">
+                  <div className="flex justify-between sm:flex-col sm:items-center py-1">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">Amount</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{stat.entryCount}</span>
+                  </div>
+                  <div className="flex justify-between sm:flex-col sm:items-center py-1">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">Active Days</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{stat.activeDays}</span>
+                  </div>
+                  <div className="flex justify-between sm:flex-col sm:items-center py-1">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">Avg/Active Day</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{stat.formattedAvgPerDay}</span>
+                  </div>
+                  <div className="flex justify-between sm:flex-col sm:items-center py-1">
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">Streaks</span>
+                    <span className="font-medium text-gray-800 dark:text-white">
+                      {stat.currentStreak > 0 || stat.bestStreak > 0
+                        ? `${stat.currentStreak}d / ${stat.bestStreak}d`
+                        : '—'}
+                    </span>
+                  </div>
+                </div>
+
+                {expandedCategory === stat.name && stat.entries.length > 0 && (
+                  <div className="border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 px-4 py-3">
+                    <div className="space-y-1.5">
+                      {stat.entries.map(entry => (
+                        <div key={entry.id} className="flex items-baseline gap-3 text-sm py-1 border-b border-gray-100 dark:border-gray-600 last:border-b-0">
+                          <span className="text-gray-500 dark:text-gray-400 shrink-0 w-28">{formatDisplayDate(entry.date)}</span>
+                          <span className="font-medium text-gray-800 dark:text-white shrink-0">
+                            {formatSingleUnit(stat.type, entry.amount, entry.unit, converters)}
+                          </span>
+                          {entry.note && (
+                            <span className="text-gray-400 dark:text-gray-500 truncate">{entry.note}</span>
+                          )}
                         </div>
-                      </div>
-                    </td>
-                  </tr>
+                      ))}
+                    </div>
+                  </div>
                 )}
-              </React.Fragment>
+              </div>
             ))}
-              </tbody>
-            </table>
           </div>
         )}
       </div>
