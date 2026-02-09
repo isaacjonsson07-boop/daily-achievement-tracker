@@ -34,7 +34,10 @@ export function formatSingleUnit(type: string, valueInBase: number, unit: string
   const label = UNIT_SHORT[unit as keyof typeof UNIT_SHORT] || unit;
 
   if (type === 'Distance') return `${Math.round(amount * 100) / 100} ${label}`;
-  if (type === 'Count') return `${Math.round(amount)}${label === '×' ? '×' : ''}`;
+  if (type === 'Count') {
+    const n = Math.round(amount);
+    return `${n} ${n === 1 ? 'time' : 'times'}`;
+  }
   return `${amount} ${label}`;
 }
 
