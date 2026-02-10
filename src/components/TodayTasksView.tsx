@@ -762,103 +762,95 @@ export function TodayTasksView({
             <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
               Daily Habits
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {habits.map(habit => (
-                <div
-                  key={habit.id}
-                  onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
-                  className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${
-                    habit.isCompleted
-                      ? 'bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700'
-                      : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleHabit(habit);
-                    }}
-                    className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
+                <div key={habit.id} className="group">
+                  <div
+                    onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
+                    className={`grid grid-cols-[40px_80px_1fr_120px_40px] gap-3 items-center py-2.5 px-3 rounded-lg border transition-all cursor-pointer ${
                       habit.isCompleted
-                        ? 'bg-green-500 border-green-500 text-white'
-                        : 'border-gray-300 hover:border-gray-400'
+                        ? 'bg-green-50/50 dark:bg-green-900/20 border-green-200/50 dark:border-green-700/50'
+                        : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'
                     }`}
                   >
-                    {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
-                  </button>
+                    {/* Checkbox */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleHabit(habit);
+                      }}
+                      className={`w-5 h-5 rounded border transition-colors flex items-center justify-center ${
+                        habit.isCompleted
+                          ? 'bg-green-500 border-green-500 text-white'
+                          : 'border-gray-300 dark:border-gray-600 hover:border-green-400 dark:hover:border-green-500'
+                      }`}
+                    >
+                      {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
+                    </button>
 
-                  <div
-                    className="flex-1 cursor-pointer"
-                    onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">
-                        {habit.time}
-                      </span>
-                      <Repeat className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+                    {/* Time */}
+                    <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                      {habit.time}
+                    </div>
+
+                    {/* Title */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Repeat className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       <span
-                        className={`font-medium ${
+                        className={`font-medium truncate ${
                           habit.isCompleted
-                            ? 'text-green-700 dark:text-green-300 line-through'
-                            : 'text-gray-800 dark:text-white'
+                            ? 'text-gray-500 dark:text-gray-400 line-through'
+                            : 'text-gray-900 dark:text-gray-100'
                         }`}
                       >
                         {habit.name}
                       </span>
+                      {habit.linked_goal_id && (() => {
+                        const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
+                        return linkedGoal ? (
+                          <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+                            → {linkedGoal.title}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+
+                    {/* Unit */}
+                    <div className="text-right">
                       {(habit.duration || habit.distance || habit.target_number > 1) && (
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          habit.isCompleted
-                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
-                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
-                        }`}>
+                        <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                           {habit.duration
                             ? formatDurationDisplay(habit.duration)
                             : habit.distance
                               ? formatDistanceDisplay(habit.distance || '')
-                              : `${habit.target_number} times`
+                              : `${habit.target_number}×`
                           }
                         </span>
                       )}
                     </div>
-                    {habit.linked_goal_id && (() => {
-                      const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
-                      return linkedGoal ? (
-                        <div className="flex items-center space-x-2 mt-1">
-                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
-                            🎯 {linkedGoal.title}
-                          </span>
-                        </div>
-                      ) : null;
-                    })()}
 
-                    {expandedHabit === habit.id && habit.description && (
-                      <p className={`text-sm mt-2 whitespace-pre-line ${
-                        habit.isCompleted
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {habit.description}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center space-x-2 ml-2">
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
-                    >
+                    {/* Actions */}
+                    <div className="flex items-center justify-end">
                       {habit.description && (
-                        <>
+                        <div className="cursor-pointer">
                           {expandedHabit === habit.id ? (
-                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                            <ChevronUp className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                           ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                            <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                           )}
-                        </>
+                        </div>
                       )}
                     </div>
                   </div>
 
+                  {/* Expanded Description */}
+                  {expandedHabit === habit.id && habit.description && (
+                    <div className="ml-[123px] mr-[163px] mt-1 mb-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                        {habit.description}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -877,136 +869,127 @@ export function TodayTasksView({
             <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
               Tasks
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {todaysTasks.map(task => (
-              <div
-                key={task.id}
-                onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${
-                  task.completed
-                    ? 'bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700'
-                    : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
-                }`}
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggleTaskCompletion(task.id);
-                  }}
-                  className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
-                    task.completed
-                      ? 'bg-green-500 border-green-500 text-white'
-                      : 'border-gray-300 hover:border-green-400'
-                  }`}
-                >
-                  {task.completed ? <Check className="w-3 h-3" /> : null}
-                </button>
+                <div key={task.id} className="group">
+                  <div
+                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+                    className={`grid grid-cols-[40px_80px_1fr_120px_120px] gap-3 items-center py-2.5 px-3 rounded-lg border transition-all cursor-pointer ${
+                      task.completed
+                        ? 'bg-green-50/50 dark:bg-green-900/20 border-green-200/50 dark:border-green-700/50'
+                        : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                    }`}
+                  >
+                    {/* Checkbox */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleTaskCompletion(task.id);
+                      }}
+                      className={`w-5 h-5 rounded border transition-colors flex items-center justify-center ${
+                        task.completed
+                          ? 'bg-green-500 border-green-500 text-white'
+                          : 'border-gray-300 dark:border-gray-600 hover:border-green-400 dark:hover:border-green-500'
+                      }`}
+                    >
+                      {task.completed ? <Check className="w-3 h-3" /> : null}
+                    </button>
 
-                <div 
-                  className="flex-1 cursor-pointer" 
-                  onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                >
-                  <div className="flex flex-col space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">
-                        {task.time}
-                      </span>
+                    {/* Time */}
+                    <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                      {task.time}
+                    </div>
+
+                    {/* Title */}
+                    <div className="flex items-center gap-2 min-w-0">
                       <span
-                        className={`${
+                        className={`font-medium truncate ${
                           task.completed
-                            ? 'text-green-700 dark:text-green-300 line-through'
-                            : 'text-gray-800 dark:text-white'
+                            ? 'text-gray-500 dark:text-gray-400 line-through'
+                            : 'text-gray-900 dark:text-gray-100'
                         }`}
                       >
                         {task.title}
                       </span>
+                      {task.linkedGoalId && (() => {
+                        const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
+                        return linkedGoal ? (
+                          <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+                            → {linkedGoal.title}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+
+                    {/* Unit */}
+                    <div className="text-right">
                       {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) && (
-                        <span className={`ml-2 text-xs px-2 py-1 rounded ${
-                          task.completed
-                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
-                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
-                        }`}>
+                        <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                           {task.duration
                             ? formatDurationDisplay(task.duration)
                             : task.distance
                               ? formatDistanceDisplay(task.distance || '')
-                              : `${task.targetNumber} times`
+                              : `${task.targetNumber}×`
                           }
                         </span>
                       )}
                     </div>
-                    {task.linkedGoalId && (() => {
-                      const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
-                      return linkedGoal ? (
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
-                            🎯 {linkedGoal.title}
-                          </span>
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDuplicateTask(task);
+                        }}
+                        className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                        title="Duplicate task"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditScheduleItem(task);
+                        }}
+                        className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                        title="Edit task"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingItemId(task.id);
+                        }}
+                        className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                        title="Delete task"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      {task.description && (
+                        <div className="cursor-pointer p-1">
+                          {expandedTask === task.id ? (
+                            <ChevronUp className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                          )}
                         </div>
-                      ) : null;
-                    })()}
+                      )}
+                    </div>
                   </div>
 
+                  {/* Expanded Description */}
                   {expandedTask === task.id && task.description && (
-                    <p className={`mt-2 text-sm whitespace-pre-line ${
-                      task.completed
-                        ? 'text-green-600 dark:text-green-400'
-                        : 'text-gray-600 dark:text-gray-400'
-                    }`}>
-                      {task.description}
-                    </p>
+                    <div className="ml-[123px] mr-[243px] mt-1 mb-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                        {task.description}
+                      </p>
+                    </div>
                   )}
                 </div>
-
-                <div className="flex items-center space-x-2 ml-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDuplicateTask(task);
-                    }}
-                    className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-                    title="Duplicate task"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditScheduleItem(task);
-                    }}
-                    className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition-colors"
-                    title="Edit task"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeletingItemId(task.id);
-                    }}
-                    className="p-1 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
-                    title="Delete task"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                  >
-                    {task.description && (
-                      <>
-                        {expandedTask === task.id ? (
-                          <ChevronUp className="w-4 h-4 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-gray-400" />
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           </>
         ) : null}
 
