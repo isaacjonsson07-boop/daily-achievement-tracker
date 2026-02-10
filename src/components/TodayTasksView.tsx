@@ -100,6 +100,12 @@ export function TodayTasksView({
     return selectedDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }, [selectedDate]);
 
+  const selectedDateShort = useMemo(() => {
+    const weekday = selectedDateObj.toLocaleDateString('en-US', { weekday: 'short' });
+    const monthDay = selectedDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `${weekday}, ${monthDay}`;
+  }, [selectedDate]);
+
   const goToPreviousDay = () => {
     setDayOffset(prev => Math.max(prev - 1, -7));
   };
@@ -695,69 +701,55 @@ export function TodayTasksView({
 
       {/* Today's Tasks Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
             <button
               onClick={goToPreviousDay}
-              className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors"
+              className="flex-shrink-0 p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <div className="w-72 text-center">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center justify-center">
-                <CheckSquare className="w-6 h-6 mr-2 flex-shrink-0" />
-                <span className="truncate">{selectedDayLabel}'s Tasks</span>
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {DAYS.find(d => d.key === currentDay)?.label}, {selectedDateDisplay}
-              </p>
-            </div>
+            <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+              {selectedDayLabel} <span className="text-gray-400 dark:text-gray-500 font-normal">·</span> {selectedDateShort}
+            </h2>
 
             <button
               onClick={goToNextDay}
-              className="flex-shrink-0 p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors"
+              className="flex-shrink-0 p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
 
             {!isToday && (
               <button
                 onClick={goToToday}
-                className="flex-shrink-0 px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="flex-shrink-0 px-2.5 py-1 text-xs text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Today
               </button>
             )}
           </div>
-          
+
           <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Progress: {todayStats.completed} / {todayStats.total}
+            </span>
             <button
               onClick={() => setShowAddScheduleForm(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center text-sm"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-4 h-4 mr-1.5" />
               Add Task
             </button>
-            <div className="text-right">
-              <div className="text-sm text-gray-500 dark:text-gray-400">Progress</div>
-              <div className="text-2xl font-bold text-blue-600">
-                {todayStats.completed}/{todayStats.total}
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Progress Bar */}
         {todayStats.total > 0 && (
           <div className="mb-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <span>Completion Rate</span>
-              <span>{todayStats.percentage}%</span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
-                className="bg-green-500 h-2 rounded-full transition-all duration-300"
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1">
+              <div
+                className="bg-gray-400 dark:bg-gray-500 h-1 rounded-full transition-all duration-300"
                 style={{ width: `${todayStats.percentage}%` }}
               ></div>
             </div>
