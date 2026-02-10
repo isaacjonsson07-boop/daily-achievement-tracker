@@ -758,12 +758,11 @@ export function TodayTasksView({
 
         {/* Habits Section */}
         {habits.length > 0 && (
-          <div className="mb-6">
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-              <Repeat className="w-4 h-4 mr-2" />
+          <div className="mb-8">
+            <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
               Daily Habits
-            </h4>
-            <div className="space-y-2">
+            </h3>
+            <div className="space-y-1.5">
               {habits.map(habit => (
                 <div
                   key={habit.id}
@@ -875,13 +874,10 @@ export function TodayTasksView({
           </div>
         ) : todaysTasks.length > 0 ? (
           <>
-            {todaysTasks.length > 0 && habits.length > 0 && (
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                <CheckSquare className="w-4 h-4 mr-2" />
-                Scheduled Tasks
-              </h4>
-            )}
-            <div className="space-y-3">
+            <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+              Tasks
+            </h3>
+            <div className="space-y-1.5">
               {todaysTasks.map(task => (
               <div
                 key={task.id}
