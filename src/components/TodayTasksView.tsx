@@ -772,7 +772,7 @@ export function TodayTasksView({
                       : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                   }`}
                 >
-                  <div className="grid grid-cols-[auto_64px_1fr_auto_auto_auto] gap-3 items-start">
+                  <div className="grid grid-cols-[24px_64px_1fr_90px_auto] gap-x-3 gap-y-0 items-center">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -787,41 +787,29 @@ export function TodayTasksView({
                       {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
                     </button>
 
-                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded inline-block">
+                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
                       {habit.time}
                     </span>
 
                     <div
-                      className="cursor-pointer"
+                      className="flex items-center space-x-2 cursor-pointer truncate"
                       onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
                     >
-                      <div className="flex items-center space-x-2">
-                        <Repeat className="w-3 h-3 text-gray-500 dark:text-gray-400" />
-                        <span
-                          className={`font-medium ${
-                            habit.isCompleted
-                              ? 'text-green-700 dark:text-green-300 line-through'
-                              : 'text-gray-800 dark:text-white'
-                          }`}
-                        >
-                          {habit.name}
-                        </span>
-                      </div>
-
-                      {expandedHabit === habit.id && habit.description && (
-                        <p className={`text-sm mt-2 whitespace-pre-line ${
+                      <Repeat className="w-3 h-3 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                      <span
+                        className={`font-medium truncate ${
                           habit.isCompleted
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-gray-600 dark:text-gray-400'
-                        }`}>
-                          {habit.description}
-                        </p>
-                      )}
+                            ? 'text-green-700 dark:text-green-300 line-through'
+                            : 'text-gray-800 dark:text-white'
+                        }`}
+                      >
+                        {habit.name}
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-end min-w-[100px]">
-                      {(habit.duration || habit.distance || habit.target_number > 1) && (
-                        <span className={`text-xs px-2 py-1 rounded ${
+                    <div className="flex items-center justify-start">
+                      {(habit.duration || habit.distance || habit.target_number > 1) ? (
+                        <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
                           habit.isCompleted
                             ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
                             : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
@@ -833,23 +821,20 @@ export function TodayTasksView({
                               : `${habit.target_number} times`
                           }
                         </span>
-                      )}
+                      ) : <span />}
                     </div>
 
-                    <div className="flex items-center justify-end min-w-[120px]">
+                    <div className="flex items-center space-x-2">
                       {habit.linked_goal_id && (() => {
                         const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
                         return linkedGoal ? (
-                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
+                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap truncate max-w-[200px]">
                             🎯 {linkedGoal.title}
                           </span>
                         ) : null;
                       })()}
-                    </div>
-
-                    <div className="flex items-center">
                       <div
-                        className="cursor-pointer"
+                        className="cursor-pointer flex-shrink-0"
                         onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
                       >
                         {habit.description && (
@@ -863,6 +848,18 @@ export function TodayTasksView({
                         )}
                       </div>
                     </div>
+
+                    {expandedHabit === habit.id && habit.description && (
+                      <div className="col-span-full">
+                        <p className={`text-sm mt-1 pl-[100px] whitespace-pre-line ${
+                          habit.isCompleted
+                            ? 'text-green-600 dark:text-green-400'
+                            : 'text-gray-600 dark:text-gray-400'
+                        }`}>
+                          {habit.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -892,7 +889,7 @@ export function TodayTasksView({
                     : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                 }`}
               >
-                <div className="grid grid-cols-[auto_64px_1fr_auto_auto_auto] gap-3 items-start">
+                <div className="grid grid-cols-[24px_64px_1fr_90px_auto] gap-x-3 gap-y-0 items-center">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -907,16 +904,16 @@ export function TodayTasksView({
                     {task.completed ? <Check className="w-3 h-3" /> : null}
                   </button>
 
-                  <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded inline-block">
+                  <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
                     {task.time}
                   </span>
 
                   <div
-                    className="cursor-pointer"
+                    className="cursor-pointer truncate"
                     onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
                   >
                     <span
-                      className={`${
+                      className={`truncate ${
                         task.completed
                           ? 'text-green-700 dark:text-green-300 line-through'
                           : 'text-gray-800 dark:text-white'
@@ -924,21 +921,11 @@ export function TodayTasksView({
                     >
                       {task.title}
                     </span>
-
-                    {expandedTask === task.id && task.description && (
-                      <p className={`mt-2 text-sm whitespace-pre-line ${
-                        task.completed
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {task.description}
-                      </p>
-                    )}
                   </div>
 
-                  <div className="flex items-center justify-end min-w-[100px]">
-                    {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) && (
-                      <span className={`text-xs px-2 py-1 rounded ${
+                  <div className="flex items-center justify-start">
+                    {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) ? (
+                      <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
                         task.completed
                           ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
                           : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
@@ -950,27 +937,24 @@ export function TodayTasksView({
                             : `${task.targetNumber} times`
                         }
                       </span>
-                    )}
+                    ) : <span />}
                   </div>
 
-                  <div className="flex items-center justify-end min-w-[120px]">
+                  <div className="flex items-center space-x-2">
                     {task.linkedGoalId && (() => {
                       const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
                       return linkedGoal ? (
-                        <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
+                        <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap truncate max-w-[200px]">
                           🎯 {linkedGoal.title}
                         </span>
                       ) : null;
                     })()}
-                  </div>
-
-                  <div className="flex items-center space-x-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDuplicateTask(task);
                       }}
-                      className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                      className="flex-shrink-0 p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
                       title="Duplicate task"
                     >
                       <Copy className="w-4 h-4" />
@@ -980,7 +964,7 @@ export function TodayTasksView({
                         e.stopPropagation();
                         handleEditScheduleItem(task);
                       }}
-                      className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition-colors"
+                      className="flex-shrink-0 p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition-colors"
                       title="Edit task"
                     >
                       <Pencil className="w-4 h-4" />
@@ -990,13 +974,13 @@ export function TodayTasksView({
                         e.stopPropagation();
                         setDeletingItemId(task.id);
                       }}
-                      className="p-1 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
+                      className="flex-shrink-0 p-1 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
                       title="Delete task"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                     <div
-                      className="cursor-pointer"
+                      className="flex-shrink-0 cursor-pointer"
                       onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
                     >
                       {task.description && (
@@ -1010,6 +994,18 @@ export function TodayTasksView({
                       )}
                     </div>
                   </div>
+
+                  {expandedTask === task.id && task.description && (
+                    <div className="col-span-full">
+                      <p className={`mt-1 text-sm pl-[100px] whitespace-pre-line ${
+                        task.completed
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {task.description}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
