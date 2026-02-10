@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { X, Mail, Lock, User, AlertCircle } from 'lucide-react'
 
 interface AuthModalProps {
@@ -14,12 +14,12 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
 
   if (!isOpen) return null
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const handleClick = async () => {
+    if (formRef.current && !formRef.current.reportValidity()) return
     setLoading(true)
     setError('')
 
@@ -81,7 +81,7 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} action="javascript:void(0)" className="space-y-4">
+        <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
@@ -127,7 +127,8 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
           )}
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleClick}
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
           >
