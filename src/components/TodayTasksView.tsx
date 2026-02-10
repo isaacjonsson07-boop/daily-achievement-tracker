@@ -772,93 +772,96 @@ export function TodayTasksView({
                       : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                   }`}
                 >
-                  <div className="grid grid-cols-[24px_64px_1fr_90px_auto] gap-x-3 gap-y-0 items-center">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleHabit(habit);
-                      }}
-                      className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
-                        habit.isCompleted
-                          ? 'bg-green-500 border-green-500 text-white'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                    >
-                      {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
-                    </button>
-
-                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
-                      {habit.time}
-                    </span>
-
-                    <div
-                      className="flex items-center space-x-2 cursor-pointer truncate"
-                      onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
-                    >
-                      <Repeat className="w-3 h-3 flex-shrink-0 text-gray-500 dark:text-gray-400" />
-                      <span
-                        className={`font-medium truncate ${
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleHabit(habit);
+                        }}
+                        className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
                           habit.isCompleted
-                            ? 'text-green-700 dark:text-green-300 line-through'
-                            : 'text-gray-800 dark:text-white'
+                            ? 'bg-green-500 border-green-500 text-white'
+                            : 'border-gray-300 hover:border-gray-400'
                         }`}
                       >
-                        {habit.name}
+                        {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
+                      </button>
+
+                      <span className="flex-shrink-0 w-16 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
+                        {habit.time}
                       </span>
-                    </div>
 
-                    <div className="flex items-center justify-start">
-                      {(habit.duration || habit.distance || habit.target_number > 1) ? (
-                        <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
-                          habit.isCompleted
-                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
-                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
-                        }`}>
-                          {habit.duration
-                            ? formatDurationDisplay(habit.duration)
-                            : habit.distance
-                              ? formatDistanceDisplay(habit.distance || '')
-                              : `${habit.target_number} times`
-                          }
-                        </span>
-                      ) : <span />}
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      {habit.linked_goal_id && (() => {
-                        const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
-                        return linkedGoal ? (
-                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap truncate max-w-[200px]">
-                            🎯 {linkedGoal.title}
-                          </span>
-                        ) : null;
-                      })()}
                       <div
-                        className="cursor-pointer flex-shrink-0"
+                        className="flex items-center space-x-2 cursor-pointer min-w-0 flex-1"
                         onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
                       >
-                        {habit.description && (
-                          <>
-                            {expandedHabit === habit.id ? (
-                              <ChevronUp className="w-4 h-4 text-gray-400" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-gray-400" />
-                            )}
-                          </>
+                        <Repeat className="w-3 h-3 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                        <span
+                          className={`font-medium truncate ${
+                            habit.isCompleted
+                              ? 'text-green-700 dark:text-green-300 line-through'
+                              : 'text-gray-800 dark:text-white'
+                          }`}
+                        >
+                          {habit.name}
+                        </span>
+                      </div>
+
+                      <div className="flex-shrink-0 w-24 flex justify-end">
+                        {(habit.duration || habit.distance || habit.target_number > 1) && (
+                          <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
+                            habit.isCompleted
+                              ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
+                              : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
+                          }`}>
+                            {habit.duration
+                              ? formatDurationDisplay(habit.duration)
+                              : habit.distance
+                                ? formatDistanceDisplay(habit.distance || '')
+                                : `${habit.target_number} times`
+                            }
+                          </span>
                         )}
+                      </div>
+
+                      <div className="flex-shrink-0 w-[180px] truncate">
+                        {habit.linked_goal_id && (() => {
+                          const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
+                          return linkedGoal ? (
+                            <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap">
+                              🎯 {linkedGoal.title}
+                            </span>
+                          ) : null;
+                        })()}
+                      </div>
+
+                      <div className="flex-shrink-0 w-[104px] flex items-center justify-end">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
+                        >
+                          {habit.description && (
+                            <>
+                              {expandedHabit === habit.id ? (
+                                <ChevronUp className="w-4 h-4 text-gray-400" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4 text-gray-400" />
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
 
                     {expandedHabit === habit.id && habit.description && (
-                      <div className="col-span-full">
-                        <p className={`text-sm mt-1 pl-[100px] whitespace-pre-line ${
-                          habit.isCompleted
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-gray-600 dark:text-gray-400'
-                        }`}>
-                          {habit.description}
-                        </p>
-                      </div>
+                      <p className={`text-sm mt-1 ml-[100px] whitespace-pre-line ${
+                        habit.isCompleted
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {habit.description}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -889,122 +892,125 @@ export function TodayTasksView({
                     : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                 }`}
               >
-                <div className="grid grid-cols-[24px_64px_1fr_90px_auto] gap-x-3 gap-y-0 items-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleTaskCompletion(task.id);
-                    }}
-                    className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
-                      task.completed
-                        ? 'bg-green-500 border-green-500 text-white'
-                        : 'border-gray-300 hover:border-green-400'
-                    }`}
-                  >
-                    {task.completed ? <Check className="w-3 h-3" /> : null}
-                  </button>
-
-                  <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
-                    {task.time}
-                  </span>
-
-                  <div
-                    className="cursor-pointer truncate"
-                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                  >
-                    <span
-                      className={`truncate ${
+                <div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleTaskCompletion(task.id);
+                      }}
+                      className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
                         task.completed
-                          ? 'text-green-700 dark:text-green-300 line-through'
-                          : 'text-gray-800 dark:text-white'
+                          ? 'bg-green-500 border-green-500 text-white'
+                          : 'border-gray-300 hover:border-green-400'
                       }`}
                     >
-                      {task.title}
+                      {task.completed ? <Check className="w-3 h-3" /> : null}
+                    </button>
+
+                    <span className="flex-shrink-0 w-16 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-center">
+                      {task.time}
                     </span>
-                  </div>
 
-                  <div className="flex items-center justify-start">
-                    {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) ? (
-                      <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
-                        task.completed
-                          ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
-                          : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
-                      }`}>
-                        {task.duration
-                          ? formatDurationDisplay(task.duration)
-                          : task.distance
-                            ? formatDistanceDisplay(task.distance || '')
-                            : `${task.targetNumber} times`
-                        }
-                      </span>
-                    ) : <span />}
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    {task.linkedGoalId && (() => {
-                      const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
-                      return linkedGoal ? (
-                        <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap truncate max-w-[200px]">
-                          🎯 {linkedGoal.title}
-                        </span>
-                      ) : null;
-                    })()}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDuplicateTask(task);
-                      }}
-                      className="flex-shrink-0 p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-                      title="Duplicate task"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditScheduleItem(task);
-                      }}
-                      className="flex-shrink-0 p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition-colors"
-                      title="Edit task"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeletingItemId(task.id);
-                      }}
-                      className="flex-shrink-0 p-1 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
-                      title="Delete task"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                     <div
-                      className="flex-shrink-0 cursor-pointer"
+                      className="cursor-pointer min-w-0 flex-1 truncate"
                       onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
                     >
-                      {task.description && (
-                        <>
-                          {expandedTask === task.id ? (
-                            <ChevronUp className="w-4 h-4 text-gray-400" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                          )}
-                        </>
+                      <span
+                        className={`${
+                          task.completed
+                            ? 'text-green-700 dark:text-green-300 line-through'
+                            : 'text-gray-800 dark:text-white'
+                        }`}
+                      >
+                        {task.title}
+                      </span>
+                    </div>
+
+                    <div className="flex-shrink-0 w-24 flex justify-end">
+                      {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) && (
+                        <span className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
+                          task.completed
+                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
+                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
+                        }`}>
+                          {task.duration
+                            ? formatDurationDisplay(task.duration)
+                            : task.distance
+                              ? formatDistanceDisplay(task.distance || '')
+                              : `${task.targetNumber} times`
+                          }
+                        </span>
                       )}
+                    </div>
+
+                    <div className="flex-shrink-0 w-[180px] truncate">
+                      {task.linkedGoalId && (() => {
+                        const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
+                        return linkedGoal ? (
+                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap">
+                            🎯 {linkedGoal.title}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+
+                    <div className="flex-shrink-0 flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDuplicateTask(task);
+                        }}
+                        className="p-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                        title="Duplicate task"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditScheduleItem(task);
+                        }}
+                        className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition-colors"
+                        title="Edit task"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingItemId(task.id);
+                        }}
+                        className="p-1 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
+                        title="Delete task"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+                      >
+                        {task.description && (
+                          <>
+                            {expandedTask === task.id ? (
+                              <ChevronUp className="w-4 h-4 text-gray-400" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-gray-400" />
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   {expandedTask === task.id && task.description && (
-                    <div className="col-span-full">
-                      <p className={`mt-1 text-sm pl-[100px] whitespace-pre-line ${
-                        task.completed
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {task.description}
-                      </p>
-                    </div>
+                    <p className={`mt-1 text-sm ml-[100px] whitespace-pre-line ${
+                      task.completed
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}>
+                      {task.description}
+                    </p>
                   )}
                 </div>
               </div>
