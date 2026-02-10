@@ -772,7 +772,7 @@ export function TodayTasksView({
                       : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                   }`}
                 >
-                  <div className="grid grid-cols-[auto_64px_auto_1fr_auto] gap-3 items-start">
+                  <div className="grid grid-cols-[auto_64px_1fr_auto_auto_auto] gap-3 items-start">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -791,23 +791,6 @@ export function TodayTasksView({
                       {habit.time}
                     </span>
 
-                    <div className="flex items-center min-w-[100px]">
-                      {(habit.duration || habit.distance || habit.target_number > 1) && (
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          habit.isCompleted
-                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
-                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
-                        }`}>
-                          {habit.duration
-                            ? formatDurationDisplay(habit.duration)
-                            : habit.distance
-                              ? formatDistanceDisplay(habit.distance || '')
-                              : `${habit.target_number} times`
-                          }
-                        </span>
-                      )}
-                    </div>
-
                     <div
                       className="cursor-pointer"
                       onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
@@ -824,16 +807,6 @@ export function TodayTasksView({
                           {habit.name}
                         </span>
                       </div>
-                      {habit.linked_goal_id && (() => {
-                        const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
-                        return linkedGoal ? (
-                          <div className="flex items-center space-x-2 mt-1">
-                            <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
-                              🎯 {linkedGoal.title}
-                            </span>
-                          </div>
-                        ) : null;
-                      })()}
 
                       {expandedHabit === habit.id && habit.description && (
                         <p className={`text-sm mt-2 whitespace-pre-line ${
@@ -844,6 +817,34 @@ export function TodayTasksView({
                           {habit.description}
                         </p>
                       )}
+                    </div>
+
+                    <div className="flex items-center justify-end min-w-[100px]">
+                      {(habit.duration || habit.distance || habit.target_number > 1) && (
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          habit.isCompleted
+                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
+                            : 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300'
+                        }`}>
+                          {habit.duration
+                            ? formatDurationDisplay(habit.duration)
+                            : habit.distance
+                              ? formatDistanceDisplay(habit.distance || '')
+                              : `${habit.target_number} times`
+                          }
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-end min-w-[120px]">
+                      {habit.linked_goal_id && (() => {
+                        const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
+                        return linkedGoal ? (
+                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
+                            🎯 {linkedGoal.title}
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
 
                     <div className="flex items-center">
@@ -891,7 +892,7 @@ export function TodayTasksView({
                     : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                 }`}
               >
-                <div className="grid grid-cols-[auto_64px_auto_1fr_auto] gap-3 items-start">
+                <div className="grid grid-cols-[auto_64px_1fr_auto_auto_auto] gap-3 items-start">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -910,7 +911,32 @@ export function TodayTasksView({
                     {task.time}
                   </span>
 
-                  <div className="flex items-center min-w-[100px]">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+                  >
+                    <span
+                      className={`${
+                        task.completed
+                          ? 'text-green-700 dark:text-green-300 line-through'
+                          : 'text-gray-800 dark:text-white'
+                      }`}
+                    >
+                      {task.title}
+                    </span>
+
+                    {expandedTask === task.id && task.description && (
+                      <p className={`mt-2 text-sm whitespace-pre-line ${
+                        task.completed
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {task.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-end min-w-[100px]">
                     {(task.duration || task.distance || (task.targetNumber && task.targetNumber > 1)) && (
                       <span className={`text-xs px-2 py-1 rounded ${
                         task.completed
@@ -927,41 +953,15 @@ export function TodayTasksView({
                     )}
                   </div>
 
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                  >
-                    <div className="flex flex-col space-y-1">
-                      <span
-                        className={`${
-                          task.completed
-                            ? 'text-green-700 dark:text-green-300 line-through'
-                            : 'text-gray-800 dark:text-white'
-                        }`}
-                      >
-                        {task.title}
-                      </span>
-                      {task.linkedGoalId && (() => {
-                        const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
-                        return linkedGoal ? (
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
-                              🎯 {linkedGoal.title}
-                            </span>
-                          </div>
-                        ) : null;
-                      })()}
-                    </div>
-
-                    {expandedTask === task.id && task.description && (
-                      <p className={`mt-2 text-sm whitespace-pre-line ${
-                        task.completed
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-600 dark:text-gray-400'
-                      }`}>
-                        {task.description}
-                      </p>
-                    )}
+                  <div className="flex items-center justify-end min-w-[120px]">
+                    {task.linkedGoalId && (() => {
+                      const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
+                      return linkedGoal ? (
+                        <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded">
+                          🎯 {linkedGoal.title}
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
 
                   <div className="flex items-center space-x-2">
