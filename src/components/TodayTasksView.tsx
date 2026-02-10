@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Pencil, Trash2, Copy } from 'lucide-react';
+import { CheckSquare, Check, ChevronLeft, ChevronRight, Calendar, Plus, Save, X, ChevronDown, ChevronUp, Repeat, Pencil, Trash2, Copy } from 'lucide-react';
 import { ScheduleItem, Goal, Habit, HabitCompletion, Converter } from '../types';
 import { fmtDateISO, uid, getDayKeyFromISO } from '../utils/dateUtils';
 import { parseAmountByType } from '../utils/parsing';
@@ -767,10 +767,10 @@ export function TodayTasksView({
                 <div
                   key={habit.id}
                   onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
-                  className={`flex items-center space-x-3 py-2 px-3 rounded border transition-all ${
+                  className={`flex items-start space-x-3 p-3 rounded-lg border transition-all ${
                     habit.isCompleted
-                      ? 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 opacity-60'
-                      : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
+                      ? 'bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700'
+                      : 'bg-purple-50 dark:bg-purple-900 border-purple-200 dark:border-purple-700 hover:bg-purple-100 dark:hover:bg-purple-800'
                   }`}
                 >
                   <button
@@ -778,36 +778,87 @@ export function TodayTasksView({
                       e.stopPropagation();
                       handleToggleHabit(habit);
                     }}
-                    className={`flex-shrink-0 w-5 h-5 rounded border transition-colors flex items-center justify-center ${
+                    className={`flex-shrink-0 w-6 h-6 rounded border transition-colors flex items-center justify-center ${
                       habit.isCompleted
-                        ? 'bg-gray-400 border-gray-400 text-white'
-                        : 'border-gray-300 dark:border-gray-500 hover:border-gray-400 dark:hover:border-gray-400'
+                        ? 'bg-green-500 border-green-500 text-white'
+                        : 'border-purple-300 hover:border-purple-400'
                     }`}
                   >
                     {habit.isCompleted ? <Check className="w-3 h-3" /> : null}
                   </button>
 
-                  <div className="flex-1 flex items-center justify-between">
-                    <span
-                      className={`text-sm ${
-                        habit.isCompleted
-                          ? 'text-gray-500 dark:text-gray-400 line-through'
-                          : 'text-gray-700 dark:text-gray-300'
-                      }`}
-                    >
-                      {habit.name}
-                    </span>
-                    {(habit.duration || habit.distance || habit.target_number > 1) && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                        {habit.duration
-                          ? formatDurationDisplay(habit.duration)
-                          : habit.distance
-                            ? formatDistanceDisplay(habit.distance || '')
-                            : `${habit.target_number}×`
-                        }
+                  <div
+                    className="flex-1 cursor-pointer"
+                    onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">
+                        {habit.time}
                       </span>
+                      <Repeat className="w-3 h-3 text-purple-500" />
+                      <span
+                        className={`font-medium ${
+                          habit.isCompleted
+                            ? 'text-green-700 dark:text-green-300 line-through'
+                            : 'text-gray-800 dark:text-white'
+                        }`}
+                      >
+                        {habit.name}
+                      </span>
+                      {(habit.duration || habit.distance || habit.target_number > 1) && (
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          habit.isCompleted
+                            ? 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300'
+                            : 'bg-purple-100 dark:bg-purple-800 text-purple-600 dark:text-purple-300'
+                        }`}>
+                          {habit.duration
+                            ? formatDurationDisplay(habit.duration)
+                            : habit.distance
+                              ? formatDistanceDisplay(habit.distance || '')
+                              : `${habit.target_number} times`
+                          }
+                        </span>
+                      )}
+                    </div>
+                    {habit.linked_goal_id && (() => {
+                      const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
+                      return linkedGoal ? (
+                        <div className="flex items-center space-x-2 mt-1">
+                          <span className="text-xs text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900 px-2 py-0.5 rounded">
+                            🎯 {linkedGoal.title}
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
+
+                    {expandedHabit === habit.id && habit.description && (
+                      <p className={`text-sm mt-2 whitespace-pre-line ${
+                        habit.isCompleted
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {habit.description}
+                      </p>
                     )}
                   </div>
+
+                  <div className="flex items-center space-x-2 ml-2">
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
+                    >
+                      {habit.description && (
+                        <>
+                          {expandedHabit === habit.id ? (
+                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
                 </div>
               ))}
             </div>
