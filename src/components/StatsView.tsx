@@ -1453,7 +1453,6 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
                   <option value="time">Time-based</option>
                   <option value="distance">Distance-based</option>
                   <option value="weight">Weight-based</option>
-                  <option value="attendance">Perfect Attendance</option>
                 </select>
               </div>
 
