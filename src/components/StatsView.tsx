@@ -670,8 +670,8 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     if (goal.goalType === 'distance' && goal.distance) {
       return goal.distance;
     }
-    if (goal.goalType === 'weight' && goal.weight) {
-      return goal.weight + ' kg';
+    if (goal.goalType === 'weight') {
+      return formatSingleUnit('Weight', goal.targetAmount, goal.unit || 'Kg', converters);
     }
     return formatSingleUnit('Count', goal.targetAmount, goal.unit, converters);
   };
@@ -740,9 +740,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         } else if (task.distance) {
           categoryType = 'Distance';
           inferredFromTask = true;
+        } else if (task.weight) {
+          categoryType = 'Weight';
+          inferredFromTask = true;
         }
 
-        // Use task's original name if it has explicit duration/distance
+        // Use task's original name if it has explicit duration/distance/weight
         let categoryName = task.title;
 
         // Only normalize to match other categories if no explicit type was set
@@ -773,12 +776,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         const current = categoryTotals.get(categoryName) || 0;
         let amountToAdd = completionCount;
 
-        // Parse duration or distance if available and multiply by completion count
+        // Parse duration, distance, or weight if available and multiply by completion count
         if (task.duration && categoryType === 'Time') {
           const parsed = parseAmountByType(task.duration, 'Time', converters);
           if (parsed) amountToAdd = parsed.value * completionCount;
         } else if (task.distance && categoryType === 'Distance') {
           const parsed = parseAmountByType(task.distance, 'Distance', converters);
+          if (parsed) amountToAdd = parsed.value * completionCount;
+        } else if (task.weight && categoryType === 'Weight') {
+          const parsed = parseAmountByType(task.weight, 'Weight', converters);
           if (parsed) amountToAdd = parsed.value * completionCount;
         }
 
@@ -834,9 +840,12 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       } else if (habit.distance) {
         categoryType = 'Distance';
         inferredFromHabit = true;
+      } else if (habit.weight) {
+        categoryType = 'Weight';
+        inferredFromHabit = true;
       }
 
-      // Use habit's original name if it has explicit duration/distance
+      // Use habit's original name if it has explicit duration/distance/weight
       let categoryName = habit.name;
 
       // Only normalize to match other categories if no explicit type was set
@@ -864,12 +873,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       const current = categoryTotals.get(categoryName) || 0;
       let amountToAdd = habit.target_number;
 
-      // Parse duration or distance if available
+      // Parse duration, distance, or weight if available
       if (habit.duration && categoryType === 'Time') {
         const parsed = parseAmountByType(habit.duration, 'Time', converters);
         if (parsed) amountToAdd = parsed.value;
       } else if (habit.distance && categoryType === 'Distance') {
         const parsed = parseAmountByType(habit.distance, 'Distance', converters);
+        if (parsed) amountToAdd = parsed.value;
+      } else if (habit.weight && categoryType === 'Weight') {
+        const parsed = parseAmountByType(habit.weight, 'Weight', converters);
         if (parsed) amountToAdd = parsed.value;
       }
 
@@ -900,7 +912,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
     const categoryStats = Array.from(categoryTotals.entries()).map(([name, total]) => {
       const type = categoryTypes.get(name) || 'Time';
-      const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : 'Times';
+      const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : type === 'Weight' ? 'Kg' : 'Times';
       const category = categories.find(c => c.name === name);
       const activeDays = categoryDays.get(name)?.size || 0;
       const avgPerDay = activeDays > 0 ? total / activeDays : 0;
@@ -973,7 +985,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
     categories.forEach(category => {
       if (category.isHabit && !categoryStats.find(stat => stat.name === category.name)) {
         const type = category.type;
-        const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : 'Times';
+        const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : type === 'Weight' ? 'Kg' : 'Times';
         const datesForCategory = categoryDays.get(category.name) || new Set();
         const schedule = categoryHabitSchedule.get(category.name);
         let bestStreak: number;
@@ -1075,6 +1087,9 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         } else if (task.distance) {
           categoryType = 'Distance';
           inferredFromTask = true;
+        } else if (task.weight) {
+          categoryType = 'Weight';
+          inferredFromTask = true;
         }
 
         let categoryName = task.title;
@@ -1107,12 +1122,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         const current = categoryTotals.get(categoryName) || 0;
         let amountToAdd = completionCount;
 
-        // Parse duration or distance if available and multiply by completion count
+        // Parse duration, distance, or weight if available and multiply by completion count
         if (task.duration && categoryType === 'Time') {
           const parsed = parseAmountByType(task.duration, 'Time', converters);
           if (parsed) amountToAdd = parsed.value * completionCount;
         } else if (task.distance && categoryType === 'Distance') {
           const parsed = parseAmountByType(task.distance, 'Distance', converters);
+          if (parsed) amountToAdd = parsed.value * completionCount;
+        } else if (task.weight && categoryType === 'Weight') {
+          const parsed = parseAmountByType(task.weight, 'Weight', converters);
           if (parsed) amountToAdd = parsed.value * completionCount;
         }
 
@@ -1124,7 +1142,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
           date: completedDate,
           category: categoryName,
           amount: amountToAdd,
-          unit: categoryType === 'Time' ? 'Hours' : categoryType === 'Distance' ? 'Km' : 'Times',
+          unit: categoryType === 'Time' ? 'Hours' : categoryType === 'Distance' ? 'Km' : categoryType === 'Weight' ? 'Kg' : 'Times',
           note: `Completed task: ${task.title}${task.description ? ` - ${task.description}` : ''}`
         };
 
@@ -1154,6 +1172,9 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       } else if (habit.distance) {
         categoryType = 'Distance';
         inferredFromHabit = true;
+      } else if (habit.weight) {
+        categoryType = 'Weight';
+        inferredFromHabit = true;
       }
 
       const categoryName = habit.name;
@@ -1182,12 +1203,15 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
       const current = categoryTotals.get(categoryName) || 0;
       let amountToAdd = habit.target_number;
 
-      // Parse duration or distance if available
+      // Parse duration, distance, or weight if available
       if (habit.duration && categoryType === 'Time') {
         const parsed = parseAmountByType(habit.duration, 'Time', converters);
         if (parsed) amountToAdd = parsed.value;
       } else if (habit.distance && categoryType === 'Distance') {
         const parsed = parseAmountByType(habit.distance, 'Distance', converters);
+        if (parsed) amountToAdd = parsed.value;
+      } else if (habit.weight && categoryType === 'Weight') {
+        const parsed = parseAmountByType(habit.weight, 'Weight', converters);
         if (parsed) amountToAdd = parsed.value;
       }
 
@@ -1199,7 +1223,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
         date: completion.completion_date,
         category: categoryName,
         amount: amountToAdd,
-        unit: categoryType === 'Time' ? 'Hours' : categoryType === 'Distance' ? 'Km' : 'Times',
+        unit: categoryType === 'Time' ? 'Hours' : categoryType === 'Distance' ? 'Km' : categoryType === 'Weight' ? 'Kg' : 'Times',
         note: `Completed habit: ${habit.name}${habit.description ? ` - ${habit.description}` : ''}`
       };
 
@@ -1220,7 +1244,7 @@ export function StatsView({ entries, categories, converters, goals, scheduleItem
 
     const categoryStats = Array.from(categoryTotals.entries()).map(([name, total]) => {
       const type = categoryTypes.get(name) || 'Time';
-      const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : 'Times';
+      const baseUnit = type === 'Time' ? 'Hours' : type === 'Distance' ? 'Km' : type === 'Weight' ? 'Kg' : 'Times';
       const allCategoryEntries = categoryEntries.get(name) || [];
       const datesForCat = categoryDaysAll.get(name) || new Set();
       const activeDays = datesForCat.size;
