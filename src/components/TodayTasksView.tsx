@@ -836,7 +836,7 @@ export function TodayTasksView({
                       </div>
 
                       <div className="flex-shrink-0 flex justify-start">
-                        {(habit.duration || habit.distance || habit.weight || habit.target_number > 1) && (
+                        {(habit.duration || habit.distance || habit.weight || habit.target_number >= 1) && (
                           <span className="text-xs px-2 py-1 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
                             {habit.duration
                               ? formatDurationDisplay(habit.duration)
@@ -844,7 +844,9 @@ export function TodayTasksView({
                                 ? formatDistanceDisplay(habit.distance || '')
                                 : habit.weight
                                   ? formatWeightDisplay(habit.weight)
-                                  : `${habit.target_number} times`
+                                  : habit.target_number === 1
+                                    ? '1 time'
+                                    : `${habit.target_number} times`
                             }
                           </span>
                         )}
@@ -943,7 +945,7 @@ export function TodayTasksView({
                     </div>
 
                     <div className="flex-shrink-0 flex justify-start">
-                      {(task.duration || task.distance || task.weight || (task.targetNumber && task.targetNumber > 1)) && (
+                      {(task.duration || task.distance || task.weight || (task.targetNumber && task.targetNumber >= 1)) && (
                         <span className="text-xs px-2 py-1 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
                           {task.duration
                             ? formatDurationDisplay(task.duration)
@@ -951,7 +953,9 @@ export function TodayTasksView({
                               ? formatDistanceDisplay(task.distance || '')
                               : task.weight
                                 ? formatWeightDisplay(task.weight)
-                                : `${task.targetNumber} times`
+                                : task.targetNumber === 1
+                                  ? '1 time'
+                                  : `${task.targetNumber} times`
                           }
                         </span>
                       )}

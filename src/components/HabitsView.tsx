@@ -635,9 +635,9 @@ export function HabitsView({ habits, goals, onHabitsChange, setHabits }: HabitsV
                             ? formatDistanceDisplay(habit.distance)
                             : habit.weight
                               ? formatWeightDisplay(habit.weight)
-                              : habit.target_number > 1
-                                ? `${habit.target_number}x`
-                                : 'Task'
+                              : habit.target_number === 1
+                                ? '1 time'
+                                : `${habit.target_number} times`
                         }
                       </td>
 
