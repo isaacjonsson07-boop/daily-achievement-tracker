@@ -826,7 +826,7 @@ export function TodayTasksView({
                       </span>
 
                       <div
-                        className="flex items-center space-x-2 cursor-pointer min-w-0 flex-1"
+                        className="flex items-center space-x-2 cursor-pointer min-w-0 w-24 flex-shrink-0"
                         onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
                       >
                         <Repeat className="w-3 h-3 flex-shrink-0 text-gray-500 dark:text-gray-400" />
@@ -835,9 +835,9 @@ export function TodayTasksView({
                         </span>
                       </div>
 
-                      <div className="flex-shrink-0 w-16 flex justify-end">
+                      <div className="flex-shrink-0 flex justify-start">
                         {(habit.duration || habit.distance || habit.weight || habit.target_number > 1) && (
-                          <span className="text-xs px-1.5 py-0.5 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
+                          <span className="text-xs px-2 py-1 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
                             {habit.duration
                               ? formatDurationDisplay(habit.duration)
                               : habit.distance
@@ -850,11 +850,11 @@ export function TodayTasksView({
                         )}
                       </div>
 
-                      <div className="flex-shrink-0 w-[120px] truncate">
+                      <div className="flex-1 min-w-0">
                         {habit.linked_goal_id && (() => {
                           const linkedGoal = goals.find(g => g.id === habit.linked_goal_id);
                           return linkedGoal ? (
-                            <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-1.5 py-0.5 rounded truncate block">
+                            <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap">
                               {linkedGoal.title}
                             </span>
                           ) : null;
@@ -934,7 +934,7 @@ export function TodayTasksView({
                     </span>
 
                     <div
-                      className="cursor-pointer min-w-0 flex-1 truncate"
+                      className="cursor-pointer min-w-0 w-24 flex-shrink-0 truncate"
                       onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
                     >
                       <span className="text-gray-800 dark:text-white">
@@ -942,9 +942,9 @@ export function TodayTasksView({
                       </span>
                     </div>
 
-                    <div className="flex-shrink-0 w-16 flex justify-end">
+                    <div className="flex-shrink-0 flex justify-start">
                       {(task.duration || task.distance || task.weight || (task.targetNumber && task.targetNumber > 1)) && (
-                        <span className="text-xs px-1.5 py-0.5 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
+                        <span className="text-xs px-2 py-1 rounded whitespace-nowrap bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
                           {task.duration
                             ? formatDurationDisplay(task.duration)
                             : task.distance
@@ -957,11 +957,11 @@ export function TodayTasksView({
                       )}
                     </div>
 
-                    <div className="flex-shrink-0 w-[120px] truncate">
+                    <div className="flex-1 min-w-0">
                       {task.linkedGoalId && (() => {
                         const linkedGoal = goals.find(g => g.id === task.linkedGoalId);
                         return linkedGoal ? (
-                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-1.5 py-0.5 rounded truncate block">
+                          <span className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 px-2 py-0.5 rounded whitespace-nowrap">
                             {linkedGoal.title}
                           </span>
                         ) : null;
