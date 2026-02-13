@@ -865,17 +865,15 @@ export function TodayTasksView({
 
                       <div className="flex-shrink-0 w-[104px] flex items-center justify-end">
                         <div
-                          className="cursor-pointer"
-                          onClick={() => setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
+                          className={`w-4 h-4 ${habit.description ? 'cursor-pointer' : ''}`}
+                          onClick={() => habit.description && setExpandedHabit(expandedHabit === habit.id ? null : habit.id)}
                         >
                           {habit.description && (
-                            <>
-                              {expandedHabit === habit.id ? (
-                                <ChevronUp className="w-4 h-4 text-gray-400" />
-                              ) : (
-                                <ChevronDown className="w-4 h-4 text-gray-400" />
-                              )}
-                            </>
+                            expandedHabit === habit.id ? (
+                              <ChevronUp className="w-4 h-4 text-gray-400" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-gray-400" />
+                            )
                           )}
                         </div>
                       </div>
@@ -1004,17 +1002,15 @@ export function TodayTasksView({
                         <Trash2 className="w-4 h-4" />
                       </button>
                       <div
-                        className="cursor-pointer"
-                        onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+                        className={`w-4 h-4 ${task.description ? 'cursor-pointer' : ''}`}
+                        onClick={() => task.description && setExpandedTask(expandedTask === task.id ? null : task.id)}
                       >
                         {task.description && (
-                          <>
-                            {expandedTask === task.id ? (
-                              <ChevronUp className="w-4 h-4 text-gray-400" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-gray-400" />
-                            )}
-                          </>
+                          expandedTask === task.id ? (
+                            <ChevronUp className="w-4 h-4 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                          )
                         )}
                       </div>
                     </div>
