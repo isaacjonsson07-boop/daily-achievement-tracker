@@ -1,8 +1,9 @@
 import React from 'react';
-import { Settings, Crown, Shield, Wrench, LogIn, LogOut } from 'lucide-react';
+import { Settings, Crown, Shield, Wrench, LogIn, LogOut, Ruler } from 'lucide-react';
 import { getTrialDaysRemaining } from '../utils/trialUtils';
 import { isDevEnvironment } from '../utils/devUtils';
 import { openWhopPaid, openWhopTrial } from '../constants';
+import { useUnitSystem } from '../hooks/useUnitSystem';
 
 interface SettingsViewProps {
   user?: { id?: string } | null;
@@ -15,6 +16,52 @@ interface SettingsViewProps {
   devSetFreePlan?: () => Promise<any>;
   devStartTrial?: () => Promise<any>;
   devSetPaidPlan?: () => Promise<any>;
+}
+
+function PreferencesSection() {
+  const { unitSystem, setUnitSystem } = useUnitSystem();
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+        <Ruler className="w-5 h-5 mr-2" />
+        Preferences
+      </h3>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Unit System</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Choose between metric and imperial units
+            </p>
+          </div>
+          <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+            <button
+              onClick={() => setUnitSystem('metric')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                unitSystem === 'metric'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+              }`}
+            >
+              Metric
+            </button>
+            <button
+              onClick={() => setUnitSystem('imperial')}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                unitSystem === 'imperial'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+              }`}
+            >
+              Imperial
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function SettingsView({
@@ -114,6 +161,9 @@ export function SettingsView({
           </div>
         </div>
       </div>
+
+      {/* Preferences Section */}
+      <PreferencesSection />
 
       {/* Dev Tools Section */}
       {showDevTools && (

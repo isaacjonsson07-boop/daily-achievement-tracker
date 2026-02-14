@@ -7,6 +7,7 @@ import { saveToCloud, loadFromCloud } from './utils/cloudStorage';
 import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { useCapacitor } from './hooks/useCapacitor';
+import { UnitSystemProvider } from './hooks/useUnitSystem';
 import { supabase } from './lib/supabase';
 import { Navigation } from './components/Navigation';
 import { AuthModal } from './components/AuthModal';
@@ -479,6 +480,7 @@ function App() {
   }
 
   return (
+    <UnitSystemProvider userId={user?.id}>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Navigation
         currentTab={currentTab}
@@ -577,6 +579,7 @@ function App() {
         {currentTab === 'help' && <HelpView />}
       </main>
     </div>
+    </UnitSystemProvider>
   );
 }
 
