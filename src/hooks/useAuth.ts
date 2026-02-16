@@ -113,22 +113,35 @@ export function useAuth() {
   }
 
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    console.error('Sign in error:', error)
+  }
+
+  if (!error && data.session) {
+    setSession(data.session)
+    setUser(data.session.user)
+
+    // 🔹 NEW: sync Whop tier
+    await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-whop-tier`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${data.session.access_token}`,
+      },
+      body: JSON.stringify({})
     })
 
-    if (error) {
-      console.error('Sign in error:', error)
-    }
+    await loadUserPlan(data.session.user.id)
+  }
 
-    if (!error && data.session) {
-      setSession(data.session)
-      setUser(data.session.user)
-      await loadUserPlan(data.session.user.id)
-    }
+  return { data, error }
+}
 
-    return { data, error }
   }
 
   const signOut = async () => {
