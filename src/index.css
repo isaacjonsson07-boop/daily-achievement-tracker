@@ -136,6 +136,23 @@ body::after {
   75% { transform: translate(15px, 5px); }
 }
 
+@keyframes slideRight {
+  0% { left: -15%; }
+  100% { left: 100%; }
+}
+@keyframes slideLeft {
+  0% { right: -15%; left: auto; }
+  100% { right: 100%; left: auto; }
+}
+@keyframes slideDown {
+  0% { top: -15%; }
+  100% { top: 100%; }
+}
+@keyframes slideUp {
+  0% { bottom: -15%; top: auto; }
+  100% { bottom: 100%; top: auto; }
+}
+
 .animate-rise {
   animation: rise 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
