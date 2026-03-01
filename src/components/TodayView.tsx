@@ -134,41 +134,21 @@ export function TodayView({
       {/* ════ DIRECTION & IDENTITY ════ */}
       {(direction || identity) && (
         <div className="relative mb-14 text-center animate-rise py-10 px-8">
-          {/* Corner accents — static frame */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25" />
+          {/* Rotating glow border */}
+          <div className="absolute -inset-px rounded-sm overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 animate-[spin_8s_linear_infinite]"
+              style={{
+                background: 'conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(197,165,90,0.6) 75%, rgba(212,186,120,0.8) 78%, rgba(197,165,90,0.6) 81%, transparent 96%, transparent 100%)',
+              }} />
+            {/* Inner cutout to make it a border, not a fill */}
+            <div className="absolute inset-[1px] bg-sa-bg-deep" />
+          </div>
 
-          {/* Travelling glow around the full frame */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-            <defs>
-              <linearGradient id="glow1" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="45%" stopColor="transparent" />
-                <stop offset="50%" stopColor="rgba(197,165,90,0.6)" />
-                <stop offset="55%" stopColor="transparent" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-              <linearGradient id="glow2" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="45%" stopColor="transparent" />
-                <stop offset="50%" stopColor="rgba(197,165,90,0.35)" />
-                <stop offset="55%" stopColor="transparent" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-            </defs>
-            {/* Full rectangle path for light 1 */}
-            <rect x="0" y="0" width="100%" height="100%" fill="none"
-              stroke="url(#glow1)" strokeWidth="1.5"
-              strokeDasharray="15% 85%"
-              style={{ animation: 'dashLoop 8s linear infinite' }} />
-            {/* Full rectangle path for light 2 — offset by half */}
-            <rect x="0" y="0" width="100%" height="100%" fill="none"
-              stroke="url(#glow2)" strokeWidth="1"
-              strokeDasharray="10% 90%"
-              style={{ animation: 'dashLoop 8s linear -4s infinite' }} />
-          </svg>
+          {/* Corner accents — static frame */}
+          <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
           {direction && (
             <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
