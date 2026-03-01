@@ -134,49 +134,41 @@ export function TodayView({
       {/* ════ DIRECTION & IDENTITY ════ */}
       {(direction || identity) && (
         <div className="relative mb-14 text-center animate-rise py-10 px-8">
-          {/* Animated glowing border */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="glow-grad" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="40%" stopColor="transparent" />
-                <stop offset="50%" stopColor="rgba(197,165,90,0.7)" />
-                <stop offset="60%" stopColor="transparent" />
-                <stop offset="100%" stopColor="transparent" />
-                <animateTransform attributeName="gradientTransform" type="rotate" from="0 0.5 0.5" to="360 0.5 0.5" dur="6s" repeatCount="indefinite" />
-              </linearGradient>
-            </defs>
-          </svg>
-
           {/* Corner accents — static frame */}
           <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25" />
           <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25" />
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25" />
 
-          {/* Travelling glow on the frame edges */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Top edge */}
-            <div className="absolute top-0 left-0 right-0 h-px">
-              <div className="absolute h-full w-24 animate-[slideRight_8s_linear_infinite]"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)' }} />
-            </div>
-            {/* Bottom edge */}
-            <div className="absolute bottom-0 left-0 right-0 h-px">
-              <div className="absolute h-full w-24 animate-[slideLeft_8s_linear_infinite]"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)' }} />
-            </div>
-            {/* Left edge */}
-            <div className="absolute top-0 bottom-0 left-0 w-px">
-              <div className="absolute w-full h-24 animate-[slideDown_8s_linear_infinite]"
-                style={{ background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)' }} />
-            </div>
-            {/* Right edge */}
-            <div className="absolute top-0 bottom-0 right-0 w-px">
-              <div className="absolute w-full h-24 animate-[slideUp_8s_linear_infinite]"
-                style={{ background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)' }} />
-            </div>
-          </div>
+          {/* Travelling glow around the full frame */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+            <defs>
+              <linearGradient id="glow1" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="45%" stopColor="transparent" />
+                <stop offset="50%" stopColor="rgba(197,165,90,0.6)" />
+                <stop offset="55%" stopColor="transparent" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <linearGradient id="glow2" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="45%" stopColor="transparent" />
+                <stop offset="50%" stopColor="rgba(197,165,90,0.35)" />
+                <stop offset="55%" stopColor="transparent" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+            </defs>
+            {/* Full rectangle path for light 1 */}
+            <rect x="0" y="0" width="100%" height="100%" fill="none"
+              stroke="url(#glow1)" strokeWidth="1.5"
+              strokeDasharray="15% 85%"
+              style={{ animation: 'dashLoop 8s linear infinite' }} />
+            {/* Full rectangle path for light 2 — offset by half */}
+            <rect x="0" y="0" width="100%" height="100%" fill="none"
+              stroke="url(#glow2)" strokeWidth="1"
+              strokeDasharray="10% 90%"
+              style={{ animation: 'dashLoop 8s linear -4s infinite' }} />
+          </svg>
 
           {direction && (
             <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
