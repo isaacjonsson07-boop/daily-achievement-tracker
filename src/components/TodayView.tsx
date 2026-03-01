@@ -35,10 +35,9 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
           const d = Math.min(Math.abs(dist - c), perimeter - Math.abs(dist - c));
           if (d < minCornerDist) minCornerDist = d;
         }
-        // Fade out within 50px of any corner
-        const fadeZone = 50;
-        const opacity = Math.min(1, minCornerDist / fadeZone);
-        el.style.opacity = `${opacity}`;
+        // Hide completely when overlapping corner lines (32px)
+        const cornerSize = 32;
+        el.style.opacity = minCornerDist < cornerSize ? '0' : '1';
 
         if (dist < width) {
           // Top edge: left → right
