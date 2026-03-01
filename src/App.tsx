@@ -7,6 +7,7 @@ import { fmtDateISO, uid } from './utils/dateUtils';
 import { useAuth } from './hooks/useAuth';
 import { supabase } from './lib/supabase';
 import { Navigation } from './components/Navigation';
+import { TabCover } from './components/TabCover';
 import { AuthModal } from './components/AuthModal';
 import { TodayView } from './components/TodayView';
 import { SettingsView } from './components/SettingsView';
@@ -278,7 +279,8 @@ function App() {
       />
 
       <main className="md:ml-[260px] min-h-screen">
-        <div className="px-6 sm:px-10 lg:px-14 py-12 pb-24 md:pb-12">
+        <TabCover tab={currentTab} />
+        <div className="px-6 sm:px-10 lg:px-14 pb-24 md:pb-12">
         {currentTab === 'today' && (
           <TodayView
             nonNegotiables={nonNegotiables}
