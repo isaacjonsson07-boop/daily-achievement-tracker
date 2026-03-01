@@ -1,98 +1,20 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { Habit, HabitCompletion, DailyTask, NonNegotiable, NonNegotiableCompletion } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 
 function DirectionFrame({ direction, identity }: { direction: string; identity: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const line1Ref = useRef<HTMLDivElement>(null);
-  const line2Ref = useRef<HTMLDivElement>(null);
-  const animRef = useRef<number>(0);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const speed = 80;
-
-    function animate() {
-      if (!container) return;
-      const { width, height } = container.getBoundingClientRect();
-      const perimeter = 2 * width + 2 * height;
-      const now = performance.now() / 1000;
-
-      [line1Ref, line2Ref].forEach((ref, i) => {
-        const el = ref.current;
-        if (!el) return;
-
-        const dist = ((now * speed) + (i * perimeter / 2)) % perimeter;
-
-        if (dist < width) {
-          el.style.top = `${-1}px`;
-          el.style.left = `${dist - 48}px`;
-          el.style.bottom = 'auto';
-          el.style.right = 'auto';
-          el.style.width = '96px';
-          el.style.height = '2px';
-          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.4), transparent)';
-        } else if (dist < width + height) {
-          const d = dist - width;
-          el.style.top = `${d - 48}px`;
-          el.style.left = `${width - 1}px`;
-          el.style.right = 'auto';
-          el.style.bottom = 'auto';
-          el.style.width = '2px';
-          el.style.height = '96px';
-          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.4), transparent)';
-        } else if (dist < 2 * width + height) {
-          const d = dist - width - height;
-          el.style.top = `${height - 1}px`;
-          el.style.left = `${width - d - 48}px`;
-          el.style.bottom = 'auto';
-          el.style.right = 'auto';
-          el.style.width = '96px';
-          el.style.height = '2px';
-          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.4), transparent)';
-        } else {
-          const d = dist - 2 * width - height;
-          el.style.top = `${height - d - 48}px`;
-          el.style.left = `${-1}px`;
-          el.style.right = 'auto';
-          el.style.bottom = 'auto';
-          el.style.width = '2px';
-          el.style.height = '96px';
-          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.4), transparent)';
-        }
-      });
-
-      animRef.current = requestAnimationFrame(animate);
-    }
-
-    animRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animRef.current);
-  }, []);
-
   return (
-    <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
-      {/* Corner accents */}
-      <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
-      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
-      <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
-
-      {/* Two travelling glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div ref={line1Ref} className="absolute" />
-        <div ref={line2Ref} className="absolute" />
-      </div>
-
+    <div className="mb-14 text-center animate-rise">
       {direction && (
-        <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
+        <p className="font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
           {direction}
         </p>
       )}
+      {/* Gold underline */}
+      <div className="w-[80px] h-px mx-auto mt-6" style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
       {identity && (
-        <p className="relative z-10 font-serif text-[1.05rem] italic font-light text-sa-gold mt-5 leading-relaxed">
+        <p className="font-serif text-[1.05rem] italic font-light text-sa-gold mt-5 leading-relaxed">
           "{identity}"
         </p>
       )}
