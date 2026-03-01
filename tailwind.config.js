@@ -6,23 +6,23 @@ export default {
     extend: {
       colors: {
         sa: {
-          // Backgrounds (darkest to lightest)
-          bg: '#1E1F23',
-          'bg-warm': '#24252A',
-          'bg-lift': '#2A2B31',
-          'bg-hover': '#313238',
+          // Backgrounds (lighter for better readability)
+          bg: '#252730',
+          'bg-warm': '#2C2E38',
+          'bg-lift': '#343640',
+          'bg-hover': '#3C3E49',
 
-          // Text hierarchy (brightest to faintest)
-          cream: '#FAF8F3',
-          'cream-soft': '#E8E5DE',
-          'cream-muted': '#C4C0B8',
-          'cream-faint': '#9B9790',
+          // Text hierarchy (brighter across the board)
+          cream: '#FFFFFF',
+          'cream-soft': '#F0EDE6',
+          'cream-muted': '#D4D0C8',
+          'cream-faint': '#ADA9A0',
 
           // Accent — gold (primary brand)
-          gold: '#C9A96E',
-          'gold-light': '#D4BA88',
-          'gold-soft': 'rgba(201, 169, 110, 0.12)',
-          'gold-border': 'rgba(201, 169, 110, 0.25)',
+          gold: '#D4B478',
+          'gold-light': '#DFCA98',
+          'gold-soft': 'rgba(212, 180, 120, 0.15)',
+          'gold-border': 'rgba(212, 180, 120, 0.30)',
 
           // Semantic — success
           green: '#5ADB7E',
@@ -40,9 +40,9 @@ export default {
           'blue-border': 'rgba(109, 181, 245, 0.30)',
 
           // Borders and dividers
-          border: 'rgba(240, 237, 230, 0.12)',
-          'border-light': 'rgba(240, 237, 230, 0.18)',
-          'border-active': 'rgba(201, 169, 110, 0.50)',
+          border: 'rgba(240, 237, 230, 0.16)',
+          'border-light': 'rgba(240, 237, 230, 0.24)',
+          'border-active': 'rgba(201, 169, 110, 0.60)',
         }
       },
       fontFamily: {
