@@ -133,18 +133,32 @@ export function TodayView({
 
       {/* ════ DIRECTION & IDENTITY ════ */}
       {(direction || identity) && (
-        <div className="mb-14 text-center animate-rise">
-          {direction && (
-            <p className="font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
-              {direction}
-            </p>
-          )}
-          {identity && (
-            <p className="font-serif text-[1.05rem] italic font-light text-sa-gold mt-5 leading-relaxed">
-              "{identity}"
-            </p>
-          )}
-          <div className="w-[60px] h-px mx-auto mt-7" style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
+        <div className="relative mb-14 text-center animate-rise">
+          {/* Slow breathing gradient glow */}
+          <div className="absolute -inset-8 -top-12 -bottom-6 rounded-2xl overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 animate-[breathe_8s_ease-in-out_infinite]" style={{
+              background: 'radial-gradient(ellipse 70% 60% at 50% 45%, rgba(197, 165, 90, 0.10), transparent 70%)',
+            }} />
+            <div className="absolute inset-0 animate-[breathe_12s_ease-in-out_infinite_reverse]" style={{
+              background: 'radial-gradient(ellipse 50% 70% at 40% 55%, rgba(197, 165, 90, 0.06), transparent 65%)',
+            }} />
+            <div className="absolute inset-0 animate-[breathe_10s_ease-in-out_2s_infinite]" style={{
+              background: 'radial-gradient(ellipse 60% 50% at 60% 40%, rgba(212, 186, 120, 0.05), transparent 60%)',
+            }} />
+          </div>
+          <div className="relative z-10">
+            {direction && (
+              <p className="font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
+                {direction}
+              </p>
+            )}
+            {identity && (
+              <p className="font-serif text-[1.05rem] italic font-light text-sa-gold mt-5 leading-relaxed">
+                "{identity}"
+              </p>
+            )}
+            <div className="w-[60px] h-px mx-auto mt-7" style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
+          </div>
         </div>
       )}
 
