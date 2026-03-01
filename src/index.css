@@ -141,6 +141,11 @@ body::after {
   to { transform: rotate(360deg); }
 }
 
+@keyframes underlineBreathe {
+  0%, 100% { width: 60px; opacity: 0.4; }
+  50% { width: 120px; opacity: 0.8; }
+}
+
 /* ═══ Direction frame — SVG dash scroll ═══ */
 @keyframes dashScroll {
   0% { stroke-dashoffset: 0; }

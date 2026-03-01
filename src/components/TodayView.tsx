@@ -11,8 +11,11 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
           {direction}
         </p>
       )}
-      {/* Gold underline */}
-      <div className="w-[80px] h-px mx-auto mt-6" style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
+      {/* Breathing gold underline */}
+      <div className="mx-auto mt-6 h-px" style={{ 
+        background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
+        animation: 'underlineBreathe 6s ease-in-out infinite',
+      }} />
       {identity && (
         <p className="font-serif text-[1.05rem] italic font-light text-sa-gold mt-5 leading-relaxed">
           "{identity}"
