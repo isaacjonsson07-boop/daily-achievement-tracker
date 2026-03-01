@@ -88,14 +88,14 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       {/* Travelling glows — clip-path cuts out corner areas */}
       <div className="absolute inset-0 pointer-events-none" style={{
         clipPath: `polygon(
-          36px -2px, calc(100% - 36px) -2px,
-          calc(100% - 36px) -2px, calc(100% + 2px) 36px,
-          calc(100% + 2px) 36px, calc(100% + 2px) calc(100% - 36px),
-          calc(100% + 2px) calc(100% - 36px), calc(100% - 36px) calc(100% + 2px),
-          calc(100% - 36px) calc(100% + 2px), 36px calc(100% + 2px),
-          36px calc(100% + 2px), -2px calc(100% - 36px),
-          -2px calc(100% - 36px), -2px 36px,
-          -2px 36px, 36px -2px
+          35px -2px, calc(100% - 35px) -2px,
+          calc(100% - 35px) -2px, calc(100% + 2px) 35px,
+          calc(100% + 2px) 35px, calc(100% + 2px) calc(100% - 35px),
+          calc(100% + 2px) calc(100% - 35px), calc(100% - 35px) calc(100% + 2px),
+          calc(100% - 35px) calc(100% + 2px), 35px calc(100% + 2px),
+          35px calc(100% + 2px), -2px calc(100% - 35px),
+          -2px calc(100% - 35px), -2px 35px,
+          -2px 35px, 35px -2px
         )`
       }}>
         <div ref={line1Ref} className="absolute" />
