@@ -25,45 +25,45 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
         const el = ref.current;
         if (!el) return;
 
-        // Offset second line by exactly half the perimeter
         const dist = ((now * speed) + (i * perimeter / 2)) % perimeter;
 
+        // Calculate position and angle along perimeter
+        let x = 0, y = 0, angle = 0;
+
         if (dist < width) {
-          el.style.top = `${-1}px`;
-          el.style.left = `${dist - 48}px`;
-          el.style.bottom = 'auto';
-          el.style.right = 'auto';
-          el.style.width = '96px';
-          el.style.height = '2px';
-          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.4), transparent)';
+          // Top edge: left → right
+          x = dist;
+          y = 0;
+          angle = 0;
         } else if (dist < width + height) {
+          // Right edge: top → bottom
           const d = dist - width;
-          el.style.top = `${d - 48}px`;
-          el.style.left = `${width - 1}px`;
-          el.style.right = 'auto';
-          el.style.bottom = 'auto';
-          el.style.width = '2px';
-          el.style.height = '96px';
-          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.4), transparent)';
+          x = width;
+          y = d;
+          angle = 90;
         } else if (dist < 2 * width + height) {
+          // Bottom edge: right → left
           const d = dist - width - height;
-          el.style.top = `${height - 1}px`;
-          el.style.left = `${width - d - 48}px`;
-          el.style.bottom = 'auto';
-          el.style.right = 'auto';
-          el.style.width = '96px';
-          el.style.height = '2px';
-          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.4), transparent)';
+          x = width - d;
+          y = height;
+          angle = 180;
         } else {
+          // Left edge: bottom → top
           const d = dist - 2 * width - height;
-          el.style.top = `${height - d - 48}px`;
-          el.style.left = `${-1}px`;
-          el.style.right = 'auto';
-          el.style.bottom = 'auto';
-          el.style.width = '2px';
-          el.style.height = '96px';
-          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.4), transparent)';
+          x = 0;
+          y = height - d;
+          angle = 270;
         }
+
+        el.style.left = '0';
+        el.style.top = '0';
+        el.style.right = 'auto';
+        el.style.bottom = 'auto';
+        el.style.width = '96px';
+        el.style.height = '2px';
+        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.4), transparent)';
+        el.style.transform = `translate(${x - 48}px, ${y - 1}px) rotate(${angle}deg)`;
+        el.style.transformOrigin = '48px 1px';
       });
 
       animRef.current = requestAnimationFrame(animate);
