@@ -14,28 +14,28 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       <div className="absolute top-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
         <div className="absolute inset-y-0 w-[60px]" style={{
           background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerRight 6s ease-in-out infinite',
+          animation: 'shimmerRight 12s ease-in-out infinite',
         }} />
       </div>
       {/* Bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
         <div className="absolute inset-y-0 w-[60px]" style={{
           background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerLeft 6s ease-in-out infinite',
+          animation: 'shimmerLeft 12s ease-in-out infinite',
         }} />
       </div>
       {/* Left */}
       <div className="absolute top-0 bottom-0 left-0 w-px overflow-hidden pointer-events-none">
         <div className="absolute inset-x-0 h-[60px]" style={{
           background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerDown 6s ease-in-out infinite',
+          animation: 'shimmerDown 12s ease-in-out infinite',
         }} />
       </div>
       {/* Right */}
       <div className="absolute top-0 bottom-0 right-0 w-px overflow-hidden pointer-events-none">
         <div className="absolute inset-x-0 h-[60px]" style={{
           background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerUp 6s ease-in-out infinite',
+          animation: 'shimmerUp 12s ease-in-out infinite',
         }} />
       </div>
 
