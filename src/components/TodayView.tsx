@@ -20,7 +20,7 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
     return () => window.removeEventListener('resize', measure);
   }, [measure]);
 
-  const glowLen = 80;
+  const glowLen = 60;
   // Two glows evenly spaced: glow, gap, glow, gap = perimeter
   // Each gap = (perimeter - 2*glowLen) / 2
   const gapLen = Math.max(0, (perimeter - 2 * glowLen) / 2);
@@ -41,20 +41,19 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg"
           style={{ ['--perimeter' as string]: `${perimeter}px` }}>
           <defs>
-            <filter id="glow-blur">
-              <feGaussianBlur stdDeviation="1" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
+            <filter id="glow-soft">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="blur" in2="blur" operator="over" />
             </filter>
           </defs>
           <rect
             x="1" y="1"
             width="calc(100% - 2px)" height="calc(100% - 2px)"
             fill="none"
-            stroke="rgba(197,165,90,0.5)"
-            strokeWidth="1"
+            stroke="rgba(197,165,90,0.4)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            filter="url(#glow-soft)"
             filter="url(#glow-blur)"
             strokeDasharray={`${glowLen} ${gapLen}`}
             className="animate-[dashScroll_10s_linear_infinite]"
