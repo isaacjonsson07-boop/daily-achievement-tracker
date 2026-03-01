@@ -1,69 +1,95 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { Habit, HabitCompletion, DailyTask, NonNegotiable, NonNegotiableCompletion } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 
 function DirectionFrame({ direction, identity }: { direction: string; identity: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [perimeter, setPerimeter] = useState(0);
-
-  const measure = useCallback(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setPerimeter(2 * width + 2 * height);
-    }
-  }, []);
+  const line1Ref = useRef<HTMLDivElement>(null);
+  const line2Ref = useRef<HTMLDivElement>(null);
+  const animRef = useRef<number>(0);
 
   useEffect(() => {
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [measure]);
+    const container = containerRef.current;
+    if (!container) return;
 
-  const glowLen = 120;
-  // Two glows evenly spaced
-  const gapLen = Math.max(0, (perimeter - 2 * glowLen) / 2);
+    const speed = 80; // pixels per second
+
+    function animate() {
+      if (!container) return;
+      const { width, height } = container.getBoundingClientRect();
+      const perimeter = 2 * width + 2 * height;
+      const now = performance.now() / 1000;
+
+      [line1Ref, line2Ref].forEach((ref, i) => {
+        const el = ref.current;
+        if (!el) return;
+
+        // Offset second line by exactly half the perimeter
+        const dist = ((now * speed) + (i * perimeter / 2)) % perimeter;
+
+        if (dist < width) {
+          // Top edge: left → right
+          el.style.top = '-0.5px';
+          el.style.left = `${dist - 48}px`;
+          el.style.bottom = 'auto';
+          el.style.right = 'auto';
+          el.style.width = '96px';
+          el.style.height = '1px';
+          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
+        } else if (dist < width + height) {
+          // Right edge: top → bottom
+          const d = dist - width;
+          el.style.top = `${d - 48}px`;
+          el.style.right = '-0.5px';
+          el.style.left = 'auto';
+          el.style.bottom = 'auto';
+          el.style.width = '1px';
+          el.style.height = '96px';
+          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
+        } else if (dist < 2 * width + height) {
+          // Bottom edge: right → left
+          const d = dist - width - height;
+          el.style.bottom = '-0.5px';
+          el.style.left = `${width - d - 48}px`;
+          el.style.top = 'auto';
+          el.style.right = 'auto';
+          el.style.width = '96px';
+          el.style.height = '1px';
+          el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
+        } else {
+          // Left edge: bottom → top
+          const d = dist - 2 * width - height;
+          el.style.top = `${height - d - 48}px`;
+          el.style.left = '-0.5px';
+          el.style.right = 'auto';
+          el.style.bottom = 'auto';
+          el.style.width = '1px';
+          el.style.height = '96px';
+          el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
+        }
+      });
+
+      animRef.current = requestAnimationFrame(animate);
+    }
+
+    animRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animRef.current);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
-      {/* Corner accents only — no full border */}
+      {/* Corner accents */}
       <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
       <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
-      {/* SVG glow */}
-      {perimeter > 0 && (
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg"
-          style={{ ['--perimeter' as string]: `${perimeter}px` }}>
-          <defs>
-            <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-            </filter>
-          </defs>
-          {/* Soft halo */}
-          <rect
-            x="1" y="1"
-            width="calc(100% - 2px)" height="calc(100% - 2px)"
-            fill="none"
-            stroke="rgba(197,165,90,0.6)"
-            strokeWidth="3"
-            filter="url(#soft-glow)"
-            strokeDasharray={`${glowLen} ${gapLen}`}
-            className="animate-[dashScroll_10s_linear_infinite]"
-          />
-          {/* Sharp bright core */}
-          <rect
-            x="1" y="1"
-            width="calc(100% - 2px)" height="calc(100% - 2px)"
-            fill="none"
-            stroke="rgba(197,165,90,0.5)"
-            strokeWidth="1"
-            strokeDasharray={`${glowLen} ${gapLen}`}
-            className="animate-[dashScroll_10s_linear_infinite]"
-          />
-        </svg>
-      )}
+      {/* Two travelling lines */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div ref={line1Ref} className="absolute" />
+        <div ref={line2Ref} className="absolute" />
+      </div>
 
       {direction && (
         <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
