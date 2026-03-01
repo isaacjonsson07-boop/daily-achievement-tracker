@@ -143,6 +143,11 @@ export function TodayView({
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
+          {/* Glow light 1 */}
+          <div className="direction-glow direction-glow-1" />
+          {/* Glow light 2 — 50% offset */}
+          <div className="direction-glow direction-glow-2" />
+
           {direction && (
             <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
               {direction}
