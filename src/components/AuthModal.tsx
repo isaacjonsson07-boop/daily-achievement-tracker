@@ -57,7 +57,7 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-sm bg-sa-bg-warm border border-[rgba(240,237,230,0.1)] rounded-2xl p-8 animate-rise">
+      <div className="relative w-full max-w-sm bg-sa-bg-warm border border-sa-border-light rounded-2xl p-8 animate-rise">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1 text-sa-cream-faint hover:text-sa-cream transition-colors"
@@ -85,7 +85,7 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               required
-              className="w-full bg-sa-bg border border-[rgba(240,237,230,0.1)] rounded-lg px-4 py-3 text-[0.88rem] text-sa-cream placeholder:text-sa-cream-faint outline-none focus:border-sa-gold transition-colors"
+              className="w-full bg-sa-bg border border-sa-border-light rounded-lg px-4 py-3 text-[0.88rem] text-sa-cream placeholder:text-sa-cream-faint outline-none focus:border-sa-gold transition-colors"
             />
             <input
               type="password"
@@ -94,7 +94,7 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
               placeholder="Password"
               required
               minLength={6}
-              className="w-full bg-sa-bg border border-[rgba(240,237,230,0.1)] rounded-lg px-4 py-3 text-[0.88rem] text-sa-cream placeholder:text-sa-cream-faint outline-none focus:border-sa-gold transition-colors"
+              className="w-full bg-sa-bg border border-sa-border-light rounded-lg px-4 py-3 text-[0.88rem] text-sa-cream placeholder:text-sa-cream-faint outline-none focus:border-sa-gold transition-colors"
             />
 
             {error && (

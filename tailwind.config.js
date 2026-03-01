@@ -6,43 +6,43 @@ export default {
     extend: {
       colors: {
         sa: {
-          // Backgrounds (darker, more depth)
-          bg: '#1A1B22',
-          'bg-warm': '#21222A',
-          'bg-lift': '#282A33',
-          'bg-hover': '#31333D',
+          // Backgrounds (Claude-style warm cream)
+          bg: '#F4F3EE',
+          'bg-warm': '#EDECE7',
+          'bg-lift': '#E5E4DF',
+          'bg-hover': '#DDDCD7',
 
-          // Text hierarchy (all near-white)
-          cream: '#FFFFFF',
-          'cream-soft': '#F7F6F3',
-          'cream-muted': '#EDEAE4',
-          'cream-faint': '#D5D1C9',
+          // Text hierarchy (dark text on light bg)
+          cream: '#1A1A1A',
+          'cream-soft': '#2E2E2E',
+          'cream-muted': '#5C5C5C',
+          'cream-faint': '#8A8A85',
 
           // Accent — gold (primary brand)
-          gold: '#D4B478',
-          'gold-light': '#DFCA98',
-          'gold-soft': 'rgba(212, 180, 120, 0.15)',
-          'gold-border': 'rgba(212, 180, 120, 0.30)',
+          gold: '#A8863A',
+          'gold-light': '#C09E52',
+          'gold-soft': 'rgba(168, 134, 58, 0.10)',
+          'gold-border': 'rgba(168, 134, 58, 0.25)',
 
           // Semantic — success
-          green: '#5ADB7E',
-          'green-soft': 'rgba(90, 219, 126, 0.14)',
-          'green-border': 'rgba(90, 219, 126, 0.30)',
+          green: '#2D8A4E',
+          'green-soft': 'rgba(45, 138, 78, 0.10)',
+          'green-border': 'rgba(45, 138, 78, 0.25)',
 
           // Semantic — warning / attention
-          rose: '#E07070',
-          'rose-soft': 'rgba(230, 100, 100, 0.12)',
-          'rose-border': 'rgba(230, 100, 100, 0.25)',
+          rose: '#C94444',
+          'rose-soft': 'rgba(201, 68, 68, 0.08)',
+          'rose-border': 'rgba(201, 68, 68, 0.20)',
 
           // Semantic — info / neutral accent
-          blue: '#6DB5F5',
-          'blue-soft': 'rgba(109, 181, 245, 0.14)',
-          'blue-border': 'rgba(109, 181, 245, 0.30)',
+          blue: '#3B7DD8',
+          'blue-soft': 'rgba(59, 125, 216, 0.10)',
+          'blue-border': 'rgba(59, 125, 216, 0.25)',
 
           // Borders and dividers
-          border: 'rgba(240, 237, 230, 0.16)',
-          'border-light': 'rgba(240, 237, 230, 0.24)',
-          'border-active': 'rgba(201, 169, 110, 0.60)',
+          border: 'rgba(0, 0, 0, 0.08)',
+          'border-light': 'rgba(0, 0, 0, 0.12)',
+          'border-active': 'rgba(168, 134, 58, 0.40)',
         }
       },
       fontFamily: {

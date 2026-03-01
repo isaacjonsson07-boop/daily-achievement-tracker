@@ -10,38 +10,38 @@
 
 :root {
   /* Backgrounds */
-  --bg: #1A1B22;
-  --bg-warm: #21222A;
-  --bg-lift: #282A33;
-  --bg-hover: #31333D;
+  --bg: #F4F3EE;
+  --bg-warm: #EDECE7;
+  --bg-lift: #E5E4DF;
+  --bg-hover: #DDDCD7;
 
   /* Text */
-  --cream: #FFFFFF;
-  --cream-soft: #F7F6F3;
-  --cream-muted: #EDEAE4;
-  --cream-faint: #D5D1C9;
+  --cream: #1A1A1A;
+  --cream-soft: #2E2E2E;
+  --cream-muted: #5C5C5C;
+  --cream-faint: #8A8A85;
 
   /* Gold — primary accent */
-  --gold: #D4B478;
-  --gold-light: #DFCA98;
-  --gold-soft: rgba(212, 180, 120, 0.15);
-  --gold-border: rgba(212, 180, 120, 0.30);
+  --gold: #A8863A;
+  --gold-light: #C09E52;
+  --gold-soft: rgba(168, 134, 58, 0.10);
+  --gold-border: rgba(168, 134, 58, 0.25);
 
   /* Semantic */
-  --green: #5ADB7E;
-  --green-soft: rgba(90, 219, 126, 0.14);
-  --green-border: rgba(90, 219, 126, 0.30);
-  --rose: #E07070;
-  --rose-soft: rgba(230, 100, 100, 0.12);
-  --rose-border: rgba(230, 100, 100, 0.25);
-  --blue: #6DB5F5;
-  --blue-soft: rgba(109, 181, 245, 0.14);
-  --blue-border: rgba(109, 181, 245, 0.30);
+  --green: #2D8A4E;
+  --green-soft: rgba(45, 138, 78, 0.10);
+  --green-border: rgba(45, 138, 78, 0.25);
+  --rose: #C94444;
+  --rose-soft: rgba(201, 68, 68, 0.08);
+  --rose-border: rgba(201, 68, 68, 0.20);
+  --blue: #3B7DD8;
+  --blue-soft: rgba(59, 125, 216, 0.10);
+  --blue-border: rgba(59, 125, 216, 0.25);
 
   /* Borders */
-  --border: rgba(240, 237, 230, 0.16);
-  --border-light: rgba(240, 237, 230, 0.24);
-  --border-active: rgba(201, 169, 110, 0.60);
+  --border: rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.12);
+  --border-active: rgba(168, 134, 58, 0.40);
 
   /* Typography */
   --serif: 'Playfair Display', Georgia, serif;
@@ -69,8 +69,8 @@ body {
    ======================================== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(240,237,230,0.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(240,237,230,0.18); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
 
 /* ========================================
    FOCUS
@@ -132,7 +132,7 @@ input::placeholder, textarea::placeholder {
 
   /* Buttons */
   .sa-btn-primary {
-    @apply px-4 py-2.5 bg-sa-gold text-sa-bg font-medium text-sm rounded-sa
+    @apply px-4 py-2.5 bg-sa-gold text-white font-medium text-sm rounded-sa
            hover:bg-sa-gold-light transition-colors duration-150;
   }
 
@@ -172,7 +172,7 @@ input::placeholder, textarea::placeholder {
   }
 
   .sa-check-done {
-    @apply bg-sa-green border-sa-green text-sa-bg;
+    @apply bg-sa-green border-sa-green text-white;
   }
 
   .sa-check-undone {
