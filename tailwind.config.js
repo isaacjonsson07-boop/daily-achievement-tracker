@@ -12,11 +12,11 @@ export default {
           'bg-lift': '#282A33',
           'bg-hover': '#31333D',
 
-          // Text hierarchy (much whiter/brighter)
+          // Text hierarchy (all near-white)
           cream: '#FFFFFF',
-          'cream-soft': '#F2F0EB',
-          'cream-muted': '#DDD9D1',
-          'cream-faint': '#B8B4AB',
+          'cream-soft': '#F7F6F3',
+          'cream-muted': '#EDEAE4',
+          'cream-faint': '#D5D1C9',
 
           // Accent — gold (primary brand)
           gold: '#D4B478',
