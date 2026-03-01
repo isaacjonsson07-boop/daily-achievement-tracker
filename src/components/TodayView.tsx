@@ -33,45 +33,24 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
-      {/* SVG glow — gradient-faded segments */}
+      {/* SVG glow */}
       {perimeter > 0 && (
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg"
           style={{ ['--perimeter' as string]: `${perimeter}px` }}>
           <defs>
-            {/* Mask that fades each dash segment at both ends */}
-            <mask id="dash-fade">
-              <rect
-                x="1" y="1"
-                width="calc(100% - 2px)" height="calc(100% - 2px)"
-                fill="none"
-                stroke="white"
-                strokeWidth="8"
-                strokeDasharray={`${glowLen * 0.3} 0 ${glowLen * 0.4} 0 ${glowLen * 0.3} ${gapLen}`}
-                strokeOpacity="1"
-                className="animate-[dashScroll_10s_linear_infinite]"
-              />
-            </mask>
+            <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+            </filter>
           </defs>
-          {/* Soft wide glow */}
+          {/* Blurred glow layer */}
           <rect
             x="1" y="1"
             width="calc(100% - 2px)" height="calc(100% - 2px)"
             fill="none"
-            stroke="rgba(197,165,90,0.35)"
-            strokeWidth="8"
-            mask="url(#dash-fade)"
+            stroke="rgba(197,165,90,0.7)"
+            strokeWidth="2"
+            filter="url(#soft-glow)"
             strokeDasharray={`${glowLen} ${gapLen}`}
-            className="animate-[dashScroll_10s_linear_infinite]"
-          />
-          {/* Bright thin core */}
-          <rect
-            x="1" y="1"
-            width="calc(100% - 2px)" height="calc(100% - 2px)"
-            fill="none"
-            stroke="rgba(197,165,90,0.6)"
-            strokeWidth="1"
-            strokeDasharray={`${glowLen * 0.5} ${gapLen + glowLen * 0.5}`}
-            strokeDashoffset={`${-glowLen * 0.25}`}
             className="animate-[dashScroll_10s_linear_infinite]"
           />
         </svg>
