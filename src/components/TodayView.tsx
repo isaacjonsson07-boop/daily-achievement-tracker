@@ -52,7 +52,13 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
           style={{ overflow: 'visible' }}>
           <defs>
             <filter id="shimmer-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur1" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur2" />
+              <feMerge>
+                <feMergeNode in="blur1" />
+                <feMergeNode in="blur2" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
             </filter>
           </defs>
           <rect
@@ -60,8 +66,8 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
             x="0.5" y="0.5"
             width={dims.w - 1} height={dims.h - 1}
             fill="none"
-            stroke="rgba(197,165,90,0.6)"
-            strokeWidth="4"
+            stroke="rgba(197,165,90,0.9)"
+            strokeWidth="3"
             filter="url(#shimmer-glow)"
             strokeDasharray={`${glowLen} ${gapLen}`}
           />
