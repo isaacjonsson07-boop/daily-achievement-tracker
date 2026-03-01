@@ -70,7 +70,7 @@ export function TabCover({ tab }: TabCoverProps) {
       }} />
 
       {/* Title overlay */}
-      <div className="relative z-10 w-full px-6 sm:px-10 lg:px-14 pb-6">
+      <div className="relative z-10 w-full px-6 sm:px-10 lg:px-14 pb-6 text-center">
         <h1 className="font-serif text-3xl sm:text-4xl md:text-[2.8rem] text-sa-cream font-normal tracking-[-0.02em]">
           {cover.title}
         </h1>
