@@ -237,10 +237,14 @@ export function ReviewsView({
                 <p className="sa-section-subtitle text-sa-gold mb-4">Non-Negotiable Consistency</p>
                 <div className="space-y-3">
                   {nonNegotiables.filter(n => n.active).map((nn) => {
-                    const completedDays = weekStats.dailyData.filter(d =>
+                    const applicableDays = weekStats.dailyData.filter(d =>
+                      new Date(nn.created_at).getTime() <= new Date(d.date + 'T23:59:59').getTime()
+                    );
+                    const completedDays = applicableDays.filter(d =>
                       nnCompletions.some(c => c.non_negotiable_id === nn.id && c.completion_date === d.date)
                     ).length;
-                    const rate = Math.round((completedDays / 7) * 100);
+                    const totalDays = applicableDays.length || 1;
+                    const rate = Math.round((completedDays / totalDays) * 100);
                     return (
                       <div key={nn.id} className="flex items-center gap-3">
                         <span className="text-sm text-sa-cream flex-1 truncate">{nn.title}</span>
@@ -248,7 +252,7 @@ export function ReviewsView({
                           <div className="h-full rounded-full transition-all duration-500"
                             style={{ width: `${rate}%`, background: rateBarColor(rate) }} />
                         </div>
-                        <span className={`text-xs w-8 text-right ${rateColor(rate)}`}>{completedDays}/7</span>
+                        <span className={`text-xs w-8 text-right ${rateColor(rate)}`}>{completedDays}/{totalDays}</span>
                       </div>
                     );
                   })}
