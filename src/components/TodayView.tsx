@@ -5,74 +5,61 @@ import { fmtDateISO, uid } from '../utils/dateUtils';
 
 function DirectionFrame({ direction, identity }: { direction: string; identity: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const shimmer1Ref = useRef<HTMLDivElement>(null);
-  const shimmer2Ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<SVGRectElement>(null);
   const animRef = useRef<number>(0);
+  const [dims, setDims] = useState({ w: 0, h: 0, p: 0 });
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    function measure() {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setDims({ w: width, h: height, p: 2 * width + 2 * height });
+      }
+    }
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
+  useEffect(() => {
+    if (dims.p <= 0) return;
     const speed = 60;
 
-    function positionShimmer(el: HTMLDivElement, dist: number, width: number, height: number) {
-      if (dist < width) {
-        el.style.top = '-1px';
-        el.style.left = `${dist - 30}px`;
-        el.style.width = '60px';
-        el.style.height = '2px';
-        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else if (dist < width + height) {
-        const d = dist - width;
-        el.style.top = `${d - 30}px`;
-        el.style.left = `${width - 1}px`;
-        el.style.width = '2px';
-        el.style.height = '60px';
-        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else if (dist < 2 * width + height) {
-        const d = dist - width - height;
-        el.style.top = `${height - 1}px`;
-        el.style.left = `${width - d - 30}px`;
-        el.style.width = '60px';
-        el.style.height = '2px';
-        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else {
-        const d = dist - 2 * width - height;
-        el.style.top = `${height - d - 30}px`;
-        el.style.left = '-1px';
-        el.style.width = '2px';
-        el.style.height = '60px';
-        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
-      }
-    }
-
     function animate() {
-      if (!container) return;
-      const { width, height } = container.getBoundingClientRect();
-      const perimeter = 2 * width + 2 * height;
-      const now = performance.now() / 1000;
-
-      if (shimmer1Ref.current) {
-        const dist = ((now * speed)) % perimeter;
-        positionShimmer(shimmer1Ref.current, dist, width, height);
+      if (rectRef.current) {
+        const offset = -((performance.now() / 1000) * speed) % dims.p;
+        rectRef.current.style.strokeDashoffset = `${offset}`;
       }
-
       animRef.current = requestAnimationFrame(animate);
     }
-
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, []);
+  }, [dims.p]);
+
+  const glowLen = 60;
+  const gapLen = dims.p > 0 ? dims.p - glowLen : 0;
 
   return (
     <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
       {/* Static dim border */}
       <div className="absolute inset-0 border border-sa-gold/15 pointer-events-none" />
 
-      {/* Two shimmer lights following the frame */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div ref={shimmer1Ref} className="absolute" />
-      </div>
+      {/* Single SVG shimmer — one continuous path */}
+      {dims.w > 0 && (
+        <svg className="absolute inset-0 pointer-events-none z-[5]" 
+          width={dims.w} height={dims.h}
+          viewBox={`0 0 ${dims.w} ${dims.h}`}>
+          <rect
+            ref={rectRef}
+            x="0.5" y="0.5"
+            width={dims.w - 1} height={dims.h - 1}
+            fill="none"
+            stroke="rgba(197,165,90,0.5)"
+            strokeWidth="1"
+            strokeDasharray={`${glowLen} ${gapLen}`}
+          />
+        </svg>
+      )}
 
       {direction && (
         <p className="relative z-10 font-serif text-[1.85rem] font-light leading-[1.45] text-sa-cream tracking-[-0.01em]">
