@@ -30,41 +30,41 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
 
         if (dist < width) {
           // Top edge: left → right
-          el.style.top = `${-16}px`;
+          el.style.top = `${-3}px`;
           el.style.left = `${dist - 48}px`;
           el.style.bottom = 'auto';
           el.style.right = 'auto';
           el.style.width = '96px';
-          el.style.height = '32px';
+          el.style.height = '6px';
           el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
         } else if (dist < width + height) {
           // Right edge: top → bottom
           const d = dist - width;
           el.style.top = `${d - 48}px`;
-          el.style.left = `${width - 16}px`;
+          el.style.left = `${width - 3}px`;
           el.style.right = 'auto';
           el.style.bottom = 'auto';
-          el.style.width = '32px';
+          el.style.width = '6px';
           el.style.height = '96px';
           el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
         } else if (dist < 2 * width + height) {
           // Bottom edge: right → left
           const d = dist - width - height;
-          el.style.top = `${height - 16}px`;
+          el.style.top = `${height - 3}px`;
           el.style.left = `${width - d - 48}px`;
           el.style.bottom = 'auto';
           el.style.right = 'auto';
           el.style.width = '96px';
-          el.style.height = '32px';
+          el.style.height = '6px';
           el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
         } else {
           // Left edge: bottom → top
           const d = dist - 2 * width - height;
           el.style.top = `${height - d - 48}px`;
-          el.style.left = `${-16}px`;
+          el.style.left = `${-3}px`;
           el.style.right = 'auto';
           el.style.bottom = 'auto';
-          el.style.width = '32px';
+          el.style.width = '6px';
           el.style.height = '96px';
           el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
         }
