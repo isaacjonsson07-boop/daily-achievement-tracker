@@ -5,46 +5,15 @@ import { fmtDateISO, uid } from '../utils/dateUtils';
 
 function DirectionFrame({ direction, identity }: { direction: string; identity: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const shimmer1Ref = useRef<HTMLDivElement>(null);
-  const shimmer2Ref = useRef<HTMLDivElement>(null);
+  const line1Ref = useRef<HTMLDivElement>(null);
+  const line2Ref = useRef<HTMLDivElement>(null);
   const animRef = useRef<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const speed = 60;
-
-    function positionShimmer(el: HTMLDivElement, dist: number, width: number, height: number) {
-      if (dist < width) {
-        el.style.top = '-1px';
-        el.style.left = `${dist - 30}px`;
-        el.style.width = '60px';
-        el.style.height = '2px';
-        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else if (dist < width + height) {
-        const d = dist - width;
-        el.style.top = `${d - 30}px`;
-        el.style.left = `${width - 1}px`;
-        el.style.width = '2px';
-        el.style.height = '60px';
-        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else if (dist < 2 * width + height) {
-        const d = dist - width - height;
-        el.style.top = `${height - 1}px`;
-        el.style.left = `${width - d - 30}px`;
-        el.style.width = '60px';
-        el.style.height = '2px';
-        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
-      } else {
-        const d = dist - 2 * width - height;
-        el.style.top = `${height - d - 30}px`;
-        el.style.left = '-1px';
-        el.style.width = '2px';
-        el.style.height = '60px';
-        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
-      }
-    }
+    const speed = 80; // pixels per second
 
     function animate() {
       if (!container) return;
@@ -52,10 +21,54 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       const perimeter = 2 * width + 2 * height;
       const now = performance.now() / 1000;
 
-      if (shimmer1Ref.current) {
-        const dist = ((now * speed)) % perimeter;
-        positionShimmer(shimmer1Ref.current, dist, width, height);
-      }
+      [line1Ref, line2Ref].forEach((ref, i) => {
+        const el = ref.current;
+        if (!el) return;
+
+        // Offset second line by exactly half the perimeter
+        const dist = ((now * speed) + (i * perimeter / 2)) % perimeter;
+
+        if (dist < width) {
+          // Top edge: left → right
+          el.style.top = `${-16}px`;
+          el.style.left = `${dist - 48}px`;
+          el.style.bottom = 'auto';
+          el.style.right = 'auto';
+          el.style.width = '96px';
+          el.style.height = '32px';
+          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
+        } else if (dist < width + height) {
+          // Right edge: top → bottom
+          const d = dist - width;
+          el.style.top = `${d - 48}px`;
+          el.style.left = `${width - 16}px`;
+          el.style.right = 'auto';
+          el.style.bottom = 'auto';
+          el.style.width = '32px';
+          el.style.height = '96px';
+          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
+        } else if (dist < 2 * width + height) {
+          // Bottom edge: right → left
+          const d = dist - width - height;
+          el.style.top = `${height - 16}px`;
+          el.style.left = `${width - d - 48}px`;
+          el.style.bottom = 'auto';
+          el.style.right = 'auto';
+          el.style.width = '96px';
+          el.style.height = '32px';
+          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
+        } else {
+          // Left edge: bottom → top
+          const d = dist - 2 * width - height;
+          el.style.top = `${height - d - 48}px`;
+          el.style.left = `${-16}px`;
+          el.style.right = 'auto';
+          el.style.bottom = 'auto';
+          el.style.width = '32px';
+          el.style.height = '96px';
+          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)';
+        }
+      });
 
       animRef.current = requestAnimationFrame(animate);
     }
@@ -66,12 +79,16 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
 
   return (
     <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
-      {/* Static dim border */}
-      <div className="absolute inset-0 border border-sa-gold/15 pointer-events-none" />
+      {/* Corner accents */}
+      <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
+      <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
-      {/* Two shimmer lights following the frame */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div ref={shimmer1Ref} className="absolute" />
+      {/* Two travelling glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div ref={line1Ref} className="absolute" />
+        <div ref={line2Ref} className="absolute" />
       </div>
 
       {direction && (
