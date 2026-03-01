@@ -9,33 +9,37 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       {/* Static dim border */}
       <div className="absolute inset-0 border border-sa-gold/15 pointer-events-none" />
 
-      {/* Shimmer overlay on each edge */}
-      {/* Top */}
+      {/* Shimmer overlay — connected loop: top→right→bottom→left */}
+      {/* Top: slides left→right */}
       <div className="absolute top-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
         <div className="absolute inset-y-0 w-[60px]" style={{
           background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerRight 12s ease-in-out infinite',
+          animation: 'shimmerOnce 12s linear infinite',
+          animationDelay: '0s',
         }} />
       </div>
-      {/* Bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-y-0 w-[60px]" style={{
-          background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerLeft 12s ease-in-out infinite',
-        }} />
-      </div>
-      {/* Left */}
-      <div className="absolute top-0 bottom-0 left-0 w-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-x-0 h-[60px]" style={{
-          background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerDown 12s ease-in-out infinite',
-        }} />
-      </div>
-      {/* Right */}
+      {/* Right: slides top→bottom */}
       <div className="absolute top-0 bottom-0 right-0 w-px overflow-hidden pointer-events-none">
         <div className="absolute inset-x-0 h-[60px]" style={{
           background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerUp 12s ease-in-out infinite',
+          animation: 'shimmerOnceDown 12s linear infinite',
+          animationDelay: '3s',
+        }} />
+      </div>
+      {/* Bottom: slides right→left */}
+      <div className="absolute bottom-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
+        <div className="absolute inset-y-0 w-[60px]" style={{
+          background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
+          animation: 'shimmerOnceReverse 12s linear infinite',
+          animationDelay: '6s',
+        }} />
+      </div>
+      {/* Left: slides bottom→top */}
+      <div className="absolute top-0 bottom-0 left-0 w-px overflow-hidden pointer-events-none">
+        <div className="absolute inset-x-0 h-[60px]" style={{
+          background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
+          animation: 'shimmerOnceUp 12s linear infinite',
+          animationDelay: '9s',
         }} />
       </div>
 
