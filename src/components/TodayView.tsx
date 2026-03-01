@@ -27,9 +27,9 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
 
     function animate() {
       const offset = -((performance.now() / 1000) * speed) % perim;
-      // Update both the sharp core and the glow
       if (rectRef.current) {
-        rectRef.current.style.strokeDashoffset = `${offset}`;
+        // Core is shorter, offset to center it on the glow
+        rectRef.current.style.strokeDashoffset = `${offset + glowLen * 0.25}`;
       }
       const glowRect = containerRef.current?.querySelector('.direction-glow-rect') as SVGElement | null;
       if (glowRect) {
@@ -57,25 +57,25 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
         const w = el ? el.getBoundingClientRect().width : 0;
         const h = el ? el.getBoundingClientRect().height : 0;
         return (
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5]" xmlns="http://www.w3.org/2000/svg"
-            viewBox={`0 0 ${w} ${h}`}>
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-[5] overflow-visible" xmlns="http://www.w3.org/2000/svg"
+            viewBox={`0 0 ${w} ${h}`} style={{ overflow: 'visible' }}>
             <defs>
-              <filter id="glow-f" x="-10%" y="-10%" width="120%" height="120%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+              <filter id="glow-f" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8 1" />
               </filter>
             </defs>
-            {/* Soft glow behind */}
+            {/* Wide horizontal glow */}
             <rect
               x="0.5" y="0.5"
               width={w - 1} height={h - 1}
               fill="none"
-              stroke="rgba(197,165,90,0.5)"
-              strokeWidth="3"
+              stroke="rgba(197,165,90,0.6)"
+              strokeWidth="2"
               filter="url(#glow-f)"
               strokeDasharray={`${glowLen} ${gapLen}`}
               className="direction-glow-rect"
             />
-            {/* Sharp thin core */}
+            {/* Sharp thin core — shorter */}
             <rect
               ref={rectRef}
               x="0.5" y="0.5"
@@ -83,7 +83,7 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
               fill="none"
               stroke="rgba(197,165,90,0.5)"
               strokeWidth="0.5"
-              strokeDasharray={`${glowLen} ${gapLen}`}
+              strokeDasharray={`${glowLen * 0.5} ${gapLen + glowLen * 0.5}`}
             />
           </svg>
         );
