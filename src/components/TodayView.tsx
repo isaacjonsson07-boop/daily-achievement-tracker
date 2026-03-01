@@ -103,7 +103,7 @@ export function TodayView({
     } catch { return 0; }
   }, []);
 
-  // ── Weekly consistency ──
+  // ── Weekly consistency (only counts days since each item was created) ──
   const weekConsistency = useMemo(() => {
     let totalPossible = 0;
     let totalDone = 0;
@@ -112,15 +112,18 @@ export function TodayView({
       d.setDate(d.getDate() - i);
       const ds = fmtDateISO(d);
       const di = d.getDay();
-      const nnT = activeNNs.length;
-      const nnD = activeNNs.filter((nn) =>
+      const dayStart = new Date(d);
+      dayStart.setHours(0, 0, 0, 0);
+
+      const nnsActive = activeNNs.filter(nn => new Date(nn.created_at) <= dayStart);
+      const nnD = nnsActive.filter((nn) =>
         nnCompletions.some((c) => c.non_negotiable_id === nn.id && c.completion_date === ds)
       ).length;
-      const hForDay = habits.filter((h) => h.days_of_week.includes(di));
+      const hForDay = habits.filter((h) => h.days_of_week.includes(di) && new Date(h.created_at) <= dayStart);
       const hD = hForDay.filter((h) =>
         habitCompletions.some((c) => c.habit_id === h.id && c.completion_date === ds)
       ).length;
-      totalPossible += nnT + hForDay.length;
+      totalPossible += nnsActive.length + hForDay.length;
       totalDone += nnD + hD;
     }
     return totalPossible > 0 ? Math.round((totalDone / totalPossible) * 100) : 0;

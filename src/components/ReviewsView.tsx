@@ -69,13 +69,16 @@ export function ReviewsView({
     const dailyData = days.map((date) => {
       const d = new Date(date + 'T00:00:00');
       const dayIndex = d.getDay();
+      const dayStart = d.getTime();
 
-      const nnTotal = activeNNs.length;
-      const nnDone = activeNNs.filter((nn) =>
+      // Only count items that existed on this day
+      const nnsForDay = activeNNs.filter(nn => new Date(nn.created_at).getTime() <= dayStart + 86400000);
+      const nnTotal = nnsForDay.length;
+      const nnDone = nnsForDay.filter((nn) =>
         nnCompletions.some((c) => c.non_negotiable_id === nn.id && c.completion_date === date)
       ).length;
 
-      const habitsForDay = habits.filter((h) => h.days_of_week.includes(dayIndex));
+      const habitsForDay = habits.filter((h) => h.days_of_week.includes(dayIndex) && new Date(h.created_at).getTime() <= dayStart + 86400000);
       const habitsDone = habitsForDay.filter((h) =>
         habitCompletions.some((c) => c.habit_id === h.id && c.completion_date === date)
       ).length;
