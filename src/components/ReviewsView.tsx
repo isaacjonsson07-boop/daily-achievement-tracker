@@ -171,7 +171,7 @@ export function ReviewsView({
   );
 
   return (
-    <div className="max-w-full">
+    <div className="max-w-3xl mx-auto">
 
       {/* Header */}
       <div className="mb-8 animate-rise">
@@ -190,10 +190,10 @@ export function ReviewsView({
 
       {/* ════════ SNAPSHOT TAB ════════ */}
       {activeTab === 'snapshot' && (
-        <div className="flex flex-col lg:flex-row gap-8 animate-rise delay-2">
+        <div className="space-y-6 animate-rise delay-2">
 
           {/* Left column — charts */}
-          <div className="flex-1 min-w-0 space-y-6">
+          <div className="space-y-6">
 
             {/* System Health Card */}
             <div className="sa-card-elevated">
@@ -255,7 +255,7 @@ export function ReviewsView({
           </div>
 
           {/* Right column — category rates + goals */}
-          <div className="lg:w-80 flex-shrink-0 space-y-6">
+          <div className="space-y-6">
 
             {/* Category breakdown */}
             <div className="sa-card-elevated">
@@ -310,10 +310,10 @@ export function ReviewsView({
 
       {/* ════════ WEEKLY REVIEW TAB ════════ */}
       {activeTab === 'weekly' && (
-        <div className="flex flex-col lg:flex-row gap-8 animate-rise delay-2">
+        <div className="space-y-6 animate-rise delay-2">
 
           {/* Left: form */}
-          <div className="flex-1 min-w-0 space-y-6">
+          <div className="space-y-6">
             <div className="space-y-6">
               {WEEKLY_QUESTIONS.map((question, i) => (
                 <div key={i}>
@@ -334,7 +334,7 @@ export function ReviewsView({
           </div>
 
           {/* Right: live stats */}
-          <div className="lg:w-80 flex-shrink-0 space-y-5">
+          <div className="space-y-5">
             <div className="sa-card-elevated">
               <p className="sa-section-subtitle text-sa-gold mb-4">This Week's Data</p>
               <div className="space-y-4">
@@ -364,10 +364,10 @@ export function ReviewsView({
 
       {/* ════════ MONTHLY RECALIBRATION TAB ════════ */}
       {activeTab === 'monthly' && (
-        <div className="flex flex-col lg:flex-row gap-8 animate-rise delay-2">
+        <div className="space-y-6 animate-rise delay-2">
 
           {/* Left: form */}
-          <div className="flex-1 min-w-0 space-y-6">
+          <div className="space-y-6">
             <div className="sa-card">
               <p className="text-sm text-sa-cream-soft">
                 The monthly recalibration is a deeper review. Revisit your direction, identity, and priorities.
@@ -394,7 +394,7 @@ export function ReviewsView({
           </div>
 
           {/* Right: system doc previews */}
-          <div className="lg:w-80 flex-shrink-0 space-y-5">
+          <div className="space-y-5">
             <div className="sa-card-elevated">
               <p className="sa-section-subtitle text-sa-gold mb-3">Your System Documents</p>
               <p className="text-xs text-sa-cream-faint mb-4">Review these while recalibrating:</p>

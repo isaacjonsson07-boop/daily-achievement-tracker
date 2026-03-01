@@ -28,7 +28,7 @@ export function SettingsView({
   const showDevTools = isDevMode && devSetFreePlan && devStartTrial && devSetPaidPlan;
 
   return (
-    <div className="max-w-full">
+    <div className="max-w-3xl mx-auto">
       <div className="mb-10 animate-rise">
         <h1 className="font-serif text-2xl sm:text-3xl font-normal text-sa-cream">Settings</h1>
       </div>

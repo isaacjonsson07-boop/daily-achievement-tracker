@@ -179,7 +179,7 @@ export function SystemView({
   const docsWithContent = DOC_TYPES.filter(d => documents[d.key]?.trim()).length;
 
   return (
-    <div className="max-w-full">
+    <div className="max-w-3xl mx-auto">
 
       {/* Header */}
       <div className="mb-10 animate-rise">
@@ -192,10 +192,10 @@ export function SystemView({
       </div>
 
       {/* ── Two Column Layout ── */}
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div>
 
-        {/* ══════ LEFT: System Documents ══════ */}
-        <div className="flex-1 min-w-0">
+        {/* System Documents */}
+        <div>
           <div className="animate-rise delay-1">
             <SectionHeader
               id="documents"
@@ -276,9 +276,6 @@ export function SystemView({
         )}
       </div>
         </div>
-
-        {/* ══════ RIGHT: Operational Components ══════ */}
-        <div className="lg:w-96 flex-shrink-0">
 
       {/* ── Non-Negotiables ── */}
       <div className="animate-rise delay-2">
@@ -548,7 +545,6 @@ export function SystemView({
           </div>
         )}
       </div>
-        </div>
       </div>
     </div>
   );
