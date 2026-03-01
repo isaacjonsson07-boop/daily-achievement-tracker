@@ -133,18 +133,11 @@ export function TodayView({
 
       {/* ════ DIRECTION & IDENTITY ════ */}
       {(direction || identity) && (
-        <div className="relative mb-14 text-center animate-rise py-10 px-8">
-          {/* Rotating glow border */}
-          <div className="absolute -inset-px rounded-sm overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 animate-[spin_8s_linear_infinite]"
-              style={{
-                background: 'conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(197,165,90,0.6) 75%, rgba(212,186,120,0.8) 78%, rgba(197,165,90,0.6) 81%, transparent 96%, transparent 100%)',
-              }} />
-            {/* Inner cutout to make it a border, not a fill */}
-            <div className="absolute inset-[1px] bg-sa-bg-deep" />
-          </div>
+        <div className="direction-frame relative mb-14 text-center animate-rise py-10 px-8">
+          {/* Static dim border */}
+          <div className="absolute inset-0 border border-sa-gold/10 pointer-events-none" />
 
-          {/* Corner accents — static frame */}
+          {/* Corner accents */}
           <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
           <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
           <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />

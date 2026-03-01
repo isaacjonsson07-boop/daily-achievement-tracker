@@ -141,6 +141,34 @@ body::after {
   to { transform: rotate(360deg); }
 }
 
+/* ═══ Direction frame — two glowing lights travelling the border ═══ */
+.direction-frame::before,
+.direction-frame::after {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197,165,90,0.7) 0%, rgba(197,165,90,0.3) 30%, transparent 70%);
+  pointer-events: none;
+  z-index: 5;
+  offset-path: rect(0% 100% 100% 0% round 0px);
+  animation: travel 10s linear infinite;
+}
+
+.direction-frame::before {
+  animation-delay: 0s;
+}
+
+.direction-frame::after {
+  animation-delay: -5s;
+}
+
+@keyframes travel {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
 .animate-rise {
   animation: rise 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
