@@ -56,10 +56,6 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
         const dist = ((now * speed)) % perimeter;
         positionShimmer(shimmer1Ref.current, dist, width, height);
       }
-      if (shimmer2Ref.current) {
-        const dist = ((now * speed) + perimeter / 2) % perimeter;
-        positionShimmer(shimmer2Ref.current, dist, width, height);
-      }
 
       animRef.current = requestAnimationFrame(animate);
     }
@@ -76,7 +72,6 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       {/* Two shimmer lights following the frame */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div ref={shimmer1Ref} className="absolute" />
-        <div ref={shimmer2Ref} className="absolute" />
       </div>
 
       {direction && (
