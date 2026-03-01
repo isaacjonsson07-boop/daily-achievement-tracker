@@ -20,9 +20,8 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
     return () => window.removeEventListener('resize', measure);
   }, [measure]);
 
-  const glowLen = 200;
-  // Two glows evenly spaced: glow, gap, glow, gap = perimeter
-  // Each gap = (perimeter - 2*glowLen) / 2
+  const glowLen = 120;
+  // Two glows evenly spaced
   const gapLen = Math.max(0, (perimeter - 2 * glowLen) / 2);
 
   return (
@@ -39,17 +38,27 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
           style={{ ['--perimeter' as string]: `${perimeter}px` }}>
           <defs>
             <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
             </filter>
           </defs>
-          {/* Blurred glow layer */}
+          {/* Soft halo */}
           <rect
             x="1" y="1"
             width="calc(100% - 2px)" height="calc(100% - 2px)"
             fill="none"
-            stroke="rgba(197,165,90,0.8)"
-            strokeWidth="1"
+            stroke="rgba(197,165,90,0.6)"
+            strokeWidth="3"
             filter="url(#soft-glow)"
+            strokeDasharray={`${glowLen} ${gapLen}`}
+            className="animate-[dashScroll_10s_linear_infinite]"
+          />
+          {/* Sharp bright core */}
+          <rect
+            x="1" y="1"
+            width="calc(100% - 2px)" height="calc(100% - 2px)"
+            fill="none"
+            stroke="rgba(197,165,90,0.5)"
+            strokeWidth="1"
             strokeDasharray={`${glowLen} ${gapLen}`}
             className="animate-[dashScroll_10s_linear_infinite]"
           />
