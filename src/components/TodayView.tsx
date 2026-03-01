@@ -1,46 +1,82 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { Habit, HabitCompletion, DailyTask, NonNegotiable, NonNegotiableCompletion } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
 
 function DirectionFrame({ direction, identity }: { direction: string; identity: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shimmer1Ref = useRef<HTMLDivElement>(null);
+  const shimmer2Ref = useRef<HTMLDivElement>(null);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const speed = 60;
+
+    function positionShimmer(el: HTMLDivElement, dist: number, width: number, height: number) {
+      if (dist < width) {
+        el.style.top = '-1px';
+        el.style.left = `${dist - 30}px`;
+        el.style.width = '60px';
+        el.style.height = '2px';
+        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
+      } else if (dist < width + height) {
+        const d = dist - width;
+        el.style.top = `${d - 30}px`;
+        el.style.left = `${width - 1}px`;
+        el.style.width = '2px';
+        el.style.height = '60px';
+        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
+      } else if (dist < 2 * width + height) {
+        const d = dist - width - height;
+        el.style.top = `${height - 1}px`;
+        el.style.left = `${width - d - 30}px`;
+        el.style.width = '60px';
+        el.style.height = '2px';
+        el.style.background = 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)';
+      } else {
+        const d = dist - 2 * width - height;
+        el.style.top = `${height - d - 30}px`;
+        el.style.left = '-1px';
+        el.style.width = '2px';
+        el.style.height = '60px';
+        el.style.background = 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)';
+      }
+    }
+
+    function animate() {
+      if (!container) return;
+      const { width, height } = container.getBoundingClientRect();
+      const perimeter = 2 * width + 2 * height;
+      const now = performance.now() / 1000;
+
+      if (shimmer1Ref.current) {
+        const dist = ((now * speed)) % perimeter;
+        positionShimmer(shimmer1Ref.current, dist, width, height);
+      }
+      if (shimmer2Ref.current) {
+        const dist = ((now * speed) + perimeter / 2) % perimeter;
+        positionShimmer(shimmer2Ref.current, dist, width, height);
+      }
+
+      animRef.current = requestAnimationFrame(animate);
+    }
+
+    animRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animRef.current);
+  }, []);
+
   return (
-    <div className="relative mb-14 text-center animate-rise py-10 px-8">
+    <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
       {/* Static dim border */}
       <div className="absolute inset-0 border border-sa-gold/15 pointer-events-none" />
 
-      {/* Shimmer overlay — connected loop: top→right→bottom→left */}
-      {/* Top: slides left→right */}
-      <div className="absolute top-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-y-0 w-[60px]" style={{
-          background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerOnce 12s linear infinite',
-          animationDelay: '0s',
-        }} />
-      </div>
-      {/* Right: slides top→bottom */}
-      <div className="absolute top-0 bottom-0 right-0 w-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-x-0 h-[60px]" style={{
-          background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerOnceDown 12s linear infinite',
-          animationDelay: '3s',
-        }} />
-      </div>
-      {/* Bottom: slides right→left */}
-      <div className="absolute bottom-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-y-0 w-[60px]" style={{
-          background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerOnceReverse 12s linear infinite',
-          animationDelay: '6s',
-        }} />
-      </div>
-      {/* Left: slides bottom→top */}
-      <div className="absolute top-0 bottom-0 left-0 w-px overflow-hidden pointer-events-none">
-        <div className="absolute inset-x-0 h-[60px]" style={{
-          background: 'linear-gradient(180deg, transparent, rgba(197,165,90,0.5), transparent)',
-          animation: 'shimmerOnceUp 12s linear infinite',
-          animationDelay: '9s',
-        }} />
+      {/* Two shimmer lights following the frame */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div ref={shimmer1Ref} className="absolute" />
+        <div ref={shimmer2Ref} className="absolute" />
       </div>
 
       {direction && (
