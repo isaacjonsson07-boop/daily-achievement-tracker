@@ -79,20 +79,25 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
 
   return (
     <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8">
-      {/* Corner masks — hide glow under corners */}
-      <div className="absolute top-0 left-0 w-8 h-8 bg-sa-bg-deep z-[6]" />
-      <div className="absolute top-0 right-0 w-8 h-8 bg-sa-bg-deep z-[6]" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 bg-sa-bg-deep z-[6]" />
-      <div className="absolute bottom-0 right-0 w-8 h-8 bg-sa-bg-deep z-[6]" />
-
       {/* Corner accents */}
       <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
       <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
-      {/* Two travelling glows */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Travelling glows — clip-path cuts out corner areas */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        clipPath: `polygon(
+          32px -2px, calc(100% - 32px) -2px,
+          calc(100% - 32px) -2px, calc(100% + 2px) 32px,
+          calc(100% + 2px) 32px, calc(100% + 2px) calc(100% - 32px),
+          calc(100% + 2px) calc(100% - 32px), calc(100% - 32px) calc(100% + 2px),
+          calc(100% - 32px) calc(100% + 2px), 32px calc(100% + 2px),
+          32px calc(100% + 2px), -2px calc(100% - 32px),
+          -2px calc(100% - 32px), -2px 32px,
+          -2px 32px, 32px -2px
+        )`
+      }}>
         <div ref={line1Ref} className="absolute" />
         <div ref={line2Ref} className="absolute" />
       </div>
