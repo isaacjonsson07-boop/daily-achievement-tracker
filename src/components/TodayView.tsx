@@ -161,7 +161,7 @@ export function TodayView({
           OPERATING CONTEXT — who you are & where you're going
           ════════════════════════════════════════ */}
       {(direction || identity) && isToday && (
-        <div className="mb-12 animate-rise">
+        <div className="mb-12 text-center animate-rise">
           {direction && (
             <p className="font-serif text-xl sm:text-2xl text-sa-cream font-light leading-relaxed">
               {direction}
@@ -172,7 +172,7 @@ export function TodayView({
               {identity}
             </p>
           )}
-          <div className="mt-6 border-t border-sa-gold-border" />
+          <div className="mt-6 border-t border-sa-gold-border mx-auto w-24" />
         </div>
       )}
 
