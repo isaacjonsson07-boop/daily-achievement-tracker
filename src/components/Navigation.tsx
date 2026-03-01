@@ -41,17 +41,9 @@ export function Navigation({
           <div className="flex items-center justify-between h-16">
 
             {/* Brand */}
-            <button
-              onClick={() => onTabChange('today')}
-              className="flex items-center gap-2.5 group"
-            >
-              <span className="font-serif text-lg text-sa-cream group-hover:text-sa-gold transition-colors">
-                Structured
-              </span>
-              <span className="text-xs tracking-widest uppercase text-sa-cream-muted group-hover:text-sa-cream-soft transition-colors">
-                Achievement
-              </span>
-            </button>
+            <span className="text-sm tracking-widest uppercase text-sa-cream-muted">
+              Structured Achievement
+            </span>
 
             {/* Desktop tabs */}
             <nav className="flex items-center gap-1">
@@ -115,13 +107,9 @@ export function Navigation({
       {/* ===== MOBILE TOP BAR ===== */}
       <header className="md:hidden border-b border-sa-border bg-sa-bg/80 backdrop-blur-md sticky top-0 z-40">
         <div className="flex items-center justify-between h-14 px-5">
-          <button
-            onClick={() => onTabChange('today')}
-            className="flex items-center gap-2"
-          >
-            <span className="font-serif text-base text-sa-cream">Structured</span>
-            <span className="text-[0.65rem] tracking-widest uppercase text-sa-cream-muted">Achievement</span>
-          </button>
+          <span className="text-xs tracking-widest uppercase text-sa-cream-muted">
+            Structured Achievement
+          </span>
 
           <div className="flex items-center gap-2.5">
             {user && plan === 'paid' && (
