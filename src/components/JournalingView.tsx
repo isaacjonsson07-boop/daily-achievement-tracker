@@ -270,9 +270,9 @@ const JOURNAL_TEMPLATES = {
 };
 
 const PHASES = [
-  { label: 'Phase I — Stabilize', shortLabel: 'Stabilize', days: [1, 2, 3, 4, 5, 6, 7], description: 'Set your direction, build your structure, and lock your foundation.' },
-  { label: 'Phase II — Reconstruct', shortLabel: 'Reconstruct', days: [8, 9, 10, 11, 12, 13, 14], description: 'Go deeper. Rebuild your identity, habits, and priorities.' },
-  { label: 'Phase III — Install', shortLabel: 'Install', days: [15, 16, 17, 18, 19, 20, 21], description: 'Make it permanent. Stress-test, consolidate, activate.' },
+  { label: 'Phase I — Stabilize', shortLabel: 'Stabilize', days: [1, 2, 3, 4, 5, 6, 7], description: 'Build the foundation. Direction, structure, discipline, and tracking — the bedrock everything else depends on.' },
+  { label: 'Phase II — Reconstruct', shortLabel: 'Reconstruct', days: [8, 9, 10, 11, 12, 13, 14], description: 'Go deeper. Identity, priorities, habits, energy, and decision-making — the strategy that makes the structure permanent.' },
+  { label: 'Phase III — Install', shortLabel: 'Install', days: [15, 16, 17, 18, 19, 20, 21], description: 'Make it permanent. Accountability, resilience, self-mastery, and the review cycles that keep the system running for life.' },
 ];
 
 interface JournalingViewProps {
@@ -581,6 +581,96 @@ export function JournalingView({
   // ── EDITORIAL LANDING / GRID VIEW ──
   return (
     <div className="max-w-3xl mx-auto">
+      {/* Custom styles for hover effects */}
+      <style>{`
+        .sa-lesson-card {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 18px 24px;
+          background: var(--bg-warm, #24252A);
+          border: 1px solid rgba(240,237,230,0.05);
+          border-radius: 12px;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+          width: 100%;
+          text-align: left;
+        }
+        .sa-lesson-card::before {
+          content: '';
+          position: absolute;
+          left: 0; top: 0; bottom: 0;
+          width: 3px;
+          border-radius: 3px 0 0 3px;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+        .sa-lesson-card.sa-gold-accent::before { background: var(--gold, #C5A55A); }
+        .sa-lesson-card.sa-blue-accent::before { background: var(--blue, #6DB5F5); }
+        .sa-lesson-card.sa-green-accent::before { background: var(--green, #6ECB8B); }
+        .sa-lesson-card:hover:not(.sa-locked) {
+          border-color: rgba(240,237,230,0.12);
+          background: var(--bg-lift, #2A2B31);
+          transform: translateX(4px);
+        }
+        .sa-lesson-card:hover:not(.sa-locked)::before { opacity: 1; }
+        .sa-lesson-card .sa-card-arrow {
+          opacity: 0;
+          transition: all 0.2s ease;
+          transform: translateX(-3px);
+          flex-shrink: 0;
+        }
+        .sa-lesson-card:hover:not(.sa-locked) .sa-card-arrow {
+          opacity: 1;
+          transform: translateX(3px);
+        }
+        .sa-lesson-card.sa-gold-accent:hover .sa-card-arrow { color: var(--gold, #C5A55A); }
+        .sa-lesson-card.sa-blue-accent:hover .sa-card-arrow { color: var(--blue, #6DB5F5); }
+        .sa-lesson-card.sa-green-accent:hover .sa-card-arrow { color: var(--green, #6ECB8B); }
+        .sa-lesson-card:hover:not(.sa-locked) .sa-card-principle { color: var(--cream-muted, #A69F93); }
+        .sa-lesson-card.sa-review-day {
+          background: rgba(240,237,230,0.02);
+          border-style: dashed;
+        }
+        .sa-lesson-card.sa-locked {
+          opacity: 0.35;
+          cursor: not-allowed;
+        }
+        .sa-lesson-card.sa-completed {
+          border-style: solid;
+        }
+        .sa-lesson-card.sa-completed.sa-gold-accent { border-color: rgba(197,165,90,0.25); background: rgba(197,165,90,0.06); }
+        .sa-lesson-card.sa-completed.sa-blue-accent { border-color: rgba(109,181,245,0.25); background: rgba(109,181,245,0.06); }
+        .sa-lesson-card.sa-completed.sa-green-accent { border-color: rgba(110,203,139,0.25); background: rgba(110,203,139,0.06); }
+        .sa-lesson-card.sa-completed::before { opacity: 1; }
+        .sa-brand-line::before, .sa-brand-line::after {
+          content: '';
+          width: 40px;
+          height: 1px;
+          background: rgba(197,165,90,0.25);
+        }
+        .sa-diamond-divider::before, .sa-diamond-divider::after {
+          content: '';
+          width: 60px;
+          height: 1px;
+          background: rgba(240,237,230,0.07);
+        }
+        @keyframes saCardIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .sa-lesson-card { animation: saCardIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) both; }
+        .sa-lesson-card:nth-child(1) { animation-delay: 0.0s; }
+        .sa-lesson-card:nth-child(2) { animation-delay: 0.03s; }
+        .sa-lesson-card:nth-child(3) { animation-delay: 0.06s; }
+        .sa-lesson-card:nth-child(4) { animation-delay: 0.09s; }
+        .sa-lesson-card:nth-child(5) { animation-delay: 0.12s; }
+        .sa-lesson-card:nth-child(6) { animation-delay: 0.15s; }
+        .sa-lesson-card:nth-child(7) { animation-delay: 0.18s; }
+      `}</style>
+
       {/* Upgrade modal */}
       {showUpgradePrompt && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
@@ -634,129 +724,150 @@ export function JournalingView({
       {/* Installation content */}
       {journalAccessDays > 0 && (
         <>
-          {/* Editorial header */}
-          <div className="mb-10 animate-rise">
-            <h2 className="font-serif text-2xl sm:text-3xl text-sa-cream mb-1">Installation</h2>
-            <p className="text-sm text-sa-cream-muted mb-1">21 days. 3 phases. One operating system.</p>
-            <p className="text-xs text-sa-cream-faint mb-5">{completedDays} of 21 completed</p>
-            <div className="sa-progress-track">
-              <div
-                className={completedDays === 21 ? 'sa-progress-fill-green' : 'sa-progress-fill'}
-                style={{ width: `${progressPercent}%` }}
-              />
+          {/* Hero branding */}
+          <div className="text-center pt-6 pb-4 animate-rise">
+            <div className="sa-brand-line flex items-center justify-center gap-4 mb-10"
+              style={{ fontSize: '0.62rem', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' as const, color: 'var(--gold, #C5A55A)' }}>
+              Structured Achievement
+            </div>
+
+            <h2 className="font-serif text-sa-cream mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 400, lineHeight: 1.12, letterSpacing: '-0.01em' }}>
+              Build your personal<br /><em className="text-sa-gold italic">operating system</em>
+            </h2>
+
+            <p className="text-sa-cream-soft mx-auto mb-10" style={{ fontSize: '1.05rem', fontWeight: 300, lineHeight: 1.75, maxWidth: 560 }}>
+              21 days. Three phases. One system designed to replace chaos with structure, intention with identity, and effort with compounding results.
+            </p>
+
+            {/* Stats bar */}
+            <div className="flex justify-center gap-12 py-6 mb-0" style={{ borderTop: '1px solid rgba(240,237,230,0.07)', borderBottom: '1px solid rgba(240,237,230,0.07)' }}>
+              <div className="text-center">
+                <div className="font-serif text-sa-cream" style={{ fontSize: '1.8rem', lineHeight: 1 }}>{completedDays > 0 ? completedDays : 21}</div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--cream-muted, #A69F93)', marginTop: 6 }}>
+                  {completedDays > 0 ? 'Completed' : 'Lessons'}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="font-serif text-sa-cream" style={{ fontSize: '1.8rem', lineHeight: 1 }}>3</div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--cream-muted, #A69F93)', marginTop: 6 }}>Phases</div>
+              </div>
+              <div className="text-center">
+                <div className="font-serif text-sa-cream" style={{ fontSize: '1.8rem', lineHeight: 1 }}>12</div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--cream-muted, #A69F93)', marginTop: 6 }}>Principles</div>
+              </div>
+              <div className="text-center">
+                <div className="font-serif text-sa-cream" style={{ fontSize: '1.8rem', lineHeight: 1 }}>∞</div>
+                <div style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--cream-muted, #A69F93)', marginTop: 6 }}>Compound effect</div>
+              </div>
             </div>
           </div>
 
-          {/* Stats row */}
-          <div className="grid grid-cols-3 gap-3 mb-10 animate-rise">
-            <div className="text-center p-3 rounded-sa border border-sa-border bg-sa-bg-warm">
-              <div className="text-lg font-serif text-sa-gold">{completedDays}</div>
-              <div className="text-xs text-sa-cream-faint">Completed</div>
-            </div>
-            <div className="text-center p-3 rounded-sa border border-sa-border bg-sa-bg-warm">
-              <div className="text-lg font-serif text-sa-cream">{21 - completedDays}</div>
-              <div className="text-xs text-sa-cream-faint">Remaining</div>
-            </div>
-            <div className="text-center p-3 rounded-sa border border-sa-border bg-sa-bg-warm">
-              <div className="text-lg font-serif text-sa-cream">3</div>
-              <div className="text-xs text-sa-cream-faint">Phases</div>
-            </div>
-          </div>
+          {/* Phase sections */}
+          {PHASES.map((phase, phaseIndex) => {
+            const phaseColor = phaseIndex === 0 ? 'gold' : phaseIndex === 1 ? 'blue' : 'green';
+            const colorVar = phaseColor === 'gold' ? 'var(--gold, #C5A55A)' : phaseColor === 'blue' ? 'var(--blue, #6DB5F5)' : 'var(--green, #6ECB8B)';
 
-          {/* Phase sections with lesson cards */}
-          <div className="space-y-10">
-            {PHASES.map((phase, phaseIndex) => {
-              const phaseColor = phaseIndex === 0 ? 'gold' : phaseIndex === 1 ? 'blue' : 'green';
-              const completedInPhase = phase.days.filter(d => {
-                const entry = journalEntries.find(e => e.dayNumber === d);
-                return entry && hasContent(entry);
-              }).length;
+            return (
+              <section key={phase.label} className="animate-rise" style={{ paddingTop: 72 }}>
+                {/* Phase header */}
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: colorVar }} />
+                  <span style={{ fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: colorVar }}>
+                    {phase.label}
+                  </span>
+                </div>
+                <p className="mb-7" style={{ fontSize: '0.92rem', fontWeight: 300, color: 'var(--cream-muted, #A69F93)', lineHeight: 1.7, paddingLeft: 24 }}>
+                  {phase.description}
+                </p>
 
-              return (
-                <section key={phase.label} className="animate-rise">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      phaseColor === 'gold' ? 'bg-sa-gold' : phaseColor === 'blue' ? 'bg-sa-blue' : 'bg-sa-green'
-                    }`} />
-                    <span className={`text-xs font-medium uppercase tracking-widest ${
-                      phaseColor === 'gold' ? 'text-sa-gold' : phaseColor === 'blue' ? 'text-sa-blue' : 'text-sa-green'
-                    }`}>
-                      {phase.label}
-                    </span>
-                    <div className="flex-1 h-px bg-sa-border" />
-                    <span className="text-xs text-sa-cream-faint">{completedInPhase}/{phase.days.length}</span>
-                  </div>
-                  <p className="text-xs text-sa-cream-faint mb-4 ml-5">{phase.description}</p>
+                {/* Lesson cards */}
+                <div className="flex flex-col gap-1.5">
+                  {phase.days.map((dayNumber) => {
+                    const entry = journalEntries.find(e => e.dayNumber === dayNumber);
+                    const completed = entry && hasContent(entry);
+                    const isLocked = dayNumber > journalAccessDays;
+                    const lessonData = getLessonByDay(dayNumber);
+                    const title = lessonData?.title || `Day ${dayNumber}`;
+                    const principle = lessonData?.principleLabel || '';
+                    const isReview = dayNumber === 7 || dayNumber === 14 || dayNumber === 21;
 
-                  <div className="space-y-2">
-                    {phase.days.map((dayNumber) => {
-                      const entry = journalEntries.find(e => e.dayNumber === dayNumber);
-                      const completed = entry && hasContent(entry);
-                      const isLocked = dayNumber > journalAccessDays;
-                      const lessonData = getLessonByDay(dayNumber);
-                      const title = lessonData?.title || `Day ${dayNumber}`;
-                      const principle = lessonData?.principleLabel || '';
-
-                      const accentVar = phaseColor === 'gold' ? '--gold' : phaseColor === 'blue' ? '--blue' : '--green';
-                      const borderVar = accentVar + '-border';
-                      const softVar = accentVar + '-soft';
-
-                      return (
-                        <button
-                          key={dayNumber}
-                          onClick={() => handleDayClick(dayNumber)}
-                          disabled={isLocked}
-                          className={`w-full flex items-center gap-4 p-3.5 rounded-sa border transition-all duration-150 text-left ${
-                            isLocked
-                              ? 'opacity-35 cursor-not-allowed border-sa-border bg-sa-bg-warm'
-                              : completed
-                                ? 'hover:brightness-110'
-                                : 'border-sa-border bg-sa-bg-warm hover:border-sa-gold-border hover:bg-sa-bg-lift'
-                          }`}
-                          style={completed ? {
-                            borderColor: `var(${borderVar})`,
-                            backgroundColor: `var(${softVar})`,
-                          } : undefined}
-                        >
-                          <div
-                            className="w-9 h-9 rounded-sa-sm flex items-center justify-center flex-shrink-0 text-sm font-medium"
-                            style={completed ? {
-                              backgroundColor: `color-mix(in srgb, var(${accentVar}) 20%, transparent)`,
-                              color: `var(${accentVar})`,
-                            } : undefined}
-                          >
-                            {completed ? (
-                              <Check className="w-4 h-4" strokeWidth={2.5} />
-                            ) : (
-                              <span className={isLocked ? 'text-sa-cream-faint' : 'text-sa-cream-muted'}>{dayNumber}</span>
-                            )}
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className={`text-sm font-medium ${
-                              completed ? 'text-sa-cream' : isLocked ? 'text-sa-cream-faint' : 'text-sa-cream-soft'
-                            }`}>{title}</div>
-                            {principle && (
-                              <div className="text-xs text-sa-cream-faint mt-0.5 truncate">{principle}</div>
-                            )}
-                          </div>
-
-                          {isLocked ? (
-                            <Lock className="w-3.5 h-3.5 text-sa-cream-faint flex-shrink-0" />
+                    return (
+                      <button
+                        key={dayNumber}
+                        onClick={() => handleDayClick(dayNumber)}
+                        disabled={isLocked}
+                        className={`sa-lesson-card sa-${phaseColor}-accent${isReview ? ' sa-review-day' : ''}${isLocked ? ' sa-locked' : ''}${completed ? ' sa-completed' : ''}`}
+                      >
+                        {/* Day number — phase colored */}
+                        <span className="font-serif flex-shrink-0" style={{ fontSize: '0.82rem', width: 20, textAlign: 'right' as const, color: isLocked ? 'var(--cream-faint, #6B665D)' : colorVar }}>
+                          {completed ? (
+                            <Check className="w-4 h-4 inline" strokeWidth={2.5} style={{ color: colorVar }} />
                           ) : (
-                            <ChevronRight className="w-4 h-4 text-sa-cream-faint flex-shrink-0" />
+                            dayNumber
                           )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-              );
-            })}
+                        </span>
+
+                        {/* Divider */}
+                        <div className="flex-shrink-0" style={{ width: 1, height: 20, background: 'rgba(240,237,230,0.08)' }} />
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-serif" style={{ fontSize: '0.98rem', fontWeight: 400, color: 'var(--cream, #F2EDE4)', lineHeight: 1.35 }}>
+                            {title}
+                          </div>
+                          <div className="sa-card-principle truncate" style={{ fontSize: '0.72rem', fontWeight: 300, color: 'var(--cream-faint, #6B665D)', marginTop: 3 }}>
+                            {principle}
+                          </div>
+                        </div>
+
+                        {/* Arrow or lock */}
+                        {isLocked ? (
+                          <Lock className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--cream-faint, #6B665D)' }} />
+                        ) : (
+                          <span className="sa-card-arrow" style={{ fontSize: '1rem', color: 'var(--cream-faint, #6B665D)' }}>→</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
+
+          {/* Bottom section */}
+          <div className="text-center animate-rise" style={{ paddingTop: 80, paddingBottom: 40 }}>
+            {/* Diamond divider */}
+            <div className="sa-diamond-divider flex items-center justify-center gap-5 mb-12">
+              <div style={{ width: 6, height: 6, border: '1px solid var(--cream-faint, #6B665D)', transform: 'rotate(45deg)' }} />
+            </div>
+
+            <p className="font-serif italic mx-auto mb-4" style={{ fontSize: '1.25rem', fontWeight: 400, color: 'var(--cream-soft, #D8D2C7)', lineHeight: 1.6, maxWidth: 520 }}>
+              Every result has a cause. The system you build here becomes the cause of <strong className="not-italic font-medium text-sa-cream">everything that follows</strong>.
+            </p>
+            <p style={{ fontSize: '0.72rem', color: 'var(--cream-faint, #6B665D)', letterSpacing: '0.04em' }}>
+              — The Law of Cause and Effect
+            </p>
+
+            {/* Phase dots footer */}
+            <div className="flex justify-center gap-7" style={{ marginTop: 56, paddingTop: 28, borderTop: '1px solid rgba(240,237,230,0.05)' }}>
+              <span className="flex items-center gap-2" style={{ fontSize: '0.68rem', color: 'var(--cream-faint, #6B665D)' }}>
+                <span className="rounded-full" style={{ width: 5, height: 5, background: 'var(--gold, #C5A55A)', display: 'inline-block' }} />
+                Stabilize
+              </span>
+              <span className="flex items-center gap-2" style={{ fontSize: '0.68rem', color: 'var(--cream-faint, #6B665D)' }}>
+                <span className="rounded-full" style={{ width: 5, height: 5, background: 'var(--blue, #6DB5F5)', display: 'inline-block' }} />
+                Reconstruct
+              </span>
+              <span className="flex items-center gap-2" style={{ fontSize: '0.68rem', color: 'var(--cream-faint, #6B665D)' }}>
+                <span className="rounded-full" style={{ width: 5, height: 5, background: 'var(--green, #6ECB8B)', display: 'inline-block' }} />
+                Install
+              </span>
+            </div>
           </div>
 
+          {/* Completion state */}
           {completedDays === 21 && (
-            <div className="mt-10 py-6 px-8 bg-sa-green-soft border border-sa-green-border rounded-sa text-center animate-rise">
+            <div className="mt-4 py-6 px-8 bg-sa-green-soft border border-sa-green-border rounded-sa text-center animate-rise">
               <p className="text-sa-green font-serif text-lg">System installed.</p>
               <p className="text-sa-cream-muted text-sm mt-1">All 21 days completed. Operational mode is active.</p>
             </div>

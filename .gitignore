@@ -64,3 +64,5 @@ temp/
 
 # Bolt specific
 .bolt/
+# Local Netlify folder
+.netlify
