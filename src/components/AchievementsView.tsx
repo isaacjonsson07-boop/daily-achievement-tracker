@@ -39,125 +39,217 @@ function getYearLabel(month: string): string {
 // ORNATE SVG FRAMES (modal only)
 // ═══════════════════════════════════════
 
-// Diamond frame — decorative scroll corners with small accents
+// Diamond frame — elaborate ornamental scrollwork with layered detail
 function DiamondFrame({ color }: { color: string }) {
   const c = color;
-  const cFaint = color + '60';
+  const cFaint = color + '50';
+  const cSoft = color + '30';
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
       {/* Top-left corner */}
-      <svg className="absolute top-0 left-0 w-20 h-20" viewBox="0 0 80 80" fill="none">
-        <circle cx="14" cy="14" r="5" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M19 9 C24 4, 32 4, 37 9" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M9 19 C4 24, 4 32, 9 37" stroke={c} strokeWidth="0.8" fill="none" />
-        <circle cx="14" cy="14" r="1.5" fill={c} opacity="0.3" />
-        <path d="M28 4 L30 2 L32 4 L30 6 Z" fill={c} opacity="0.5" />
-        <path d="M4 28 L6 26 L8 28 L6 30 Z" fill={c} opacity="0.5" />
+      <svg className="absolute top-0 left-0 w-28 h-28" viewBox="0 0 112 112" fill="none">
+        {/* Outer scroll arc */}
+        <path d="M10 56 C10 30, 30 10, 56 10" stroke={c} strokeWidth="1" fill="none" />
+        {/* Inner scroll arc */}
+        <path d="M16 48 C16 30, 30 16, 48 16" stroke={cFaint} strokeWidth="0.7" fill="none" />
+        {/* Corner circle ornament */}
+        <circle cx="18" cy="18" r="8" stroke={c} strokeWidth="0.8" fill="none" />
+        <circle cx="18" cy="18" r="4" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <circle cx="18" cy="18" r="1.5" fill={c} opacity="0.4" />
+        {/* Scroll flourish along top */}
+        <path d="M26 10 C30 4, 38 3, 44 6" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M44 6 C48 8, 50 6, 52 10" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        {/* Scroll flourish along left */}
+        <path d="M10 26 C4 30, 3 38, 6 44" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M6 44 C8 48, 6 50, 10 52" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        {/* Diamond accents */}
+        <path d="M36 6 L38 3 L40 6 L38 9 Z" fill={c} opacity="0.5" />
+        <path d="M6 36 L8 33 L10 36 L8 39 Z" fill={c} opacity="0.5" />
+        {/* Tiny dot accents */}
+        <circle cx="50" cy="10" r="1" fill={c} opacity="0.3" />
+        <circle cx="10" cy="50" r="1" fill={c} opacity="0.3" />
+        <circle cx="28" cy="6" r="1" fill={c} opacity="0.25" />
+        <circle cx="6" cy="28" r="1" fill={c} opacity="0.25" />
       </svg>
 
       {/* Top-right corner */}
-      <svg className="absolute top-0 right-0 w-20 h-20" viewBox="0 0 80 80" fill="none">
-        <circle cx="66" cy="14" r="5" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M61 9 C56 4, 48 4, 43 9" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M71 19 C76 24, 76 32, 71 37" stroke={c} strokeWidth="0.8" fill="none" />
-        <circle cx="66" cy="14" r="1.5" fill={c} opacity="0.3" />
-        <path d="M52 4 L50 2 L48 4 L50 6 Z" fill={c} opacity="0.5" />
-        <path d="M76 28 L74 26 L72 28 L74 30 Z" fill={c} opacity="0.5" />
+      <svg className="absolute top-0 right-0 w-28 h-28" viewBox="0 0 112 112" fill="none">
+        <path d="M102 56 C102 30, 82 10, 56 10" stroke={c} strokeWidth="1" fill="none" />
+        <path d="M96 48 C96 30, 82 16, 64 16" stroke={cFaint} strokeWidth="0.7" fill="none" />
+        <circle cx="94" cy="18" r="8" stroke={c} strokeWidth="0.8" fill="none" />
+        <circle cx="94" cy="18" r="4" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <circle cx="94" cy="18" r="1.5" fill={c} opacity="0.4" />
+        <path d="M86 10 C82 4, 74 3, 68 6" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M68 6 C64 8, 62 6, 60 10" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M102 26 C108 30, 109 38, 106 44" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M106 44 C104 48, 106 50, 102 52" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M76 6 L74 3 L72 6 L74 9 Z" fill={c} opacity="0.5" />
+        <path d="M106 36 L104 33 L102 36 L104 39 Z" fill={c} opacity="0.5" />
+        <circle cx="62" cy="10" r="1" fill={c} opacity="0.3" />
+        <circle cx="102" cy="50" r="1" fill={c} opacity="0.3" />
       </svg>
 
       {/* Bottom-left corner */}
-      <svg className="absolute bottom-0 left-0 w-20 h-20" viewBox="0 0 80 80" fill="none">
-        <circle cx="14" cy="66" r="5" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M19 71 C24 76, 32 76, 37 71" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M9 61 C4 56, 4 48, 9 43" stroke={c} strokeWidth="0.8" fill="none" />
-        <circle cx="14" cy="66" r="1.5" fill={c} opacity="0.3" />
-        <path d="M28 76 L30 74 L32 76 L30 78 Z" fill={c} opacity="0.5" />
-        <path d="M4 52 L6 50 L8 52 L6 54 Z" fill={c} opacity="0.5" />
+      <svg className="absolute bottom-0 left-0 w-28 h-28" viewBox="0 0 112 112" fill="none">
+        <path d="M10 56 C10 82, 30 102, 56 102" stroke={c} strokeWidth="1" fill="none" />
+        <path d="M16 64 C16 82, 30 96, 48 96" stroke={cFaint} strokeWidth="0.7" fill="none" />
+        <circle cx="18" cy="94" r="8" stroke={c} strokeWidth="0.8" fill="none" />
+        <circle cx="18" cy="94" r="4" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <circle cx="18" cy="94" r="1.5" fill={c} opacity="0.4" />
+        <path d="M26 102 C30 108, 38 109, 44 106" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M44 106 C48 104, 50 106, 52 102" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M10 86 C4 82, 3 74, 6 68" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M6 68 C8 64, 6 62, 10 60" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M36 106 L38 103 L40 106 L38 109 Z" fill={c} opacity="0.5" />
+        <path d="M6 76 L8 73 L10 76 L8 79 Z" fill={c} opacity="0.5" />
+        <circle cx="50" cy="102" r="1" fill={c} opacity="0.3" />
+        <circle cx="10" cy="62" r="1" fill={c} opacity="0.3" />
       </svg>
 
       {/* Bottom-right corner */}
-      <svg className="absolute bottom-0 right-0 w-20 h-20" viewBox="0 0 80 80" fill="none">
-        <circle cx="66" cy="66" r="5" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M61 71 C56 76, 48 76, 43 71" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M71 61 C76 56, 76 48, 71 43" stroke={c} strokeWidth="0.8" fill="none" />
-        <circle cx="66" cy="66" r="1.5" fill={c} opacity="0.3" />
-        <path d="M52 76 L50 74 L48 76 L50 78 Z" fill={c} opacity="0.5" />
-        <path d="M76 52 L74 50 L72 52 L74 54 Z" fill={c} opacity="0.5" />
+      <svg className="absolute bottom-0 right-0 w-28 h-28" viewBox="0 0 112 112" fill="none">
+        <path d="M102 56 C102 82, 82 102, 56 102" stroke={c} strokeWidth="1" fill="none" />
+        <path d="M96 64 C96 82, 82 96, 64 96" stroke={cFaint} strokeWidth="0.7" fill="none" />
+        <circle cx="94" cy="94" r="8" stroke={c} strokeWidth="0.8" fill="none" />
+        <circle cx="94" cy="94" r="4" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <circle cx="94" cy="94" r="1.5" fill={c} opacity="0.4" />
+        <path d="M86 102 C82 108, 74 109, 68 106" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M68 106 C64 104, 62 106, 60 102" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M102 86 C108 82, 109 74, 106 68" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M106 68 C104 64, 106 62, 102 60" stroke={cFaint} strokeWidth="0.6" fill="none" />
+        <path d="M76 106 L74 103 L72 106 L74 109 Z" fill={c} opacity="0.5" />
+        <path d="M106 76 L104 73 L102 76 L104 79 Z" fill={c} opacity="0.5" />
+        <circle cx="62" cy="102" r="1" fill={c} opacity="0.3" />
+        <circle cx="102" cy="62" r="1" fill={c} opacity="0.3" />
       </svg>
 
-      {/* Top edge center accent */}
-      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-5" viewBox="0 0 56 20" fill="none">
-        <path d="M20 6 L28 1 L36 6" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M24 4 L28 1 L32 4" stroke={cFaint} strokeWidth="0.5" fill="none" />
-        <path d="M28 1 L28 7" stroke={cFaint} strokeWidth="0.5" />
+      {/* Top edge center — crown accent */}
+      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-7" viewBox="0 0 80 28" fill="none">
+        <path d="M28 8 L40 1 L52 8" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M32 6 L40 1 L48 6" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <path d="M40 1 L40 10" stroke={cFaint} strokeWidth="0.4" />
+        <path d="M38 5 L40 2 L42 5" fill={c} opacity="0.25" />
+        <circle cx="24" cy="8" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+        <circle cx="56" cy="8" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+        <path d="M22 8 L18 8" stroke={cSoft} strokeWidth="0.4" />
+        <path d="M58 8 L62 8" stroke={cSoft} strokeWidth="0.4" />
       </svg>
 
-      {/* Bottom edge center accent */}
-      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-5" viewBox="0 0 56 20" fill="none">
-        <path d="M20 14 L28 19 L36 14" stroke={c} strokeWidth="0.8" fill="none" />
-        <path d="M24 16 L28 19 L32 16" stroke={cFaint} strokeWidth="0.5" fill="none" />
-        <path d="M28 19 L28 13" stroke={cFaint} strokeWidth="0.5" />
+      {/* Bottom edge center — inverted crown */}
+      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-7" viewBox="0 0 80 28" fill="none">
+        <path d="M28 20 L40 27 L52 20" stroke={c} strokeWidth="0.8" fill="none" />
+        <path d="M32 22 L40 27 L48 22" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <path d="M40 27 L40 18" stroke={cFaint} strokeWidth="0.4" />
+        <path d="M38 23 L40 26 L42 23" fill={c} opacity="0.25" />
+        <circle cx="24" cy="20" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+        <circle cx="56" cy="20" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+        <path d="M22 20 L18 20" stroke={cSoft} strokeWidth="0.4" />
+        <path d="M58 20 L62 20" stroke={cSoft} strokeWidth="0.4" />
       </svg>
     </div>
   );
 }
 
-// Gold frame — geometric art-deco accents at corners
+// Gold frame — elaborate art-deco with layered geometric ornaments
 function GoldFrame({ color }: { color: string }) {
   const c = color;
   const cFaint = color + '50';
+  const cSoft = color + '30';
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
       {/* Top-left corner */}
-      <svg className="absolute top-0 left-0 w-14 h-14" viewBox="0 0 56 56" fill="none">
-        <path d="M8 8 L11 5 L14 8 L11 11 Z" fill={c} opacity="0.45" />
-        <circle cx="22" cy="8" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <circle cx="8" cy="22" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <path d="M14 8 L19 8" stroke={cFaint} strokeWidth="0.5" />
-        <path d="M8 14 L8 19" stroke={cFaint} strokeWidth="0.5" />
+      <svg className="absolute top-0 left-0 w-24 h-24" viewBox="0 0 96 96" fill="none">
+        {/* Double L-bracket (thin) */}
+        <path d="M8 44 L8 12 C8 9, 9 8, 12 8 L44 8" stroke={c} strokeWidth="0.8" />
+        <path d="M14 36 L14 18 C14 16, 16 14, 18 14 L36 14" stroke={cFaint} strokeWidth="0.5" />
+        {/* Corner diamond */}
+        <path d="M8 8 L12 3 L16 8 L12 13 Z" stroke={c} strokeWidth="0.7" fill="none" />
+        <path d="M12 5 L14 8 L12 11 L10 8 Z" fill={c} opacity="0.3" />
+        {/* Circle accents along edges */}
+        <circle cx="26" cy="8" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="8" cy="26" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="38" cy="8" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <circle cx="8" cy="38" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        {/* Small diamond along top */}
+        <path d="M32 6 L33 4 L34 6 L33 8 Z" fill={c} opacity="0.35" />
+        <path d="M6 32 L4 33 L6 34 L8 33 Z" fill={c} opacity="0.35" />
+        {/* Dot trail */}
+        <circle cx="44" cy="8" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="8" cy="44" r="0.8" fill={c} opacity="0.2" />
       </svg>
 
       {/* Top-right corner */}
-      <svg className="absolute top-0 right-0 w-14 h-14" viewBox="0 0 56 56" fill="none">
-        <path d="M48 8 L45 5 L42 8 L45 11 Z" fill={c} opacity="0.45" />
-        <circle cx="34" cy="8" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <circle cx="48" cy="22" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <path d="M42 8 L37 8" stroke={cFaint} strokeWidth="0.5" />
-        <path d="M48 14 L48 19" stroke={cFaint} strokeWidth="0.5" />
+      <svg className="absolute top-0 right-0 w-24 h-24" viewBox="0 0 96 96" fill="none">
+        <path d="M88 44 L88 12 C88 9, 87 8, 84 8 L52 8" stroke={c} strokeWidth="0.8" />
+        <path d="M82 36 L82 18 C82 16, 80 14, 78 14 L60 14" stroke={cFaint} strokeWidth="0.5" />
+        <path d="M88 8 L84 3 L80 8 L84 13 Z" stroke={c} strokeWidth="0.7" fill="none" />
+        <path d="M84 5 L82 8 L84 11 L86 8 Z" fill={c} opacity="0.3" />
+        <circle cx="70" cy="8" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="88" cy="26" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="58" cy="8" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <circle cx="88" cy="38" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <path d="M64 6 L63 4 L62 6 L63 8 Z" fill={c} opacity="0.35" />
+        <path d="M90 32 L92 33 L90 34 L88 33 Z" fill={c} opacity="0.35" />
+        <circle cx="52" cy="8" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="88" cy="44" r="0.8" fill={c} opacity="0.2" />
       </svg>
 
       {/* Bottom-left corner */}
-      <svg className="absolute bottom-0 left-0 w-14 h-14" viewBox="0 0 56 56" fill="none">
-        <path d="M8 48 L11 51 L14 48 L11 45 Z" fill={c} opacity="0.45" />
-        <circle cx="22" cy="48" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <circle cx="8" cy="34" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <path d="M14 48 L19 48" stroke={cFaint} strokeWidth="0.5" />
-        <path d="M8 42 L8 37" stroke={cFaint} strokeWidth="0.5" />
+      <svg className="absolute bottom-0 left-0 w-24 h-24" viewBox="0 0 96 96" fill="none">
+        <path d="M8 52 L8 84 C8 87, 9 88, 12 88 L44 88" stroke={c} strokeWidth="0.8" />
+        <path d="M14 60 L14 78 C14 80, 16 82, 18 82 L36 82" stroke={cFaint} strokeWidth="0.5" />
+        <path d="M8 88 L12 93 L16 88 L12 83 Z" stroke={c} strokeWidth="0.7" fill="none" />
+        <path d="M12 85 L14 88 L12 91 L10 88 Z" fill={c} opacity="0.3" />
+        <circle cx="26" cy="88" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="8" cy="70" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="38" cy="88" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <circle cx="8" cy="58" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <path d="M32 90 L33 92 L34 90 L33 88 Z" fill={c} opacity="0.35" />
+        <path d="M6 64 L4 63 L6 62 L8 63 Z" fill={c} opacity="0.35" />
+        <circle cx="44" cy="88" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="8" cy="52" r="0.8" fill={c} opacity="0.2" />
       </svg>
 
       {/* Bottom-right corner */}
-      <svg className="absolute bottom-0 right-0 w-14 h-14" viewBox="0 0 56 56" fill="none">
-        <path d="M48 48 L45 51 L42 48 L45 45 Z" fill={c} opacity="0.45" />
-        <circle cx="34" cy="48" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <circle cx="48" cy="34" r="2.5" stroke={c} strokeWidth="0.7" fill="none" />
-        <path d="M42 48 L37 48" stroke={cFaint} strokeWidth="0.5" />
-        <path d="M48 42 L48 37" stroke={cFaint} strokeWidth="0.5" />
+      <svg className="absolute bottom-0 right-0 w-24 h-24" viewBox="0 0 96 96" fill="none">
+        <path d="M88 52 L88 84 C88 87, 87 88, 84 88 L52 88" stroke={c} strokeWidth="0.8" />
+        <path d="M82 60 L82 78 C82 80, 80 82, 78 82 L60 82" stroke={cFaint} strokeWidth="0.5" />
+        <path d="M88 88 L84 93 L80 88 L84 83 Z" stroke={c} strokeWidth="0.7" fill="none" />
+        <path d="M84 85 L82 88 L84 91 L86 88 Z" fill={c} opacity="0.3" />
+        <circle cx="70" cy="88" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="88" cy="70" r="2.5" stroke={c} strokeWidth="0.6" fill="none" />
+        <circle cx="58" cy="88" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <circle cx="88" cy="58" r="1.5" stroke={cFaint} strokeWidth="0.5" fill="none" />
+        <path d="M64 90 L63 92 L62 90 L63 88 Z" fill={c} opacity="0.35" />
+        <path d="M90 64 L92 63 L90 62 L88 63 Z" fill={c} opacity="0.35" />
+        <circle cx="52" cy="88" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="88" cy="52" r="0.8" fill={c} opacity="0.2" />
       </svg>
 
-      {/* Top center accent */}
-      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-4" viewBox="0 0 40 16" fill="none">
-        <path d="M20 2 L22 5 L20 8 L18 5 Z" fill={c} opacity="0.35" />
-        <circle cx="12" cy="5" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
-        <circle cx="28" cy="5" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+      {/* Top center — art-deco crest */}
+      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-6" viewBox="0 0 64 24" fill="none">
+        <path d="M32 3 L35 8 L32 13 L29 8 Z" stroke={c} strokeWidth="0.6" fill="none" />
+        <path d="M32 6 L33 8 L32 10 L31 8 Z" fill={c} opacity="0.3" />
+        <circle cx="22" cy="8" r="2" stroke={c} strokeWidth="0.5" fill="none" />
+        <circle cx="42" cy="8" r="2" stroke={c} strokeWidth="0.5" fill="none" />
+        <path d="M24 8 L29 8" stroke={cSoft} strokeWidth="0.4" />
+        <path d="M35 8 L40 8" stroke={cSoft} strokeWidth="0.4" />
+        <circle cx="18" cy="8" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="46" cy="8" r="0.8" fill={c} opacity="0.2" />
       </svg>
 
-      {/* Bottom center accent */}
-      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-4" viewBox="0 0 40 16" fill="none">
-        <path d="M20 14 L22 11 L20 8 L18 11 Z" fill={c} opacity="0.35" />
-        <circle cx="12" cy="11" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
-        <circle cx="28" cy="11" r="1.5" stroke={c} strokeWidth="0.5" fill="none" />
+      {/* Bottom center — inverted crest */}
+      <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-6" viewBox="0 0 64 24" fill="none">
+        <path d="M32 21 L35 16 L32 11 L29 16 Z" stroke={c} strokeWidth="0.6" fill="none" />
+        <path d="M32 18 L33 16 L32 14 L31 16 Z" fill={c} opacity="0.3" />
+        <circle cx="22" cy="16" r="2" stroke={c} strokeWidth="0.5" fill="none" />
+        <circle cx="42" cy="16" r="2" stroke={c} strokeWidth="0.5" fill="none" />
+        <path d="M24 16 L29 16" stroke={cSoft} strokeWidth="0.4" />
+        <path d="M35 16 L40 16" stroke={cSoft} strokeWidth="0.4" />
+        <circle cx="18" cy="16" r="0.8" fill={c} opacity="0.2" />
+        <circle cx="46" cy="16" r="0.8" fill={c} opacity="0.2" />
       </svg>
     </div>
   );
@@ -338,8 +430,10 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
       style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
       <div className="relative w-full max-w-lg rounded-sa-lg"
+        onClick={(e) => e.stopPropagation()}
         style={{
           border: `1px solid ${config.border}`,
           backgroundColor: '#151518',
