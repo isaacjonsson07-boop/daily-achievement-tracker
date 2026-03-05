@@ -43,8 +43,8 @@ function getYearLabel(month: string): string {
 function DiamondFrame() {
   const cornerStyle = (transform: string): React.CSSProperties => ({
     position: 'absolute',
-    width: '110px',
-    height: '110px',
+    width: '85px',
+    height: '85px',
     opacity: 0.85,
     transform,
     pointerEvents: 'none',
@@ -53,7 +53,6 @@ function DiamondFrame() {
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
-      {/* The SVG knob is at bottom-left, so flip to place knob in each corner */}
       <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('scaleY(-1)'), top: 0, left: 0 }} />
       <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('scale(-1, -1)'), top: 0, right: 0 }} />
       <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('none'), bottom: 0, left: 0 }} />
@@ -66,8 +65,8 @@ function DiamondFrame() {
 function GoldFrame() {
   const cornerStyle = (transform: string): React.CSSProperties => ({
     position: 'absolute',
-    width: '95px',
-    height: '95px',
+    width: '65px',
+    height: '65px',
     opacity: 0.75,
     transform,
     pointerEvents: 'none',
@@ -352,7 +351,7 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
               })}
             </div>
 
-            <div className="mb-2">
+            <div className="mb-2 text-center">
               <div className="h-px mb-5" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
               <p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-3">Personal Highlight</p>
               <p className="text-sm text-sa-cream-soft italic leading-relaxed">"{report.personalHighlight}"</p>
