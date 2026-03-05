@@ -4,7 +4,7 @@
 
 // === NAVIGATION ===
 
-export type TabType = 'today' | 'installation' | 'reviews' | 'system' | 'settings';
+export type TabType = 'today' | 'installation' | 'reviews' | 'achievements' | 'system' | 'settings';
 
 export type InstallationPhase = 'stabilize' | 'reconstruct' | 'install';
 
@@ -146,6 +146,41 @@ export interface MonthlyReview {
   biggest_challenge: string;
   next_month_focus: string;
   created_at: string;
+}
+
+// === SYSTEM REPORTS (Monthly Achievement Cards) ===
+// Generated at the end of each month. Stored in the Achievements tab.
+
+export type ReportTier = 'gold-perfect' | 'gold' | 'silver' | 'bronze';
+
+export interface SystemReport {
+  id: string;
+  user_id: string;
+  month: string; // YYYY-MM
+  score: number; // 0-100
+  tier: ReportTier;
+  meetsMinimums: boolean; // 3 habits, 3 tasks/day avg, 2 NNs
+  scoreCapped: boolean; // true if below minimums (capped at 75)
+  
+  // Category breakdowns
+  habitsScore: number; // 0-100 completion %
+  habitsCount: number;
+  tasksScore: number; // 0-100 completion %
+  tasksAvgPerDay: number;
+  nnScore: number; // 0-100 completion %
+  nnCount: number;
+  
+  // Highlights
+  totalTasksCompleted: number;
+  totalDaysActive: number;
+  longestStreak: number;
+  personalHighlight: string;
+  
+  // Month-over-month
+  scoreDelta?: number; // difference from previous month
+  
+  created_at: string;
+  isInstallationReport?: boolean; // true for the Day 21 report
 }
 
 // === INSTALLATION PROGRESS ===
