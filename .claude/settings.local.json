@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:cool-squirrel-61385d.netlify.app)",
+      "WebFetch(domain:structured-achievement-lessons.netlify.app)",
+      "Bash(ls:*)"
+    ]
+  }
+}
