@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, BookOpen, BarChart3, Layers, Settings, User, LogOut } from 'lucide-react';
+import { CheckCircle, BookOpen, BarChart3, Trophy, Layers, Settings, User, LogOut } from 'lucide-react';
 import { TabType } from '../types';
 
 interface NavigationProps {
@@ -17,6 +17,7 @@ const tabs: { id: TabType; label: string; mobileLabel: string; icon: React.Eleme
   { id: 'today', label: 'Today', mobileLabel: 'Today', icon: CheckCircle },
   { id: 'installation', label: 'Installation', mobileLabel: 'Install', icon: BookOpen },
   { id: 'reviews', label: 'Reviews', mobileLabel: 'Reviews', icon: BarChart3 },
+  { id: 'achievements', label: 'Achievements', mobileLabel: 'Achieve', icon: Trophy },
   { id: 'system', label: 'System', mobileLabel: 'System', icon: Layers },
   { id: 'settings', label: 'Settings', mobileLabel: 'Settings', icon: Settings },
 ];
