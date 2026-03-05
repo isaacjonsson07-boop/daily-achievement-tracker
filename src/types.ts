@@ -151,7 +151,7 @@ export interface MonthlyReview {
 // === SYSTEM REPORTS (Monthly Achievement Cards) ===
 // Generated at the end of each month. Stored in the Achievements tab.
 
-export type ReportTier = 'gold-perfect' | 'gold' | 'silver' | 'bronze';
+export type ReportTier = 'diamond' | 'gold' | 'silver' | 'bronze';
 
 export interface SystemReport {
   id: string;
