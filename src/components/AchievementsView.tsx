@@ -35,16 +35,16 @@ function getYearLabel(month: string): string {
   return month.split('-')[0];
 }
 
-// ── Animated glow for perfect score cards ──
+// ── Animated glow for diamond tier cards ──
 
-function PerfectGlow({ width, height }: { width: number; height: number }) {
+function DiamondGlow({ width, height }: { width: number; height: number }) {
   const line1Ref = useRef<HTMLDivElement>(null);
   const line2Ref = useRef<HTMLDivElement>(null);
   const animRef = useRef<number>(0);
 
   useEffect(() => {
     if (!width || !height) return;
-    const speed = 60;
+    const speed = 55;
 
     function animate() {
       const perimeter = 2 * width + 2 * height;
@@ -55,41 +55,46 @@ function PerfectGlow({ width, height }: { width: number; height: number }) {
         if (!el) return;
         const dist = ((now * speed) + (i * perimeter / 2)) % perimeter;
 
+        // Prismatic color shift based on position
+        const ratio = dist / perimeter;
+        const hue = 195 + Math.sin(ratio * Math.PI * 2 + now * 0.5) * 30; // shifts between cool blue and soft violet
+        const glowColor = `hsla(${hue}, 55%, 78%, 0.55)`;
+
         if (dist < width) {
           el.style.top = '-1px';
-          el.style.left = `${dist - 30}px`;
+          el.style.left = `${dist - 35}px`;
           el.style.bottom = 'auto';
           el.style.right = 'auto';
-          el.style.width = '60px';
+          el.style.width = '70px';
           el.style.height = '2px';
-          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.5) 0%, transparent 70%)';
+          el.style.background = `radial-gradient(ellipse at 50% 50%, ${glowColor} 0%, transparent 70%)`;
         } else if (dist < width + height) {
           const d = dist - width;
-          el.style.top = `${d - 30}px`;
+          el.style.top = `${d - 35}px`;
           el.style.left = `${width - 1}px`;
           el.style.right = 'auto';
           el.style.bottom = 'auto';
           el.style.width = '2px';
-          el.style.height = '60px';
-          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.5) 0%, transparent 70%)';
+          el.style.height = '70px';
+          el.style.background = `radial-gradient(ellipse at 50% 50%, ${glowColor} 0%, transparent 70%)`;
         } else if (dist < 2 * width + height) {
           const d = dist - width - height;
           el.style.top = `${height - 1}px`;
-          el.style.left = `${width - d - 30}px`;
+          el.style.left = `${width - d - 35}px`;
           el.style.bottom = 'auto';
           el.style.right = 'auto';
-          el.style.width = '60px';
+          el.style.width = '70px';
           el.style.height = '2px';
-          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.5) 0%, transparent 70%)';
+          el.style.background = `radial-gradient(ellipse at 50% 50%, ${glowColor} 0%, transparent 70%)`;
         } else {
           const d = dist - 2 * width - height;
-          el.style.top = `${height - d - 30}px`;
+          el.style.top = `${height - d - 35}px`;
           el.style.left = '-1px';
           el.style.bottom = 'auto';
           el.style.right = 'auto';
           el.style.width = '2px';
-          el.style.height = '60px';
-          el.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.5) 0%, transparent 70%)';
+          el.style.height = '70px';
+          el.style.background = `radial-gradient(ellipse at 50% 50%, ${glowColor} 0%, transparent 70%)`;
         }
       });
 
@@ -155,21 +160,21 @@ function DeltaBadge({ delta }: { delta?: number }) {
 
   if (delta > 0) {
     return (
-      <span className="inline-flex items-center gap-0.5 text-xs text-sa-green">
-        <TrendingUp className="w-3 h-3" />+{delta}
+      <span className="inline-flex items-center gap-1 text-xs text-sa-green">
+        <TrendingUp className="w-3 h-3" />+{delta} <span className="text-sa-cream-faint">vs last</span>
       </span>
     );
   }
   if (delta < 0) {
     return (
-      <span className="inline-flex items-center gap-0.5 text-xs text-sa-rose">
-        <TrendingDown className="w-3 h-3" />{delta}
+      <span className="inline-flex items-center gap-1 text-xs text-sa-rose">
+        <TrendingDown className="w-3 h-3" />{delta} <span className="text-sa-cream-faint">vs last</span>
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-0.5 text-xs text-sa-cream-faint">
-      <Minus className="w-3 h-3" />0
+    <span className="inline-flex items-center gap-1 text-xs text-sa-cream-faint">
+      <Minus className="w-3 h-3" />0 vs last
     </span>
   );
 }
@@ -203,6 +208,8 @@ function SystemCard({
   onClick: () => void;
 }) {
   const config = TIER_CONFIG[report.tier];
+  const isDiamond = report.tier === 'diamond';
+  const isGoldTier = report.tier === 'gold' || isDiamond;
   const cardRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 0, h: 0 });
 
@@ -218,22 +225,23 @@ function SystemCard({
       onClick={onClick}
       className="w-full text-left group relative overflow-hidden rounded-sa-lg transition-all duration-200 hover:scale-[1.01]"
       style={{
-        border: `1.5px solid ${config.border}`,
+        border: `1.5px solid ${isDiamond ? config.color : config.border}`,
         backgroundColor: config.bg,
+        boxShadow: isDiamond ? '0 0 20px rgba(184, 212, 232, 0.08), 0 0 40px rgba(184, 212, 232, 0.04)' : 'none',
       }}
     >
       <div ref={cardRef} className="relative p-5">
-        {report.tier === 'gold-perfect' && dims.w > 0 && (
-          <PerfectGlow width={dims.w} height={dims.h} />
+        {isDiamond && dims.w > 0 && (
+          <DiamondGlow width={dims.w} height={dims.h} />
         )}
 
-        {/* Corner accents for gold+ */}
-        {(report.tier === 'gold' || report.tier === 'gold-perfect') && (
+        {/* Corner accents for gold and diamond */}
+        {isGoldTier && (
           <>
-            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r" style={{ borderColor: config.color, opacity: 0.5 }} />
+            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l" style={{ borderColor: config.color, opacity: isDiamond ? 0.7 : 0.5 }} />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r" style={{ borderColor: config.color, opacity: isDiamond ? 0.7 : 0.5 }} />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l" style={{ borderColor: config.color, opacity: isDiamond ? 0.7 : 0.5 }} />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r" style={{ borderColor: config.color, opacity: isDiamond ? 0.7 : 0.5 }} />
           </>
         )}
 
@@ -282,41 +290,48 @@ function ExpandedReport({
   onClose: () => void;
 }) {
   const config = TIER_CONFIG[report.tier];
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dims, setDims] = useState({ w: 0, h: 0 });
-
-  useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setDims({ w: width, h: height });
-    }
-  }, []);
+  const isDiamond = report.tier === 'diamond';
+  const isGoldTier = report.tier === 'gold' || isDiamond;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      {/* Outer frame — non-scrolling, holds corners and glow */}
       <div
-        ref={containerRef}
-        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-sa-lg"
+        className="relative w-full max-w-lg rounded-sa-lg"
         style={{
-          border: `1.5px solid ${config.border}`,
+          border: `1.5px solid ${isDiamond ? config.color : config.border}`,
           backgroundColor: '#151518',
+          boxShadow: isDiamond
+            ? '0 0 40px rgba(184, 212, 232, 0.12), 0 0 80px rgba(184, 212, 232, 0.05), inset 0 0 60px rgba(184, 212, 232, 0.02)'
+            : 'none',
         }}
       >
-        {report.tier === 'gold-perfect' && dims.w > 0 && (
-          <PerfectGlow width={dims.w} height={dims.h} />
-        )}
-
-        {/* Corner accents */}
-        {(report.tier === 'gold' || report.tier === 'gold-perfect') && (
+        {/* Corner accents — fixed to the visual frame */}
+        {isGoldTier && (
           <>
-            <div className="absolute top-0 left-0 w-5 h-5 border-t border-l z-10" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute top-0 right-0 w-5 h-5 border-t border-r z-10" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute bottom-0 left-0 w-5 h-5 border-b border-l z-10" style={{ borderColor: config.color, opacity: 0.5 }} />
-            <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r z-10" style={{ borderColor: config.color, opacity: 0.5 }} />
+            <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 rounded-tl-sa-lg z-30 pointer-events-none" style={{ borderColor: config.color, opacity: isDiamond ? 0.8 : 0.4 }} />
+            <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 rounded-tr-sa-lg z-30 pointer-events-none" style={{ borderColor: config.color, opacity: isDiamond ? 0.8 : 0.4 }} />
+            <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 rounded-bl-sa-lg z-30 pointer-events-none" style={{ borderColor: config.color, opacity: isDiamond ? 0.8 : 0.4 }} />
+            <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 rounded-br-sa-lg z-30 pointer-events-none" style={{ borderColor: config.color, opacity: isDiamond ? 0.8 : 0.4 }} />
           </>
         )}
 
-        <div className="relative z-20 p-6 sm:p-8">
+        {/* Diamond shimmer bar at top */}
+        {isDiamond && (
+          <div className="absolute top-0 left-0 right-0 h-px z-20 overflow-hidden pointer-events-none">
+            <div
+              className="h-full w-24"
+              style={{
+                background: 'linear-gradient(90deg, transparent, rgba(184,212,232,0.6), transparent)',
+                animation: 'shimmerSlide 3s ease-in-out infinite',
+              }}
+            />
+          </div>
+        )}
+
+        {/* Scrollable content */}
+        <div className="max-h-[90vh] overflow-y-auto rounded-sa-lg">
+          <div className="relative z-20 p-6 sm:p-8">
           {/* Close button */}
           <button
             onClick={onClose}
@@ -421,6 +436,7 @@ function ExpandedReport({
             <p className="text-sm text-sa-cream-soft italic leading-relaxed">"{report.personalHighlight}"</p>
           </div>
         </div>
+        </div>
       </div>
     </div>
   );
@@ -519,7 +535,7 @@ export function AchievementsView({
     if (reports.length === 0) return null;
     const avg = Math.round(reports.reduce((sum, r) => sum + r.score, 0) / reports.length);
     const best = Math.max(...reports.map(r => r.score));
-    const goldCount = reports.filter(r => r.tier === 'gold' || r.tier === 'gold-perfect').length;
+    const goldCount = reports.filter(r => r.tier === 'gold' || r.tier === 'diamond').length;
     return { avg, best, goldCount, total: reports.length };
   }, [reports]);
 
@@ -547,7 +563,7 @@ export function AchievementsView({
                 { label: 'Reports', value: stats.total },
                 { label: 'Avg Score', value: stats.avg },
                 { label: 'Best', value: stats.best },
-                { label: 'Gold', value: stats.goldCount },
+                { label: 'Gold+', value: stats.goldCount },
               ].map(s => (
                 <div key={s.label} className="text-center py-3 rounded-sa" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span className="block font-serif text-lg text-sa-cream">{s.value}</span>
