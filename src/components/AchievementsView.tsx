@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Trophy, TrendingUp, TrendingDown, Minus, Target, Flame, Calendar, CheckCircle, AlertTriangle, X } from 'lucide-react';
 import {
   NonNegotiable, NonNegotiableCompletion,
@@ -400,6 +400,68 @@ export function AchievementsView({
   }, []);
 
   const hasCurrentReport = reports.some(r => r.month === currentMonth);
+
+  // Auto-generate reports for any missed past months
+  const autoGenRan = useRef(false);
+  useEffect(() => {
+    if (autoGenRan.current) return;
+    if (reports.length === 0 && nonNegotiables.length === 0 && habits.length === 0) return;
+
+    // Find the earliest month we have any data for
+    const allDates = [
+      ...nnCompletions.map(c => c.completion_date),
+      ...habitCompletions.map(c => c.completion_date),
+      ...dailyTasks.map(t => t.task_date),
+    ].filter(Boolean).sort();
+
+    if (allDates.length === 0) return;
+
+    const firstDate = allDates[0];
+    const firstMonth = firstDate.substring(0, 7); // YYYY-MM
+
+    // Build list of all months from firstMonth to last month (not current)
+    const months: string[] = [];
+    const [fy, fm] = firstMonth.split('-').map(Number);
+    const [cy, cm] = currentMonth.split('-').map(Number);
+    let y = fy, m = fm;
+    while (y < cy || (y === cy && m < cm)) {
+      months.push(`${y}-${String(m).padStart(2, '0')}`);
+      m++;
+      if (m > 12) { m = 1; y++; }
+    }
+
+    // Find months missing a report
+    const existingMonths = new Set(reports.map(r => r.month));
+    const missingMonths = months.filter(mo => !existingMonths.has(mo));
+
+    if (missingMonths.length === 0) {
+      autoGenRan.current = true;
+      return;
+    }
+
+    // Generate reports for missing months
+    const sortedExisting = [...reports].sort((a, b) => a.month.localeCompare(b.month));
+    let prevReport: SystemReport | null = sortedExisting.length > 0 ? sortedExisting[sortedExisting.length - 1] : null;
+
+    for (const mo of missingMonths) {
+      const report = generateMonthlyReport(
+        mo, nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, prevReport, userId,
+      );
+      // Only save if there was actual activity that month
+      const hadActivity = [
+        ...nnCompletions.filter(c => c.completion_date.startsWith(mo)),
+        ...habitCompletions.filter(c => c.completion_date.startsWith(mo)),
+        ...dailyTasks.filter(t => t.task_date.startsWith(mo)),
+      ].length > 0;
+
+      if (hadActivity) {
+        onSaveSystemReport(report);
+        prevReport = report;
+      }
+    }
+
+    autoGenRan.current = true;
+  }, [reports, nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, currentMonth, userId, onSaveSystemReport]);
 
   const handleGenerate = () => {
     const sorted = [...reports].sort((a, b) => b.month.localeCompare(a.month));
