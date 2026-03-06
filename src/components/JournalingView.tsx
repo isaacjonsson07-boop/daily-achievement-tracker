@@ -451,6 +451,27 @@ export function JournalingView({
             <h3 className="font-serif text-base text-sa-cream mb-3">{selectedPatch.configTask.title}</h3>
             <p className="text-sm text-sa-cream-muted leading-relaxed">{selectedPatch.configTask.description}</p>
           </div>
+
+          {/* Done button */}
+          {readPatches.includes(selectedPatch.id) ? (
+            <div className="mt-8 py-4 text-center">
+              <div className="inline-flex items-center gap-2 text-sa-green text-sm">
+                <Check className="w-4 h-4" />
+                <span>Patch completed</span>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                const updated = [...readPatches, selectedPatch.id];
+                setReadPatches(updated);
+                localStorage.setItem('sa_read_patches', JSON.stringify(updated));
+              }}
+              className="sa-btn-primary w-full mt-8"
+            >
+              Mark as Done
+            </button>
+          )}
         </div>
       </div>
     );
@@ -956,11 +977,6 @@ export function JournalingView({
                       key={patch.id}
                       onClick={() => {
                         setSelectedPatch(patch);
-                        if (!readPatches.includes(patch.id)) {
-                          const updated = [...readPatches, patch.id];
-                          setReadPatches(updated);
-                          localStorage.setItem('sa_read_patches', JSON.stringify(updated));
-                        }
                       }}
                       className="sa-lesson-card"
                       style={{
