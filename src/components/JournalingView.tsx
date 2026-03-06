@@ -5,6 +5,7 @@ import { uid } from '../utils/dateUtils';
 import { getJournalAccessDays } from '../utils/trialUtils';
 import { openWhopPaid, openWhopTrial } from '../constants';
 import { LESSON_DATA, getLessonByDay } from '../data/lessonContent';
+import { PATCH_DATA, SystemPatchData } from '../data/patchContent';
 import { LessonRenderer } from './LessonRenderer';
 
 // ============================================
@@ -293,6 +294,11 @@ export function JournalingView({
   onStartTrial
 }: JournalingViewProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [selectedPatch, setSelectedPatch] = useState<SystemPatchData | null>(null);
+  const [readPatches, setReadPatches] = useState<string[]>(() => {
+    try { const raw = localStorage.getItem('sa_read_patches'); return raw ? JSON.parse(raw) : []; }
+    catch { return []; }
+  });
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [activeTab, setActiveTab] = useState<'lesson' | 'journal'>('lesson');
@@ -398,6 +404,57 @@ export function JournalingView({
 
   const completedDays = journalEntries.filter(e => e.dayNumber && hasContent(e)).length;
   const progressPercent = Math.round((completedDays / 21) * 100);
+
+  // ── PATCH DETAIL VIEW ──
+  if (selectedPatch) {
+    const accentColor = 'var(--cream-muted, #A69F93)';
+
+    return (
+      <div className="max-w-3xl mx-auto animate-rise">
+        {/* Top bar */}
+        <div className="flex items-center justify-between mb-6 sticky top-14 md:top-0 z-10 py-3 -mx-6 px-6 bg-sa-bg/95 backdrop-blur-sm border-b border-sa-border/50">
+          <button onClick={() => setSelectedPatch(null)} className="sa-btn-ghost flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Back</span>
+          </button>
+          <span className="text-xs text-sa-cream-faint font-medium px-2.5 py-1 rounded-full bg-sa-bg-lift border border-sa-border-light">
+            Patch {String(selectedPatch.week).padStart(3, '0')}
+          </span>
+        </div>
+
+        {/* Patch content */}
+        <div className="space-y-8">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-[0.7rem] uppercase tracking-[0.18em] text-sa-cream-faint mb-3">System Patch {String(selectedPatch.week).padStart(3, '0')}</p>
+            <h1 className="font-serif text-2xl sm:text-3xl text-sa-cream mb-4">{selectedPatch.title}</h1>
+            <p className="text-sm text-sa-cream-muted italic leading-relaxed max-w-md mx-auto">{selectedPatch.subtitle}</p>
+          </div>
+
+          {/* Sections */}
+          {selectedPatch.sections.map((section, i) => (
+            <div key={i}>
+              <h2 className="font-serif text-lg text-sa-cream mb-4" style={{ borderLeft: `2px solid ${accentColor}`, paddingLeft: '16px' }}>
+                {section.heading}
+              </h2>
+              <div className="space-y-4 pl-0">
+                {section.paragraphs.map((p, j) => (
+                  <p key={j} className="text-sm text-sa-cream-soft leading-relaxed" dangerouslySetInnerHTML={{ __html: p }} />
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* Configuration task */}
+          <div className="mt-10 p-6 rounded-sa-lg" style={{ backgroundColor: 'rgba(197, 165, 90, 0.04)', border: '1px solid rgba(197, 165, 90, 0.12)' }}>
+            <p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-gold mb-2">Configuration Task</p>
+            <h3 className="font-serif text-base text-sa-cream mb-3">{selectedPatch.configTask.title}</h3>
+            <p className="text-sm text-sa-cream-muted leading-relaxed">{selectedPatch.configTask.description}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── DAY DETAIL VIEW ──
   if (selectedDay) {
@@ -871,6 +928,80 @@ export function JournalingView({
               <p className="text-sa-green font-serif text-lg">System installed.</p>
               <p className="text-sa-cream-muted text-sm mt-1">All 21 days completed. Operational mode is active.</p>
             </div>
+          )}
+
+          {/* ── SYSTEM PATCHES SECTION ── */}
+          {PATCH_DATA.length > 0 && (
+            <section className="animate-rise" style={{ paddingTop: 72 }}>
+              {/* Section header */}
+              <div style={{ marginBottom: 32 }}>
+                <p style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--cream-faint, #6B665D)', marginBottom: 8 }}>
+                  Post-Installation
+                </p>
+                <h2 style={{ fontFamily: 'var(--serif)', fontSize: '1.7rem', color: 'var(--cream, #F2EDE4)', fontWeight: 400, marginBottom: 8, lineHeight: 1.2 }}>
+                  System Patches
+                </h2>
+                <p style={{ fontSize: '0.9rem', color: 'var(--cream-muted, #A69F93)', lineHeight: 1.6, maxWidth: '540px' }}>
+                  Weekly operational refinements. One concept, one application, one configuration task. Designed to keep your system sharp after installation.
+                </p>
+              </div>
+
+              {/* Patch cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {PATCH_DATA.map((patch) => {
+                  const isRead = readPatches.includes(patch.id);
+
+                  return (
+                    <button
+                      key={patch.id}
+                      onClick={() => {
+                        setSelectedPatch(patch);
+                        if (!readPatches.includes(patch.id)) {
+                          const updated = [...readPatches, patch.id];
+                          setReadPatches(updated);
+                          localStorage.setItem('sa_read_patches', JSON.stringify(updated));
+                        }
+                      }}
+                      className="sa-lesson-card"
+                      style={{
+                        borderColor: isRead ? 'rgba(110, 203, 139, 0.15)' : 'rgba(240,237,230,0.05)',
+                      }}
+                    >
+                      {/* Patch number */}
+                      <div style={{
+                        width: 44, height: 44, borderRadius: 8, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontFamily: 'var(--serif)', fontSize: '1.1rem', fontWeight: 400,
+                        color: isRead ? 'var(--green, #6ECB8B)' : 'var(--cream-muted, #A69F93)',
+                        border: `1px solid ${isRead ? 'rgba(110, 203, 139, 0.25)' : 'rgba(240,237,230,0.08)'}`,
+                        background: isRead ? 'rgba(110, 203, 139, 0.06)' : 'rgba(240,237,230,0.02)',
+                      }}>
+                        {isRead ? <Check className="w-4 h-4" /> : String(patch.week).padStart(3, '0')}
+                      </div>
+
+                      {/* Title + subtitle */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{
+                          fontFamily: 'var(--serif)', fontSize: '1.05rem', fontWeight: 400,
+                          color: 'var(--cream, #F2EDE4)', lineHeight: 1.3, marginBottom: 2,
+                        }}>
+                          {patch.title}
+                        </p>
+                        <p style={{
+                          fontSize: '0.8rem', color: 'var(--cream-faint, #6B665D)',
+                          lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                        }}>
+                          {patch.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Arrow */}
+                      <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--cream-faint, #6B665D)', opacity: 0.5 }} />
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           )}
         </>
       )}
