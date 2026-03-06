@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { BarChart3, ChevronDown, ChevronUp, Check, ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react';
 import { NonNegotiable, NonNegotiableCompletion, Habit, HabitCompletion, DailyTask, Goal, SavedReview } from '../types';
 import { fmtDateISO, uid } from '../utils/dateUtils';
+import { supabase } from '../lib/supabase';
 
 interface ReviewsViewProps {
   nonNegotiables: NonNegotiable[];
@@ -16,6 +17,10 @@ interface ReviewsViewProps {
   onSaveReview: (review: SavedReview) => void;
   recalPending: object | null;
   onUpdateRecalPending: (data: object | null) => void;
+  onDeleteNonNegotiable: (id: string) => Promise<void>;
+  onAddNonNegotiable: (nn: NonNegotiable) => Promise<NonNegotiable>;
+  onHabitsChange: () => void;
+  user?: { id: string } | null;
 }
 
 interface RecalibrationData {
@@ -49,6 +54,10 @@ export function ReviewsView({
   onSaveReview,
   recalPending,
   onUpdateRecalPending,
+  onDeleteNonNegotiable,
+  onAddNonNegotiable,
+  onHabitsChange,
+  user,
 }: ReviewsViewProps) {
   const [activeTab, setActiveTab] = useState<'snapshot' | 'weekly' | 'quarterly'>('snapshot');
   const [weeklyAnswers, setWeeklyAnswers] = useState<Record<string, string>>({});
@@ -56,6 +65,13 @@ export function ReviewsView({
 
   // Quarterly Recalibration state
   const [recalStep, setRecalStep] = useState(0); // 0 = overview, 1-5 = steps, 6 = complete
+  const [recalExecuting, setRecalExecuting] = useState(false);
+  const [recalResults, setRecalResults] = useState<{
+    nnRemoved: number;
+    nnAdded: number;
+    habitsRotated: number;
+    habitsAdded: number;
+  } | null>(null);
   const [recalData, setRecalData] = useState<RecalibrationData>({
     direction: systemDocuments.direction || '',
     identity: systemDocuments.identity || '',
@@ -511,7 +527,7 @@ export function ReviewsView({
                   rows={3}
                   className="sa-textarea"
                 />
-                <p className="text-xs text-sa-cream-faint mt-1.5">Add these in the System tab after completing the recalibration.</p>
+                <p className="text-xs text-sa-cream-faint mt-1.5">One per line. These will be added to your system automatically on completion.</p>
               </div>
 
               <div className="flex gap-3">
@@ -589,7 +605,7 @@ export function ReviewsView({
                   rows={3}
                   className="sa-textarea"
                 />
-                <p className="text-xs text-sa-cream-faint mt-1.5">Add these in the System tab after completing the recalibration.</p>
+                <p className="text-xs text-sa-cream-faint mt-1.5">One per line. New habits default to weekdays at 9:00 AM — adjust in the System tab after.</p>
               </div>
 
               <div className="flex gap-3">
@@ -675,53 +691,121 @@ export function ReviewsView({
                   <ArrowLeft className="w-3.5 h-3.5" /> Back
                 </button>
                 <button
-                  onClick={() => {
-                    // Save updated documents via hook
-                    if (onUpdateSystemDocument) {
-                      if (recalData.direction) onUpdateSystemDocument('direction', recalData.direction);
-                      if (recalData.identity) onUpdateSystemDocument('identity', recalData.identity);
-                      if (recalData.priorities) onUpdateSystemDocument('priorities', recalData.priorities);
-                      if (recalData.focusNextQuarter) onUpdateSystemDocument('quarterly_focus', recalData.focusNextQuarter);
-                    }
+                  disabled={recalExecuting}
+                  onClick={async () => {
+                    setRecalExecuting(true);
 
-                    // Save pending NN/habit changes for action items
-                    const nnToRemove = Object.entries(recalData.nnActions).filter(([, a]) => a === 'remove').map(([id]) => id);
-                    const habitsToRotate = Object.entries(recalData.habitActions).filter(([, a]) => a === 'rotate').map(([id]) => id);
-                    if (nnToRemove.length > 0 || habitsToRotate.length > 0 || recalData.newNNs || recalData.newHabits) {
-                      onUpdateRecalPending({
-                        nnToRemove,
-                        habitsToRotate,
-                        newNNs: recalData.newNNs,
-                        newHabits: recalData.newHabits,
+                    try {
+                      // 1. Save updated system documents
+                      if (onUpdateSystemDocument) {
+                        if (recalData.direction) onUpdateSystemDocument('direction', recalData.direction);
+                        if (recalData.identity) onUpdateSystemDocument('identity', recalData.identity);
+                        if (recalData.priorities) onUpdateSystemDocument('priorities', recalData.priorities);
+                        if (recalData.focusNextQuarter) onUpdateSystemDocument('quarterly_focus', recalData.focusNextQuarter);
+                      }
+
+                      // 2. Execute NN removals directly
+                      const nnToRemove = Object.entries(recalData.nnActions)
+                        .filter(([, a]) => a === 'remove')
+                        .map(([id]) => id);
+                      for (const id of nnToRemove) {
+                        await onDeleteNonNegotiable(id);
+                      }
+
+                      // 3. Execute habit rotations (deletions) directly
+                      const habitsToRotate = Object.entries(recalData.habitActions)
+                        .filter(([, a]) => a === 'rotate')
+                        .map(([id]) => id);
+                      for (const id of habitsToRotate) {
+                        if (user) {
+                          await supabase.from('habit_completions').delete().eq('habit_id', id);
+                          await supabase.from('habits').delete().eq('id', id);
+                        }
+                      }
+
+                      // 4. Create new NNs
+                      const newNNLines = recalData.newNNs
+                        .split('\n')
+                        .map(l => l.trim())
+                        .filter(l => l.length > 0);
+                      const existingNNCount = nonNegotiables.filter(nn => nn.active).length - nnToRemove.length;
+                      for (let i = 0; i < newNNLines.length; i++) {
+                        await onAddNonNegotiable({
+                          id: uid(),
+                          user_id: user?.id || '',
+                          title: newNNLines[i],
+                          description: '',
+                          order: existingNNCount + i,
+                          active: true,
+                          created_at: new Date().toISOString(),
+                          updated_at: new Date().toISOString(),
+                        });
+                      }
+
+                      // 5. Create new habits
+                      const newHabitLines = recalData.newHabits
+                        .split('\n')
+                        .map(l => l.trim())
+                        .filter(l => l.length > 0);
+                      if (user && newHabitLines.length > 0) {
+                        for (const name of newHabitLines) {
+                          await supabase.from('habits').insert({
+                            user_id: user.id,
+                            name,
+                            target_number: 1,
+                            days_of_week: [1, 2, 3, 4, 5],
+                            time: '09:00',
+                          });
+                        }
+                      }
+
+                      // 6. Refresh habits list after mutations
+                      if (habitsToRotate.length > 0 || newHabitLines.length > 0) {
+                        onHabitsChange();
+                      }
+
+                      // 7. Clear recalPending (no longer needed for action items)
+                      onUpdateRecalPending(null);
+
+                      // 8. Store results for completion summary
+                      setRecalResults({
+                        nnRemoved: nnToRemove.length,
+                        nnAdded: newNNLines.length,
+                        habitsRotated: habitsToRotate.length,
+                        habitsAdded: newHabitLines.length,
                       });
+
+                      // 9. Save as a quarterly review record
+                      const nnNames = nonNegotiables.filter(nn => nn.active);
+                      const review: SavedReview = {
+                        id: uid(),
+                        type: 'quarterly',
+                        date: new Date().toISOString(),
+                        answers: {
+                          direction: recalData.direction,
+                          identity: recalData.identity,
+                          priorities: recalData.priorities,
+                          quarterlyFocus: recalData.focusNextQuarter,
+                          nnKept: nnNames.filter(nn => recalData.nnActions[nn.id] !== 'remove').map(nn => nn.title).join(', '),
+                          nnRemoved: nnNames.filter(nn => recalData.nnActions[nn.id] === 'remove').map(nn => nn.title).join(', '),
+                          newNNs: recalData.newNNs,
+                          habitsKept: habits.filter(h => recalData.habitActions[h.id] !== 'rotate').map(h => h.name).join(', '),
+                          habitsRotated: habits.filter(h => recalData.habitActions[h.id] === 'rotate').map(h => h.name).join(', '),
+                          newHabits: recalData.newHabits,
+                        },
+                      };
+                      onSaveReview(review);
+
+                      setRecalStep(6);
+                    } catch (err) {
+                      console.error('Recalibration error:', err);
+                    } finally {
+                      setRecalExecuting(false);
                     }
-
-                    // Save as a quarterly review
-                    const nnNames = nonNegotiables.filter(nn => nn.active);
-                    const review: SavedReview = {
-                      id: uid(),
-                      type: 'quarterly',
-                      date: new Date().toISOString(),
-                      answers: {
-                        direction: recalData.direction,
-                        identity: recalData.identity,
-                        priorities: recalData.priorities,
-                        quarterlyFocus: recalData.focusNextQuarter,
-                        nnKept: nnNames.filter(nn => recalData.nnActions[nn.id] !== 'remove').map(nn => nn.title).join(', '),
-                        nnRemoved: nnNames.filter(nn => recalData.nnActions[nn.id] === 'remove').map(nn => nn.title).join(', '),
-                        newNNs: recalData.newNNs,
-                        habitsKept: habits.filter(h => recalData.habitActions[h.id] !== 'rotate').map(h => h.name).join(', '),
-                        habitsRotated: habits.filter(h => recalData.habitActions[h.id] === 'rotate').map(h => h.name).join(', '),
-                        newHabits: recalData.newHabits,
-                      },
-                    };
-                    onSaveReview(review);
-
-                    setRecalStep(6);
                   }}
                   className="sa-btn-primary flex-1"
                 >
-                  Complete Recalibration
+                  {recalExecuting ? 'Applying changes...' : 'Complete Recalibration'}
                 </button>
               </div>
             </div>
@@ -729,11 +813,8 @@ export function ReviewsView({
 
           {/* Step 6 — Complete */}
           {recalStep === 6 && (() => {
-            const nnRemoved = Object.values(recalData.nnActions).filter(a => a === 'remove').length;
-            const habitsRotated = Object.values(recalData.habitActions).filter(a => a === 'rotate').length;
-            const hasNewNNs = recalData.newNNs.trim().length > 0;
-            const hasNewHabits = recalData.newHabits.trim().length > 0;
-            const hasActionItems = nnRemoved > 0 || habitsRotated > 0 || hasNewNNs || hasNewHabits;
+            const r = recalResults;
+            const hasChanges = r && (r.nnRemoved > 0 || r.nnAdded > 0 || r.habitsRotated > 0 || r.habitsAdded > 0);
 
             return (
               <div className="py-8 space-y-6">
@@ -743,37 +824,36 @@ export function ReviewsView({
                   </div>
                   <h3 className="font-serif text-xl text-sa-cream">System Recalibrated</h3>
                   <p className="text-sm text-sa-cream-muted max-w-sm mx-auto leading-relaxed">
-                    Your direction, priorities, identity, and quarterly focus have been saved to your system documents.
+                    Your direction, priorities, identity, and quarterly focus have been updated. All changes have been applied to your system.
                   </p>
                 </div>
 
-                {hasActionItems && (
+                {hasChanges && (
                   <div className="sa-card-elevated">
-                    <p className="sa-section-subtitle text-sa-gold mb-3">Action Items — System Tab</p>
-                    <p className="text-xs text-sa-cream-faint mb-4">Complete these in the System tab to finalize your recalibration:</p>
+                    <p className="sa-section-subtitle text-sa-gold mb-3">Changes Applied</p>
                     <div className="space-y-2">
-                      {nnRemoved > 0 && (
+                      {r!.nnRemoved > 0 && (
                         <div className="flex items-start gap-2">
                           <span className="text-sa-rose text-xs mt-0.5">●</span>
-                          <p className="text-xs text-sa-cream-soft">Remove {nnRemoved} non-negotiable{nnRemoved > 1 ? 's' : ''} marked for removal</p>
+                          <p className="text-xs text-sa-cream-soft">Removed {r!.nnRemoved} non-negotiable{r!.nnRemoved > 1 ? 's' : ''}</p>
                         </div>
                       )}
-                      {hasNewNNs && (
+                      {r!.nnAdded > 0 && (
                         <div className="flex items-start gap-2">
                           <span className="text-sa-green text-xs mt-0.5">●</span>
-                          <p className="text-xs text-sa-cream-soft">Add new non-negotiables: {recalData.newNNs}</p>
+                          <p className="text-xs text-sa-cream-soft">Added {r!.nnAdded} new non-negotiable{r!.nnAdded > 1 ? 's' : ''}</p>
                         </div>
                       )}
-                      {habitsRotated > 0 && (
+                      {r!.habitsRotated > 0 && (
                         <div className="flex items-start gap-2">
                           <span className="text-sa-rose text-xs mt-0.5">●</span>
-                          <p className="text-xs text-sa-cream-soft">Rotate {habitsRotated} habit{habitsRotated > 1 ? 's' : ''} marked for rotation</p>
+                          <p className="text-xs text-sa-cream-soft">Rotated {r!.habitsRotated} habit{r!.habitsRotated > 1 ? 's' : ''}</p>
                         </div>
                       )}
-                      {hasNewHabits && (
+                      {r!.habitsAdded > 0 && (
                         <div className="flex items-start gap-2">
                           <span className="text-sa-green text-xs mt-0.5">●</span>
-                          <p className="text-xs text-sa-cream-soft">Install new habits: {recalData.newHabits}</p>
+                          <p className="text-xs text-sa-cream-soft">Installed {r!.habitsAdded} new habit{r!.habitsAdded > 1 ? 's' : ''}</p>
                         </div>
                       )}
                     </div>
@@ -781,7 +861,7 @@ export function ReviewsView({
                 )}
 
                 <button
-                  onClick={() => { setRecalStep(0); setActiveTab('snapshot'); }}
+                  onClick={() => { setRecalStep(0); setRecalResults(null); setActiveTab('snapshot'); }}
                   className="sa-btn-secondary w-full"
                 >
                   Back to Snapshot
