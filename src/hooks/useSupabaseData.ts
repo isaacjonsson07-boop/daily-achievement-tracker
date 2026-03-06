@@ -331,7 +331,7 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
     const localReviews: SavedReview[] = JSON.parse(localStorage.getItem('sa_reviews') || '[]');
     if (localReviews.length > 0) {
       const rows = localReviews.map(r => ({
-        id: newUUID(), user_id: userId,
+        user_id: userId,
         review_type: r.type, review_date: r.date,
         answers: r.answers, stats: r.stats || null,
       }));
@@ -343,7 +343,7 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
     const localReports: SystemReport[] = JSON.parse(localStorage.getItem('sa_system_reports') || '[]');
     if (localReports.length > 0) {
       const rows = localReports.map(r => ({
-        id: newUUID(), user_id: userId, month: r.month,
+        user_id: userId, month: r.month,
         score: r.score, tier: r.tier,
         meets_minimums: r.meetsMinimums, score_capped: r.scoreCapped,
         habits_score: r.habitsScore, habits_count: r.habitsCount,
@@ -511,7 +511,7 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
     setSavedReviews(prev => [review, ...prev]);
     if (user) {
       await supabase.from('saved_reviews').insert({
-        id: newUUID(), user_id: user.id,
+        user_id: user.id,
         review_type: review.type, review_date: review.date,
         answers: review.answers, stats: review.stats || null,
       });
@@ -524,8 +524,13 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
       return [...filtered, report];
     });
     if (user) {
-      await supabase.from('system_reports').upsert({
-        id: report.id, user_id: user.id, month: report.month,
+      // Delete existing report for this month (if any), then insert fresh
+      await supabase.from('system_reports')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('month', report.month);
+      await supabase.from('system_reports').insert({
+        user_id: user.id, month: report.month,
         score: report.score, tier: report.tier,
         meets_minimums: report.meetsMinimums, score_capped: report.scoreCapped,
         habits_score: report.habitsScore, habits_count: report.habitsCount,
@@ -537,7 +542,7 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
         personal_highlight: report.personalHighlight,
         score_delta: report.scoreDelta ?? null,
         is_installation_report: report.isInstallationReport ?? false,
-      }, { onConflict: 'user_id,month' });
+      });
     }
   }, [user]);
 
