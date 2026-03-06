@@ -236,6 +236,10 @@ function App() {
             onSaveReview={saveSavedReview}
             recalPending={recalPending}
             onUpdateRecalPending={updateRecalPending}
+            onDeleteNonNegotiable={deleteNonNegotiable}
+            onAddNonNegotiable={addNonNegotiable}
+            onHabitsChange={loadHabits}
+            user={user}
           />
         )}
 
