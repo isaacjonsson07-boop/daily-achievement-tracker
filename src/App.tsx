@@ -229,7 +229,6 @@ function App() {
             habits={habits}
             habitCompletions={habitCompletions}
             dailyTasks={dailyTasks}
-            goals={goals}
             systemDocuments={systemDocuments}
             onUpdateSystemDocument={updateSystemDocument}
             savedReviews={savedReviews}
@@ -265,8 +264,6 @@ function App() {
             onUpdateSystemDocument={updateSystemDocument}
             habits={habits}
             onHabitsChange={loadHabits}
-            goals={goals}
-            onGoalsChange={loadGoals}
             user={user}
           />
         )}
