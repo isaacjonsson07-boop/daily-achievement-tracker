@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  TabType, DailyTask, NonNegotiable, NonNegotiableCompletion,
-  Habit, HabitCompletion, Goal, JournalEntry,
+  TabType, Habit, HabitCompletion, Goal,
 } from './types';
-import { fmtDateISO, uid } from './utils/dateUtils';
 import { useAuth } from './hooks/useAuth';
+import { useSupabaseData } from './hooks/useSupabaseData';
 import { supabase } from './lib/supabase';
 import { Navigation } from './components/Navigation';
 import { TabCover } from './components/TabCover';
@@ -27,70 +26,24 @@ function App() {
   const [currentTab, setCurrentTab] = useState<TabType>('today');
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Non-Negotiables (localStorage)
-  const [nonNegotiables, setNonNegotiables] = useState<NonNegotiable[]>([]);
-  const [nnCompletions, setNNCompletions] = useState<NonNegotiableCompletion[]>([]);
+  // Dual-mode data (localStorage + Supabase)
+  const {
+    nonNegotiables, nnCompletions,
+    dailyTasks, journalEntries, systemDocuments,
+    handleToggleNN, addNonNegotiable, deleteNonNegotiable,
+    addDailyTask, toggleDailyTask, deleteDailyTask,
+    updateJournalEntry, updateSystemDocument,
+    loading: dataLoading, clearAll,
+  } = useSupabaseData({ user, authLoading });
 
   // Habits (Supabase)
   const [habits, setHabits] = useState<Habit[]>([]);
   const [habitCompletions, setHabitCompletions] = useState<HabitCompletion[]>([]);
 
-  // Daily tasks (localStorage)
-  const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([]);
-
   // Goals (Supabase)
   const [goals, setGoals] = useState<Goal[]>([]);
 
-  // Journal (localStorage)
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
-
   const userId = user?.id;
-  const isFirstRender = useRef(true);
-
-  // === LOAD DATA ===
-  useEffect(() => {
-    try {
-      const nnRaw = localStorage.getItem('sa_non_negotiables');
-      if (nnRaw) setNonNegotiables(JSON.parse(nnRaw));
-
-      const nnCompRaw = localStorage.getItem('sa_nn_completions');
-      if (nnCompRaw) setNNCompletions(JSON.parse(nnCompRaw));
-
-      const tasksRaw = localStorage.getItem('sa_daily_tasks');
-      if (tasksRaw) setDailyTasks(JSON.parse(tasksRaw));
-
-      const journalRaw = localStorage.getItem('sa_journal_entries');
-      if (journalRaw) {
-        setJournalEntries(JSON.parse(journalRaw));
-      } else {
-        // Migrate from legacy storage if sa_journal_entries doesn't exist yet
-        const legacyRaw = localStorage.getItem('daily-achievement-tracker');
-        if (legacyRaw) {
-          try {
-            const legacy = JSON.parse(legacyRaw);
-            if (legacy.journalEntries?.length) {
-              setJournalEntries(legacy.journalEntries);
-              localStorage.setItem('sa_journal_entries', JSON.stringify(legacy.journalEntries));
-            }
-          } catch { /* ignore legacy parse errors */ }
-        }
-      }
-    } catch (e) {
-      console.warn('Failed to load data:', e);
-    }
-  }, []);
-
-  // Save to localStorage on change
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    localStorage.setItem('sa_non_negotiables', JSON.stringify(nonNegotiables));
-    localStorage.setItem('sa_nn_completions', JSON.stringify(nnCompletions));
-    localStorage.setItem('sa_daily_tasks', JSON.stringify(dailyTasks));
-    localStorage.setItem('sa_journal_entries', JSON.stringify(journalEntries));
-  }, [nonNegotiables, nnCompletions, dailyTasks, journalEntries]);
 
   // Load Supabase data when authenticated
   useEffect(() => {
@@ -155,26 +108,6 @@ function App() {
 
   // === HANDLERS ===
 
-  const handleToggleNN = (nn: NonNegotiable, date: string) => {
-    const existing = nnCompletions.find(
-      (c) => c.non_negotiable_id === nn.id && c.completion_date === date
-    );
-    if (existing) {
-      setNNCompletions((prev) => prev.filter((c) => c.id !== existing.id));
-    } else {
-      setNNCompletions((prev) => [
-        ...prev,
-        {
-          id: uid(),
-          non_negotiable_id: nn.id,
-          user_id: userId || 'local',
-          completion_date: date,
-          created_at: new Date().toISOString(),
-        },
-      ]);
-    }
-  };
-
   const handleToggleHabit = async (habit: Habit, date: string) => {
     const existing = habitCompletions.find(
       (c) => c.habit_id === habit.id && c.completion_date === date
@@ -200,7 +133,7 @@ function App() {
         setHabitCompletions((prev) => [
           ...prev,
           {
-            id: uid(),
+            id: `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
             habit_id: habit.id,
             user_id: 'local',
             completion_date: date,
@@ -212,39 +145,12 @@ function App() {
     }
   };
 
-  const handleAddDailyTask = (task: DailyTask) => {
-    setDailyTasks((prev) => [...prev, task]);
-  };
-
-  const handleToggleTask = (id: string) => {
-    setDailyTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
-  const handleDeleteTask = (id: string) => {
-    setDailyTasks((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const handleUpdateJournalEntry = (entry: JournalEntry) => {
-    setJournalEntries((prev) => {
-      const existing = prev.find((e) => e.dayNumber === entry.dayNumber);
-      if (existing) {
-        return prev.map((e) => (e.dayNumber === entry.dayNumber ? entry : e));
-      }
-      return [...prev, entry];
-    });
-  };
-
   const handleSignOut = async () => {
     await signOut();
-    setNonNegotiables([]);
-    setNNCompletions([]);
-    setDailyTasks([]);
+    clearAll();
     setHabits([]);
     setHabitCompletions([]);
     setGoals([]);
-    setJournalEntries([]);
   };
 
   // === RENDER ===
@@ -291,16 +197,16 @@ function App() {
             habitCompletions={habitCompletions}
             onToggleHabit={handleToggleHabit}
             dailyTasks={dailyTasks}
-            onAddTask={handleAddDailyTask}
-            onToggleTask={handleToggleTask}
-            onDeleteTask={handleDeleteTask}
+            onAddTask={addDailyTask}
+            onToggleTask={toggleDailyTask}
+            onDeleteTask={deleteDailyTask}
           />
         )}
 
         {currentTab === 'installation' && (
           <JournalingView
             journalEntries={journalEntries}
-            onUpdateJournalEntry={handleUpdateJournalEntry}
+            onUpdateJournalEntry={updateJournalEntry}
             user={user}
             plan={plan}
             trialEndsAt={trialEndsAt}
@@ -316,6 +222,8 @@ function App() {
             habitCompletions={habitCompletions}
             dailyTasks={dailyTasks}
             goals={goals}
+            systemDocuments={systemDocuments}
+            onUpdateSystemDocument={updateSystemDocument}
           />
         )}
 
@@ -333,7 +241,10 @@ function App() {
         {currentTab === 'system' && (
           <SystemView
             nonNegotiables={nonNegotiables}
-            onUpdateNonNegotiables={setNonNegotiables}
+            onAddNonNegotiable={addNonNegotiable}
+            onDeleteNonNegotiable={deleteNonNegotiable}
+            systemDocuments={systemDocuments}
+            onUpdateSystemDocument={updateSystemDocument}
             habits={habits}
             onHabitsChange={loadHabits}
             goals={goals}

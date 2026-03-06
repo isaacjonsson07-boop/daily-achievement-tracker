@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus, Trash2, ChevronDown, ChevronUp, Pencil, FileText, Target, Shield, Compass, Brain } from 'lucide-react';
 import { NonNegotiable, Habit, Goal, SystemDocument } from '../types';
 import { uid } from '../utils/dateUtils';
@@ -6,7 +6,10 @@ import { supabase } from '../lib/supabase';
 
 interface SystemViewProps {
   nonNegotiables: NonNegotiable[];
-  onUpdateNonNegotiables: React.Dispatch<React.SetStateAction<NonNegotiable[]>>;
+  onAddNonNegotiable: (nn: NonNegotiable) => void;
+  onDeleteNonNegotiable: (id: string) => void;
+  systemDocuments: Record<string, string>;
+  onUpdateSystemDocument: (key: string, content: string) => void;
   habits: Habit[];
   onHabitsChange: () => void;
   goals: Goal[];
@@ -35,7 +38,10 @@ const DOC_TYPES: { key: SystemDocument['doc_type']; label: string; icon: React.E
 
 export function SystemView({
   nonNegotiables,
-  onUpdateNonNegotiables,
+  onAddNonNegotiable,
+  onDeleteNonNegotiable,
+  systemDocuments,
+  onUpdateSystemDocument,
   habits,
   onHabitsChange,
   goals,
@@ -50,35 +56,18 @@ export function SystemView({
   const [showAddGoal, setShowAddGoal] = useState(false);
   const [newGoal, setNewGoal] = useState({ title: '', target: '', unit: 'times', deadline: '' });
 
-  // System documents (stored in localStorage for now)
-  const [documents, setDocuments] = useState<Record<string, string>>({});
   const [editingDoc, setEditingDoc] = useState<string | null>(null);
   const [editBuffer, setEditBuffer] = useState('');
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('sa_system_documents');
-      if (raw) setDocuments(JSON.parse(raw));
-    } catch (e) {
-      console.warn('Failed to load system documents:', e);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(documents).length > 0) {
-      localStorage.setItem('sa_system_documents', JSON.stringify(documents));
-    }
-  }, [documents]);
-
   const handleSaveDoc = (key: string) => {
-    setDocuments(prev => ({ ...prev, [key]: editBuffer }));
+    onUpdateSystemDocument(key, editBuffer);
     setEditingDoc(null);
     setEditBuffer('');
   };
 
   const handleEditDoc = (key: string) => {
     setEditingDoc(key);
-    setEditBuffer(documents[key] || '');
+    setEditBuffer(systemDocuments[key] || '');
   };
 
   const toggleSection = (id: string) => {
@@ -97,13 +86,13 @@ export function SystemView({
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
-    onUpdateNonNegotiables((prev) => [...prev, nn]);
+    onAddNonNegotiable(nn);
     setNewNNTitle('');
     setShowAddNN(false);
   };
 
   const handleDeleteNN = (id: string) => {
-    onUpdateNonNegotiables((prev) => prev.filter((n) => n.id !== id));
+    onDeleteNonNegotiable(id);
   };
 
   // === Habit Handlers ===
@@ -176,7 +165,7 @@ export function SystemView({
     </button>
   );
 
-  const docsWithContent = DOC_TYPES.filter(d => documents[d.key]?.trim()).length;
+  const docsWithContent = DOC_TYPES.filter(d => systemDocuments[d.key]?.trim()).length;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -204,7 +193,7 @@ export function SystemView({
 
             {DOC_TYPES.map((doc) => {
               const Icon = doc.icon;
-              const content = documents[doc.key];
+              const content = systemDocuments[doc.key];
               const hasContent = content && content.trim().length > 0;
               const isEditing = editingDoc === doc.key;
 

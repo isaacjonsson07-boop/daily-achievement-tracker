@@ -10,6 +10,8 @@ interface ReviewsViewProps {
   habitCompletions: HabitCompletion[];
   dailyTasks: DailyTask[];
   goals: Goal[];
+  systemDocuments: Record<string, string>;
+  onUpdateSystemDocument?: (key: string, content: string) => void;
 }
 
 interface SavedReview {
@@ -45,6 +47,8 @@ export function ReviewsView({
   habitCompletions,
   dailyTasks,
   goals,
+  systemDocuments,
+  onUpdateSystemDocument,
 }: ReviewsViewProps) {
   const [activeTab, setActiveTab] = useState<'snapshot' | 'weekly' | 'quarterly'>('snapshot');
   const [weeklyAnswers, setWeeklyAnswers] = useState<Record<string, string>>({});
@@ -58,22 +62,15 @@ export function ReviewsView({
 
   // Quarterly Recalibration state
   const [recalStep, setRecalStep] = useState(0); // 0 = overview, 1-5 = steps, 6 = complete
-  const [recalData, setRecalData] = useState<RecalibrationData>(() => {
-    try {
-      const docs = JSON.parse(localStorage.getItem('sa_system_documents') || '{}');
-      return {
-        direction: docs.direction || '',
-        identity: docs.identity || '',
-        priorities: docs.priorities || '',
-        nnActions: {},
-        newNNs: '',
-        habitActions: {},
-        newHabits: '',
-        focusNextQuarter: '',
-      };
-    } catch {
-      return { direction: '', identity: '', priorities: '', nnActions: {}, newNNs: '', habitActions: {}, newHabits: '', focusNextQuarter: '' };
-    }
+  const [recalData, setRecalData] = useState<RecalibrationData>({
+    direction: systemDocuments.direction || '',
+    identity: systemDocuments.identity || '',
+    priorities: systemDocuments.priorities || '',
+    nnActions: {},
+    newNNs: '',
+    habitActions: {},
+    newHabits: '',
+    focusNextQuarter: '',
   });
   const lastRecalibration = useMemo(() => {
     const quarterly = savedReviews.filter(r => r.type === 'quarterly');
@@ -687,15 +684,13 @@ export function ReviewsView({
                 </button>
                 <button
                   onClick={() => {
-                    // Save updated documents to localStorage
-                    try {
-                      const docs = JSON.parse(localStorage.getItem('sa_system_documents') || '{}');
-                      if (recalData.direction) docs.direction = recalData.direction;
-                      if (recalData.identity) docs.identity = recalData.identity;
-                      if (recalData.priorities) docs.priorities = recalData.priorities;
-                      if (recalData.focusNextQuarter) docs.quarterly_focus = recalData.focusNextQuarter;
-                      localStorage.setItem('sa_system_documents', JSON.stringify(docs));
-                    } catch { /* ignore */ }
+                    // Save updated documents via hook
+                    if (onUpdateSystemDocument) {
+                      if (recalData.direction) onUpdateSystemDocument('direction', recalData.direction);
+                      if (recalData.identity) onUpdateSystemDocument('identity', recalData.identity);
+                      if (recalData.priorities) onUpdateSystemDocument('priorities', recalData.priorities);
+                      if (recalData.focusNextQuarter) onUpdateSystemDocument('quarterly_focus', recalData.focusNextQuarter);
+                    }
 
                     // Save pending NN/habit changes for action items
                     const nnToRemove = Object.entries(recalData.nnActions).filter(([, a]) => a === 'remove').map(([id]) => id);
