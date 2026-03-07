@@ -63,7 +63,7 @@ function App() {
       const { data, error } = await supabase
         .from('habits')
         .select('*')
-        .order('created_at', { ascending: true });
+        .order('time', { ascending: true });
       if (error) throw error;
       setHabits(data || []);
     } catch (e) {
