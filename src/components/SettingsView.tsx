@@ -39,30 +39,8 @@ export function SettingsView({
 
         <div className="flex items-center justify-between mb-4 pb-4 border-b border-[rgba(240,237,230,0.06)]">
           <span className="text-[0.82rem] text-sa-cream-muted">Plan</span>
-          <span className={`text-[0.85rem] font-medium ${
-            plan === 'paid' ? 'text-sa-green' : isTrialActive ? 'text-sa-gold' : 'text-sa-cream-muted'
-          }`}>
-            {plan === 'paid' ? 'Active' : isTrialActive ? `Trial (${trialDaysRemaining}d)` : 'Free'}
-          </span>
+          <span className="text-[0.85rem] font-medium text-sa-green">Active</span>
         </div>
-
-        {plan === 'free' && !isTrialActive && (
-          <button
-            onClick={openWhopTrial}
-            className="w-full py-3 bg-[rgba(201,169,110,0.12)] border border-[rgba(201,169,110,0.25)] text-sa-gold rounded-lg text-[0.85rem] font-medium hover:bg-[rgba(201,169,110,0.2)] transition-colors mb-3"
-          >
-            Start Free Access
-          </button>
-        )}
-
-        {plan === 'free' && isTrialActive && (
-          <button
-            onClick={openWhopPaid}
-            className="w-full py-3 bg-[rgba(201,169,110,0.12)] border border-[rgba(201,169,110,0.25)] text-sa-gold rounded-lg text-[0.85rem] font-medium hover:bg-[rgba(201,169,110,0.2)] transition-colors mb-3"
-          >
-            Upgrade to Full Access
-          </button>
-        )}
 
         <div className="pt-2">
           {user ? (
