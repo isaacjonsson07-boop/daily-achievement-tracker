@@ -5,6 +5,7 @@ import {
 import { useAuth } from './hooks/useAuth';
 import { useSupabaseData } from './hooks/useSupabaseData';
 import { supabase } from './lib/supabase';
+import { openWhopPaid } from './constants';
 import { Navigation } from './components/Navigation';
 import { TabCover } from './components/TabCover';
 import { AuthModal } from './components/AuthModal';
@@ -165,6 +166,65 @@ function App() {
         <div className="text-center">
           <div className="w-6 h-6 border-2 border-sa-gold border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-sa-cream-faint text-xs">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Full-app lock: must be signed in AND have paid plan
+  if (!user || plan !== 'paid') {
+    return (
+      <div className="min-h-screen bg-sa-bg flex items-center justify-center px-6">
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSignIn={signIn}
+          onSignUp={signUp}
+        />
+        <div className="text-center max-w-md">
+          <h1 className="font-serif text-3xl sm:text-4xl text-sa-cream mb-2">Structured<br/>Achievement</h1>
+          <p className="text-[0.7rem] text-sa-cream-faint uppercase tracking-[0.14em] mb-10">Operating System</p>
+
+          {!user ? (
+            <>
+              <p className="text-sm text-sa-cream-muted mb-8 leading-relaxed">
+                Sign in with the email you used on Whop to access your operating system.
+              </p>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="sa-btn-primary w-full max-w-xs mx-auto mb-4"
+              >
+                Sign In
+              </button>
+              <p className="text-xs text-sa-cream-faint">
+                Don't have access yet?{' '}
+                <button onClick={openWhopPaid} className="text-sa-gold hover:underline">
+                  Subscribe on Whop
+                </button>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-sa-cream-muted mb-3 leading-relaxed">
+                Your account ({user.email}) does not have an active subscription.
+              </p>
+              <p className="text-sm text-sa-cream-muted mb-8 leading-relaxed">
+                Subscribe on Whop using this email address to activate your access.
+              </p>
+              <button
+                onClick={openWhopPaid}
+                className="sa-btn-primary w-full max-w-xs mx-auto mb-4"
+              >
+                Subscribe on Whop
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="text-xs text-sa-cream-faint hover:text-sa-cream-muted transition-colors"
+              >
+                Sign out
+              </button>
+            </>
+          )}
         </div>
       </div>
     );
