@@ -22,7 +22,6 @@ export const handler: Handler = async (event) => {
     webhookId: !!webhookId,
     webhookTimestamp: !!webhookTimestamp,
     webhookSignature: !!webhookSignature,
-    availableHeaders: Object.keys(event.headers || {}),
   });
 
   // 3. Ensure headers exist
@@ -93,67 +92,145 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  // 8. SUCCESS
+  // 8. Signature verified — process the event
   console.log("[Whop Webhook] Signature verified");
 
   const payload = JSON.parse(rawBody);
   const eventType = payload.type || payload.event_type;
-console.log("[Whop Webhook] FULL PAYLOAD:", JSON.stringify(payload));
-console.log("[Whop Webhook] Event type:", payload.type || payload.event_type);
+  console.log("[Whop Webhook] Event type:", eventType);
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.log("[Whop Webhook] Supabase env vars missing, skipping plan update");
-  return { statusCode: 200, body: "ok" };
-}
-
-// Try to pull an email from common locations in the payload
-const whopUserId =
-  payload?.data?.user?.id ||
-  payload?.user?.id;
-
-if (!whopUserId) {
-  console.log("[Whop Webhook] No Whop user id in payload, skipping update");
-  return { statusCode: 200, body: "ok" };
-}
-
-  // Try to pull email from payload
-const email =
-  payload?.data?.user?.email ||
-  payload?.data?.customer?.email ||
-  payload?.user?.email ||
-  payload?.customer?.email ||
-  null;
-
-if (!email) {
-  console.log("[Whop Webhook] No email in payload, skipping plan update");
-  return { statusCode: 200, body: "ok" };
-}
-
-let plan: "free" | "paid" = "free";
-if (eventType === "membership.activated" || eventType === "invoice.paid") plan = "paid";
-if (eventType === "membership.deactivated" || eventType === "membership.canceled") plan = "free";
-
-console.log("[Whop Webhook] Updating plan", { email, plan, eventType });
-
-await fetch(
-  `${SUPABASE_URL}/rest/v1/user_data?whop_user_id=eq.${encodeURIComponent(whopUserId)}`,
-  {
-    method: "PATCH",
-    headers: {
-      apikey: SUPABASE_SERVICE_ROLE_KEY,
-      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify({
-      updated_at: new Date().toISOString(),
-    }),
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    console.log("[Whop Webhook] Supabase env vars missing, skipping plan update");
+    return { statusCode: 200, body: "ok" };
   }
-);
 
+  // 9. Extract email from Whop payload
+  const email =
+    payload?.data?.user?.email ||
+    payload?.data?.customer?.email ||
+    payload?.user?.email ||
+    payload?.customer?.email ||
+    payload?.data?.email ||
+    null;
 
-return { statusCode: 200, body: "ok" };
+  if (!email) {
+    console.log("[Whop Webhook] No email in payload, skipping plan update");
+    console.log("[Whop Webhook] Payload keys:", JSON.stringify(payload));
+    return { statusCode: 200, body: "ok" };
+  }
+
+  // 10. Determine plan from event type
+  let plan: "free" | "paid" = "free";
+  if (
+    eventType === "membership.went_valid" ||
+    eventType === "membership.activated" ||
+    eventType === "invoice.paid"
+  ) {
+    plan = "paid";
+  }
+  if (
+    eventType === "membership.went_invalid" ||
+    eventType === "membership.deactivated" ||
+    eventType === "membership.canceled" ||
+    eventType === "membership.expired"
+  ) {
+    plan = "free";
+  }
+
+  console.log("[Whop Webhook] Updating plan", { email: email.toLowerCase(), plan, eventType });
+
+  // 11. Find Supabase auth user by email using admin API
+  const listUsersRes = await fetch(
+    `${SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1`,
+    {
+      method: "GET",
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    }
+  );
+
+  // Use the admin API to find user by email
+  const findUserRes = await fetch(
+    `${SUPABASE_URL}/auth/v1/admin/users`,
+    {
+      method: "GET",
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    }
+  );
+
+  if (!findUserRes.ok) {
+    console.log("[Whop Webhook] Failed to list users:", findUserRes.status);
+    return { statusCode: 200, body: "ok" };
+  }
+
+  const usersData = await findUserRes.json();
+  const users = usersData.users || usersData;
+  const matchedUser = Array.isArray(users)
+    ? users.find((u: any) => u.email?.toLowerCase() === email.toLowerCase())
+    : null;
+
+  if (!matchedUser) {
+    console.log("[Whop Webhook] No Supabase user found for email:", email);
+    // User hasn't created an app account yet — that's OK.
+    // When they sign up with this email later, they'll be 'free' by default.
+    // They can re-trigger by signing in (the app calls sync-whop-tier on login).
+    return { statusCode: 200, body: "ok" };
+  }
+
+  const userId = matchedUser.id;
+  console.log("[Whop Webhook] Found user:", userId);
+
+  // 12. Update user_profiles with the new plan
+  const updateRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/user_profiles?id=eq.${userId}`,
+    {
+      method: "PATCH",
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        plan: plan,
+        updated_at: new Date().toISOString(),
+      }),
+    }
+  );
+
+  const updateData = await updateRes.json();
+  console.log("[Whop Webhook] Update result:", JSON.stringify(updateData));
+
+  // If no row was updated (user exists in auth but not in user_profiles), insert one
+  if (Array.isArray(updateData) && updateData.length === 0) {
+    console.log("[Whop Webhook] No profile row found, creating one");
+    await fetch(
+      `${SUPABASE_URL}/rest/v1/user_profiles`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          id: userId,
+          plan: plan,
+          updated_at: new Date().toISOString(),
+        }),
+      }
+    );
+    console.log("[Whop Webhook] Profile created for", userId);
+  }
+
+  return { statusCode: 200, body: "ok" };
 };
