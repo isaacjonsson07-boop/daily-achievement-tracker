@@ -143,6 +143,13 @@ export function useAuth() {
 }
 
 
+  const resetPassword = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}`,
+    })
+    return { data, error }
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     return { error }
@@ -274,6 +281,7 @@ export function useAuth() {
     signUp,
     signIn,
     signOut,
+    resetPassword,
     startTrial,
     devSetFreePlan: devSetFreeLocal,
     devStartTrial: devStartTrialLocal,
