@@ -19,7 +19,7 @@ import { AchievementsView } from './components/AchievementsView';
 function App() {
   const {
     user, loading: authLoading, plan, trialEndsAt, planSource,
-    signIn, signUp, signOut, startTrial,
+    signIn, signUp, signOut, resetPassword, startTrial,
     devSetFreePlan, devStartTrial, devSetPaidPlan,
   } = useAuth();
 
@@ -185,6 +185,7 @@ function App() {
           onClose={() => setShowAuthModal(false)}
           onSignIn={signIn}
           onSignUp={signUp}
+          onResetPassword={resetPassword}
         />
         <div className="text-center max-w-md">
           <h1 className="font-serif text-3xl sm:text-4xl text-sa-cream mb-2">Structured<br/>Achievement</h1>
@@ -252,6 +253,7 @@ function App() {
         onClose={() => setShowAuthModal(false)}
         onSignIn={signIn}
         onSignUp={signUp}
+        onResetPassword={resetPassword}
       />
 
       <main className="md:ml-[260px] min-h-screen">
