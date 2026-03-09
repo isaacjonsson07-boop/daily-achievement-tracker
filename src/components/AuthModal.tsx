@@ -37,7 +37,14 @@ export function AuthModal({ isOpen, onClose, onSignIn, onSignUp }: AuthModalProp
         if (error) {
           setError(error.message || 'Sign up failed');
         } else {
-          setSignUpSuccess(true);
+          // Email confirmation is off — auto sign in
+          const { error: signInError } = await onSignIn(email, password);
+          if (signInError) {
+            setError(signInError.message || 'Account created but sign in failed. Try signing in.');
+          } else {
+            onClose();
+            resetForm();
+          }
         }
       }
     } catch (err: any) {
