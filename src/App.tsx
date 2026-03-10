@@ -262,6 +262,7 @@ function App() {
       <main className="md:ml-[260px] min-h-screen overflow-x-hidden">
         <TabCover tab={currentTab} />
         <div className={`px-6 sm:px-10 lg:px-14 pb-24 md:pb-12 ${currentTab === 'today' ? 'pt-12' : ''}`}>
+        <div key={currentTab} className="animate-rise">
         {currentTab === 'today' && (
           <TodayView
             nonNegotiables={nonNegotiables}
@@ -352,6 +353,7 @@ function App() {
             devSetPaidPlan={devSetPaidPlan}
           />
         )}
+        </div>
         </div>
       </main>
     </div>
