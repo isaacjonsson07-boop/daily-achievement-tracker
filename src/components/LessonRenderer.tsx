@@ -145,7 +145,7 @@ export function LessonRenderer({ lesson }: LessonRendererProps) {
   const accentColor = PhaseAccentColor(lesson.phase);
 
   return (
-    <div className="lesson-content">
+    <div className="lesson-content overflow-x-hidden">
       {/* Phase label */}
       <div
         className={`text-xs font-medium uppercase tracking-widest mb-3 ${phaseTextClass(lesson.phase)}`}
