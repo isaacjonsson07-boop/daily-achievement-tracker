@@ -14,9 +14,10 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
     const container = containerRef.current;
     if (!container) return;
 
-    const speed = 80;
+    // Slower on mobile (< 768px)
+    const isMobile = window.innerWidth < 768;
+    const speed = isMobile ? 35 : 55;
 
-    // Cache dimensions — only re-measure on resize
     function measure() {
       if (!container) return;
       const r = container.getBoundingClientRect();
@@ -75,8 +76,19 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
       <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-sa-gold/25 z-10" />
       <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sa-gold/25 z-10" />
 
-      {/* Travelling glows */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Travelling glows — clip-path masks out corner zones to prevent jump artifacts */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{
+        clipPath: `polygon(
+          33.3px -2px, calc(100% - 33.3px) -2px,
+          calc(100% - 33.3px) -2px, calc(100% + 2px) 33.3px,
+          calc(100% + 2px) 33.3px, calc(100% + 2px) calc(100% - 33.3px),
+          calc(100% + 2px) calc(100% - 33.3px), calc(100% - 33.3px) calc(100% + 2px),
+          calc(100% - 33.3px) calc(100% + 2px), 33.3px calc(100% + 2px),
+          33.3px calc(100% + 2px), -2px calc(100% - 33.3px),
+          -2px calc(100% - 33.3px), -2px 33.3px,
+          -2px 33.3px, 33.3px -2px
+        )`
+      }}>
         <div ref={line1Ref} className="absolute top-0 left-0 will-change-transform" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)' }} />
         <div ref={line2Ref} className="absolute top-0 left-0 will-change-transform" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(197,165,90,0.4) 0%, transparent 70%)' }} />
       </div>
