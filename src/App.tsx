@@ -64,14 +64,22 @@ function App() {
     if (user && plan === 'paid') setShowAuthModal(false);
   }, [user, plan]);
 
-  const loadHabits = async () => {
+  const loadHabits = async (force = false) => {
     try {
       const { data, error } = await supabase
         .from('habits')
         .select('*')
         .order('time', { ascending: true });
       if (error) throw error;
-      setHabits(data || []);
+      if (force) {
+        setHabits(data || []);
+      } else {
+        // Don't wipe existing habits from a stale token / empty response
+        setHabits(prev => {
+          if ((!data || data.length === 0) && prev.length > 0) return prev;
+          return data || [];
+        });
+      }
     } catch (e) {
       console.error('Error loading habits:', e);
     }
@@ -304,7 +312,7 @@ function App() {
             onUpdateRecalPending={updateRecalPending}
             onDeleteNonNegotiable={deleteNonNegotiable}
             onAddNonNegotiable={addNonNegotiable}
-            onHabitsChange={loadHabits}
+            onHabitsChange={() => loadHabits(true)}
             user={user}
           />
         )}
@@ -330,7 +338,7 @@ function App() {
             systemDocuments={systemDocuments}
             onUpdateSystemDocument={updateSystemDocument}
             habits={habits}
-            onHabitsChange={loadHabits}
+            onHabitsChange={() => loadHabits(true)}
             user={user}
           />
         )}
