@@ -69,7 +69,7 @@ function DirectionFrame({ direction, identity }: { direction: string; identity: 
   }, []);
 
   return (
-    <div ref={containerRef} className="relative mb-14 text-center animate-rise py-10 px-8 overflow-hidden">
+    <div ref={containerRef} className="relative mb-14 text-center py-10 px-8 overflow-hidden">
       {/* Corner accents */}
       <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sa-gold/25 z-10" />
       <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-sa-gold/25 z-10" />
@@ -241,7 +241,7 @@ export function TodayView({
       )}
 
       {/* ════ DATE NAV ════ */}
-      <div className="flex items-center justify-between mb-12 animate-rise" style={{ animationDelay: '0.1s' }}>
+      <div className="flex items-center justify-between mb-12">
         <button onClick={() => setDayOffset(p => p - 1)}
           className="w-10 h-10 rounded-full border border-sa-border flex items-center justify-center text-sa-cream-muted hover:border-sa-gold-border hover:text-sa-gold hover:bg-sa-gold-glow transition-all">
           <ChevronLeft className="w-5 h-5" />
@@ -258,7 +258,7 @@ export function TodayView({
 
       {/* ════ NON-NEGOTIABLES — sacred tier ════ */}
       {nnForDate.length > 0 && (
-        <section className="mb-11 animate-rise" style={{ animationDelay: '0.15s' }}>
+        <section className="mb-11">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-px bg-sa-gold" />
             <span className="text-[0.68rem] font-medium uppercase tracking-[0.16em] text-sa-gold">Non-Negotiables</span>
@@ -301,7 +301,7 @@ export function TodayView({
 
       {/* ════ KEYSTONE HABITS — medium tier ════ */}
       {habitsWithStatus.length > 0 && (
-        <section className="mb-11 animate-rise" style={{ animationDelay: '0.25s' }}>
+        <section className="mb-11">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-5 h-px bg-sa-cream-faint/60" />
             <span className="text-[0.68rem] font-medium uppercase tracking-[0.16em] text-sa-cream-muted">Keystone Habits</span>
@@ -335,7 +335,7 @@ export function TodayView({
       )}
 
       {/* ════ TASKS — lightest tier ════ */}
-      <section className="mb-11 animate-rise" style={{ animationDelay: '0.35s' }}>
+      <section className="mb-11">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-3 h-px bg-sa-cream-faint/40" />
@@ -349,7 +349,7 @@ export function TodayView({
         </div>
 
         {showAddTask && (
-          <div className="mb-4 bg-sa-bg-warm border border-sa-border rounded-xl p-5 animate-rise">
+          <div className="mb-4 bg-sa-bg-warm border border-sa-border rounded-xl p-5">
             <div className="flex gap-3 items-center">
               <input type="text" value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAddTask()} placeholder="What needs to be done?"
@@ -402,7 +402,7 @@ export function TodayView({
 
       {/* ════ PLAN TOMORROW ════ */}
       {isToday && isEvening && (
-        <div className="mb-11 animate-rise" style={{ animationDelay: '0.45s' }}>
+        <div className="mb-11">
           <button onClick={() => setDayOffset(1)}
             className="relative w-full py-6 border border-sa-gold-border rounded-xl text-center overflow-hidden transition-all duration-300 hover:border-sa-gold hover:-translate-y-[1px] group">
             <div className="absolute inset-0 bg-gradient-to-br from-sa-gold-glow to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -414,7 +414,7 @@ export function TodayView({
 
       {/* ════ COMPLETION ════ */}
       {totalItems > 0 && percentage === 100 && (
-        <div className="mb-11 py-7 border border-sa-green-border rounded-xl bg-sa-green-soft text-center animate-rise">
+        <div className="mb-11 py-7 border border-sa-green-border rounded-xl bg-sa-green-soft text-center">
           <p className="font-serif text-xl text-sa-green">System executed.</p>
           <p className="text-[0.8rem] text-sa-cream-muted mt-1.5">All items completed for {dateLabel.toLowerCase()}.</p>
         </div>
@@ -422,8 +422,7 @@ export function TodayView({
 
       {/* ════ SYSTEM PULSE ════ */}
       {isToday && (systemAge > 0 || totalItems > 0) && (
-        <div className="mt-6 pt-7 animate-rise" style={{
-          animationDelay: '0.5s',
+        <div className="mt-6 pt-7" style={{
           borderTop: '1px solid rgba(197, 165, 90, 0.06)',
         }}>
           <p className="text-[0.72rem] text-sa-cream-faint text-center tracking-wide">
@@ -438,7 +437,7 @@ export function TodayView({
 
       {/* ════ EMPTY STATE ════ */}
       {totalItems === 0 && !showAddTask && !direction && (
-        <div className="text-center py-20 animate-rise" style={{ animationDelay: '0.2s' }}>
+        <div className="text-center py-20">
           <p className="font-serif text-2xl text-sa-cream mb-3">Your system is empty.</p>
           <p className="text-sm text-sa-cream-muted max-w-md mx-auto leading-relaxed">
             Start the Installation to build your operating system — define your direction,
