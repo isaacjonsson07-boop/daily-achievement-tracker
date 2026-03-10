@@ -237,7 +237,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-sa-bg">
+    <div className="min-h-screen bg-sa-bg overflow-x-hidden">
       <Navigation
         currentTab={currentTab}
         onTabChange={setCurrentTab}
@@ -256,7 +256,7 @@ function App() {
         onResetPassword={resetPassword}
       />
 
-      <main className="md:ml-[260px] min-h-screen">
+      <main className="md:ml-[260px] min-h-screen overflow-x-hidden">
         <TabCover tab={currentTab} />
         <div className={`px-6 sm:px-10 lg:px-14 pb-24 md:pb-12 ${currentTab === 'today' ? 'pt-12' : ''}`}>
         {currentTab === 'today' && (
