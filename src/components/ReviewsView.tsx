@@ -194,6 +194,70 @@ export function ReviewsView({
     setWeeklyAnswers({});
   };
 
+  // ── System status message (makes dashboard talk) ──
+  const systemStatus = useMemo(() => {
+    const activeNNs = nonNegotiables.filter(n => n.active);
+    const hasNNs = activeNNs.length > 0;
+    const hasHabits = habits.length > 0;
+    const hasTasks = dailyTasks.length > 0;
+    const hasAnySetup = hasNNs || hasHabits || hasTasks;
+    const hasData = weekStats.totalPossible > 0;
+    const pct = weekStats.weekPercentage;
+    const streak = weekStats.streak;
+
+    // No system configured yet
+    if (!hasAnySetup) {
+      return { icon: '⚠', color: 'sa-rose', message: 'System offline. Go to Installation and begin Day 1 to activate.' };
+    }
+
+    // System configured but missing key components
+    if (!hasNNs && !hasHabits) {
+      return { icon: '⚠', color: 'sa-rose', message: 'No habits or non-negotiables installed. Your system has nothing to track.' };
+    }
+    if (!hasNNs) {
+      return { icon: '◆', color: 'sa-gold', message: 'No non-negotiables set. Define your daily commitments in the System tab.' };
+    }
+    if (!hasHabits) {
+      return { icon: '◆', color: 'sa-gold', message: 'No keystone habits installed. Add habits in the System tab to start tracking.' };
+    }
+
+    // Has setup but no execution data yet
+    if (!hasData) {
+      return { icon: '◆', color: 'sa-gold', message: 'System configured. Complete your first day to generate data.' };
+    }
+
+    // Data exists — check for patterns that need action
+    const daysWithData = weekStats.dailyData.filter(d => d.total > 0);
+    if (daysWithData.length > 0 && daysWithData.length < 3) {
+      return { icon: '◆', color: 'sa-gold', message: `${daysWithData.length} day${daysWithData.length > 1 ? 's' : ''} of data. Patterns emerge after 7. Keep executing.` };
+    }
+
+    // Performance-based messages
+    if (pct === 100 && daysWithData.length >= 7) {
+      return { icon: '●', color: 'sa-green', message: 'Perfect week. Full execution across all components. System at peak capacity.' };
+    }
+    if (streak >= 7) {
+      return { icon: '●', color: 'sa-green', message: `${streak}-day streak active. System locked in. Maintain operational rhythm.` };
+    }
+    if (pct >= 85) {
+      return { icon: '●', color: 'sa-green', message: `System operational. ${pct}% execution this week. ${streak > 0 ? `${streak}-day streak running.` : 'Build a streak tomorrow.'}` };
+    }
+    if (pct >= 60) {
+      // Find weakest category
+      const weakest = weekStats.nnRate <= weekStats.habitRate && weekStats.nnRate <= weekStats.taskRate
+        ? 'non-negotiables' : weekStats.habitRate <= weekStats.taskRate ? 'habits' : 'tasks';
+      return { icon: '◆', color: 'sa-gold', message: `System partially active. ${pct}% this week. ${weakest.charAt(0).toUpperCase() + weakest.slice(1)} are the weakest link — focus there.` };
+    }
+    if (pct >= 30) {
+      return { icon: '⚠', color: 'sa-rose', message: `System underperforming at ${pct}%. Simplify: hit your non-negotiables before anything else.` };
+    }
+    // Very low / near zero
+    if (pct > 0) {
+      return { icon: '⚠', color: 'sa-rose', message: `System nearly offline — ${pct}% this week. One full day restarts momentum. Start today.` };
+    }
+    return { icon: '⚠', color: 'sa-rose', message: 'System offline. No execution logged this week. Open the Today tab and complete one item.' };
+  }, [nonNegotiables, habits, dailyTasks, weekStats]);
+
   // ── Rate color helper ──
   const rateColor = (rate: number) =>
     rate >= 80 ? 'text-sa-green' : rate >= 50 ? 'text-sa-gold' : 'text-sa-rose';
@@ -231,6 +295,24 @@ export function ReviewsView({
       {/* ════════ SNAPSHOT TAB ════════ */}
       {activeTab === 'snapshot' && (
         <div className="space-y-6 animate-rise delay-2">
+
+          {/* System Status — the dashboard talks */}
+          <div className={`flex items-start gap-3 px-5 py-4 rounded-sa border ${
+            systemStatus.color === 'sa-green' ? 'border-sa-green-border bg-sa-green-soft' :
+            systemStatus.color === 'sa-rose' ? 'border-sa-rose-border bg-sa-rose-soft' :
+            'border-sa-gold-border bg-sa-gold-soft'
+          }`}>
+            <span className={`text-base flex-shrink-0 mt-px ${
+              systemStatus.color === 'sa-green' ? 'text-sa-green' :
+              systemStatus.color === 'sa-rose' ? 'text-sa-rose' :
+              'text-sa-gold'
+            }`}>{systemStatus.icon}</span>
+            <p className={`text-sm leading-relaxed ${
+              systemStatus.color === 'sa-green' ? 'text-sa-green' :
+              systemStatus.color === 'sa-rose' ? 'text-sa-rose' :
+              'text-sa-gold'
+            }`}>{systemStatus.message}</p>
+          </div>
 
           {/* Left column — charts */}
           <div className="space-y-6">
