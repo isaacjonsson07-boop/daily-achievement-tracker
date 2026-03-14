@@ -31,6 +31,7 @@ interface MilestoneDef {
   check: (ctx: MilestoneContext) => boolean;
   requirement: string;
   progressFn?: (ctx: MilestoneContext) => { current: number; target: number };
+  completionLabel?: (ctx: MilestoneContext) => string;
 }
 
 interface MilestoneContext {
@@ -56,45 +57,60 @@ const CHAPTER_META: Record<MilestoneChapter, { label: string; subtitle: string; 
 const MILESTONES: MilestoneDef[] = [
   { id: 'system-online', title: 'System Online', description: 'Configure at least 1 non-negotiable and 1 habit to bring your system online. This is step zero — nothing tracks until components are installed.', chapter: 'foundation', icon: Power,
     check: c => c.activeNNs.length >= 1 && c.habits.length >= 1, requirement: '1 non-negotiable + 1 habit',
-    progressFn: c => ({ current: Math.min(c.activeNNs.length, 1) + Math.min(c.habits.length, 1), target: 2 }) },
+    progressFn: c => ({ current: Math.min(c.activeNNs.length, 1) + Math.min(c.habits.length, 1), target: 2 }),
+    completionLabel: c => `${c.activeNNs.length} NNs · ${c.habits.length} habits configured` },
   { id: 'first-execution', title: 'First Execution', description: 'Complete every item in a single day — all non-negotiables, all habits, all tasks. Prove the system can run at full capacity.', chapter: 'foundation', icon: Zap,
-    check: c => c.hasAnyFullDay, requirement: '100% completion on any day' },
+    check: c => c.hasAnyFullDay, requirement: '100% completion on any day',
+    completionLabel: () => '100% day achieved' },
   { id: 'week-one', title: 'Week One', description: 'Be active for 7 days total. Not consecutive — just 7 days where you showed up and executed. The system is taking root.', chapter: 'foundation', icon: Calendar,
     check: c => c.totalActiveDays >= 7, requirement: '7 active days',
-    progressFn: c => ({ current: Math.min(c.totalActiveDays, 7), target: 7 }) },
+    progressFn: c => ({ current: Math.min(c.totalActiveDays, 7), target: 7 }),
+    completionLabel: c => `${c.totalActiveDays} days active` },
   { id: 'grounded', title: 'Grounded', description: '14 total active days. Two weeks of execution behind you. Your system has roots now — it\'s becoming part of how you operate.', chapter: 'foundation', icon: Anchor,
     check: c => c.totalActiveDays >= 14, requirement: '14 active days',
-    progressFn: c => ({ current: Math.min(c.totalActiveDays, 14), target: 14 }) },
+    progressFn: c => ({ current: Math.min(c.totalActiveDays, 14), target: 14 }),
+    completionLabel: c => `${c.totalActiveDays} days active` },
   { id: 'executor', title: 'Executor', description: '25 tasks completed. Not started — completed. This is proof of consistent output, not intention.', chapter: 'foundation', icon: CheckCircle,
     check: c => c.totalTasksCompleted >= 25, requirement: '25 tasks completed',
-    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 25), target: 25 }) },
+    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 25), target: 25 }),
+    completionLabel: c => `${c.totalTasksCompleted} tasks completed` },
   { id: '7-day-streak', title: '7-Day Streak', description: '7 consecutive days at 80% or higher completion across all categories. This isn\'t a lucky week — it\'s operational discipline.', chapter: 'momentum', icon: Flame,
     check: c => c.longestStreak80 >= 7, requirement: '7-day streak at 80%+',
-    progressFn: c => ({ current: Math.min(c.longestStreak80, 7), target: 7 }) },
+    progressFn: c => ({ current: Math.min(c.longestStreak80, 7), target: 7 }),
+    completionLabel: c => `Best streak: ${c.longestStreak80} days` },
   { id: 'nn-lock', title: 'Non-Negotiable Lock', description: '7 days straight without missing a single non-negotiable. Your non-negotiables are your identity. This proves they\'re locked in.', chapter: 'momentum', icon: Shield,
     check: c => c.longestNNStreak >= 7, requirement: '7-day perfect NN streak',
-    progressFn: c => ({ current: Math.min(c.longestNNStreak, 7), target: 7 }) },
+    progressFn: c => ({ current: Math.min(c.longestNNStreak, 7), target: 7 }),
+    completionLabel: c => `${c.longestNNStreak}-day NN streak` },
   { id: 'first-report', title: 'First Report', description: 'Generate your first monthly System Report. See your execution data compiled into a single performance score.', chapter: 'momentum', icon: FileText,
     check: c => c.systemReports.length >= 1, requirement: 'Generate 1 monthly report',
-    progressFn: c => ({ current: Math.min(c.systemReports.length, 1), target: 1 }) },
+    progressFn: c => ({ current: Math.min(c.systemReports.length, 1), target: 1 }),
+    completionLabel: c => `${c.systemReports.length} report${c.systemReports.length !== 1 ? 's' : ''} generated` },
   { id: 'half-century', title: 'Half Century', description: '50 tasks completed. You\'re past the phase where this is new — this is just how you operate now.', chapter: 'momentum', icon: Target,
     check: c => c.totalTasksCompleted >= 50, requirement: '50 tasks completed',
-    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 50), target: 50 }) },
+    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 50), target: 50 }),
+    completionLabel: c => `${c.totalTasksCompleted} tasks completed` },
   { id: 'silver-caliber', title: 'Silver Caliber', description: 'Earn Silver tier or higher in a monthly System Report. Silver means 50%+ execution across all categories — you\'re operational.', chapter: 'momentum', icon: Award,
-    check: c => c.systemReports.some(r => ['silver','gold','diamond'].includes(r.tier)), requirement: 'Silver+ monthly report' },
+    check: c => c.systemReports.some(r => ['silver','gold','diamond'].includes(r.tier)), requirement: 'Silver+ monthly report',
+    completionLabel: c => { const best = c.systemReports.find(r => ['silver','gold','diamond'].includes(r.tier)); return best ? `${best.tier.charAt(0).toUpperCase()+best.tier.slice(1)} earned` : 'Earned'; } },
   { id: '14-day-streak', title: '14-Day Streak', description: 'Two unbroken weeks at 80%+ completion. This is where most people fall off. You didn\'t.', chapter: 'mastery', icon: TrendingUp,
     check: c => c.longestStreak80 >= 14, requirement: '14-day streak at 80%+',
-    progressFn: c => ({ current: Math.min(c.longestStreak80, 14), target: 14 }) },
+    progressFn: c => ({ current: Math.min(c.longestStreak80, 14), target: 14 }),
+    completionLabel: c => `Best streak: ${c.longestStreak80} days` },
   { id: 'gold-standard', title: 'Gold Standard', description: 'Earn Gold tier in a monthly report. 75%+ execution across the board. Your system doesn\'t just run — it performs.', chapter: 'mastery', icon: Star,
-    check: c => c.systemReports.some(r => ['gold','diamond'].includes(r.tier)), requirement: 'Gold monthly report' },
+    check: c => c.systemReports.some(r => ['gold','diamond'].includes(r.tier)), requirement: 'Gold monthly report',
+    completionLabel: () => 'Gold standard reached' },
   { id: 'century', title: 'Century', description: '100 tasks completed. One hundred deliberate actions, each one tracked and finished. Relentless.', chapter: 'mastery', icon: Target,
     check: c => c.totalTasksCompleted >= 100, requirement: '100 tasks completed',
-    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 100), target: 100 }) },
+    progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 100), target: 100 }),
+    completionLabel: c => `${c.totalTasksCompleted} tasks completed` },
   { id: '30-day-operator', title: '30-Day Operator', description: '30 active days. A full month of operational history. The system runs on autopilot now — execution is identity.', chapter: 'mastery', icon: Clock,
     check: c => c.totalActiveDays >= 30, requirement: '30 active days',
-    progressFn: c => ({ current: Math.min(c.totalActiveDays, 30), target: 30 }) },
+    progressFn: c => ({ current: Math.min(c.totalActiveDays, 30), target: 30 }),
+    completionLabel: c => `${c.totalActiveDays} days active` },
   { id: 'diamond-operator', title: 'Diamond Operator', description: 'Earn a perfect Diamond report — 100% execution in every category for an entire month. Peak operational capacity. The system is you.', chapter: 'mastery', icon: Gem,
-    check: c => c.systemReports.some(r => r.tier === 'diamond'), requirement: 'Diamond report (100%)' },
+    check: c => c.systemReports.some(r => r.tier === 'diamond'), requirement: 'Diamond report (100%)',
+    completionLabel: () => 'Peak capacity achieved' },
 ];
 
 function getRank(n: number) {
@@ -137,7 +153,36 @@ function computeCtx(nns: NonNegotiable[], nnC: NonNegotiableCompletion[], habits
 }
 
 // ═══════════════════════════════════════════════════════
-// MILESTONE PATH (HTML-based with rich cards)
+// STATUS MESSAGE (the milestones page talks)
+// ═══════════════════════════════════════════════════════
+
+function getStatusMessage(unlockedCount: number, nextIndex: number | null, ctx: MilestoneContext): { message: string; color: string } {
+  if (unlockedCount === MILESTONES.length) {
+    return { message: 'All 15 milestones unlocked. Full Stack rank achieved. There is nothing left to prove.', color: '#6ECB8B' };
+  }
+  if (unlockedCount === 0) {
+    return { message: 'No milestones unlocked yet. Configure your first non-negotiable and habit to bring the system online.', color: '#C5A55A' };
+  }
+  if (nextIndex !== null) {
+    const next = MILESTONES[nextIndex];
+    const progress = next.progressFn ? next.progressFn(ctx) : null;
+    if (progress) {
+      const remaining = progress.target - progress.current;
+      if (remaining === 1) {
+        return { message: `1 away from "${next.title}." One more and it's yours.`, color: CHAPTER_META[next.chapter].color };
+      }
+      if (remaining <= 3) {
+        return { message: `${remaining} away from "${next.title}." Almost there.`, color: CHAPTER_META[next.chapter].color };
+      }
+      return { message: `${unlockedCount} milestones down. Next: "${next.title}" — ${progress.current}/${progress.target}.`, color: CHAPTER_META[next.chapter].color };
+    }
+    return { message: `${unlockedCount} milestones down. Next: "${next.title}."`, color: CHAPTER_META[next.chapter].color };
+  }
+  return { message: `${unlockedCount} milestones unlocked.`, color: '#C5A55A' };
+}
+
+// ═══════════════════════════════════════════════════════
+// MILESTONE CARD (rich, with all improvements)
 // ═══════════════════════════════════════════════════════
 
 function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
@@ -147,17 +192,17 @@ function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
   const Icon = milestone.icon;
   const progress = isNext && milestone.progressFn ? milestone.progressFn(ctx) : null;
   const progressPct = progress ? Math.round((progress.current / progress.target) * 100) : 0;
+  const completionText = unlocked && milestone.completionLabel ? milestone.completionLabel(ctx) : null;
 
   return (
-    <div className={`relative flex gap-5 ${isLocked ? 'opacity-35' : ''}`}
-      style={isNext ? { animation: 'milestoneGlow 3s ease-in-out infinite' } : {}}>
+    <div className={`relative flex gap-5 ${isLocked ? 'opacity-30' : ''}`}>
 
       {/* Left: node on the path */}
       <div className="flex flex-col items-center flex-shrink-0" style={{ width: 52 }}>
-        {/* Node circle */}
         <div className="relative">
-          {/* Glow */}
+          {/* Glow behind unlocked */}
           {unlocked && <div className="absolute -inset-2 rounded-full" style={{ background: ch.glow, filter: 'blur(10px)' }} />}
+          {/* Pulse for current */}
           {isNext && <div className="absolute -inset-3 rounded-full" style={{ background: ch.glow, filter: 'blur(12px)', opacity: 0.4, animation: 'nodePulse 2.5s ease-in-out infinite' }} />}
 
           <div className={`relative w-[52px] h-[52px] rounded-full flex items-center justify-center ${unlocked ? '' : isNext ? 'border-2' : 'border border-dashed'}`}
@@ -166,86 +211,97 @@ function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
               borderColor: unlocked ? 'transparent' : isNext ? ch.color : 'rgba(255,255,255,0.12)',
               boxShadow: unlocked ? `0 0 20px ${ch.glow}` : 'none',
             }}>
-            {unlocked ? (
-              <Icon className="w-6 h-6" style={{ color: '#131316' }} strokeWidth={2} />
-            ) : (
-              <Icon className="w-5 h-5" style={{ color: isNext ? ch.color : 'rgba(255,255,255,0.2)' }} strokeWidth={1.5} />
-            )}
+            {unlocked
+              ? <Icon className="w-6 h-6" style={{ color: '#131316' }} strokeWidth={2} />
+              : <Icon className="w-5 h-5" style={{ color: isNext ? ch.color : 'rgba(255,255,255,0.2)' }} strokeWidth={1.5} />}
           </div>
         </div>
-
-        {/* Connecting line downward */}
+        {/* Connecting line */}
         <div className="flex-1 w-px min-h-[24px]" style={{
-          background: unlocked
-            ? `linear-gradient(to bottom, ${ch.color}, ${ch.border})`
-            : isNext
-              ? `linear-gradient(to bottom, ${ch.border}, rgba(255,255,255,0.04))`
-              : 'rgba(255,255,255,0.04)',
+          background: unlocked ? `linear-gradient(to bottom, ${ch.color}, ${ch.border})` : isNext ? `linear-gradient(to bottom, ${ch.border}, rgba(255,255,255,0.04))` : 'rgba(255,255,255,0.04)',
         }} />
       </div>
 
-      {/* Right: content card */}
-      <div className={`flex-1 min-w-0 pb-6 ${isNext ? 'pb-8' : ''}`}>
-        {/* Title row */}
-        <div className="flex items-center gap-2.5 mb-1.5">
-          <span className="text-[0.65rem] font-medium tabular-nums" style={{
-            color: unlocked ? ch.color : isNext ? ch.color : 'var(--cream-faint)',
-            opacity: isLocked ? 0.5 : 1,
-          }}>{String(index + 1).padStart(2, '0')}</span>
+      {/* Right: content — ELEVATED CARD for current milestone */}
+      <div className={`flex-1 min-w-0 ${isNext ? 'pb-8' : 'pb-5'}`}>
+        <div className={`${isNext ? 'p-5 rounded-sa-lg' : ''}`} style={isNext ? {
+          border: `1.5px solid ${ch.border}`,
+          backgroundColor: ch.colorSoft,
+          boxShadow: `0 0 30px ${ch.colorSoft}, inset 0 0 40px ${ch.colorSoft}`,
+        } : {}}>
 
-          <h3 className={`font-serif text-[1.15rem] leading-tight ${unlocked ? 'text-sa-cream' : isNext ? 'text-sa-cream-soft' : 'text-sa-cream-faint'}`}>
-            {milestone.title}
-          </h3>
+          {/* Title row */}
+          <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+            <span className="text-[0.65rem] font-medium tabular-nums" style={{
+              color: unlocked ? ch.color : isNext ? ch.color : 'var(--cream-faint)', opacity: isLocked ? 0.5 : 1,
+            }}>{String(index + 1).padStart(2, '0')}</span>
 
-          {unlocked && (
-            <span className="flex items-center gap-1 text-[0.6rem] uppercase tracking-widest px-2 py-0.5 rounded-full font-medium"
-              style={{ color: ch.color, backgroundColor: ch.colorSoft, border: `1px solid ${ch.border}` }}>
-              <CheckCircle className="w-3 h-3" strokeWidth={2.5} /> Done
-            </span>
-          )}
-          {isNext && (
-            <span className="text-[0.6rem] uppercase tracking-widest px-2 py-0.5 rounded-full font-medium"
-              style={{ color: ch.color, backgroundColor: ch.colorSoft, border: `1px solid ${ch.border}` }}>
-              Current
-            </span>
-          )}
-          {isLocked && <Lock className="w-3.5 h-3.5 text-sa-cream-faint opacity-40" />}
-        </div>
+            <h3 className={`font-serif text-[1.15rem] leading-tight ${unlocked ? 'text-sa-cream' : isNext ? 'text-sa-cream' : 'text-sa-cream-faint'}`}>
+              {milestone.title}
+            </h3>
 
-        {/* Description */}
-        <p className={`text-[0.85rem] leading-relaxed mb-2 ${unlocked ? 'text-sa-cream-muted' : isNext ? 'text-sa-cream-muted' : 'text-sa-cream-faint'}`}>
-          {milestone.description}
-        </p>
-
-        {/* Requirement tag */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-[0.72rem] px-2.5 py-1 rounded-sa-sm" style={{
-            color: unlocked ? ch.color : isNext ? ch.color : 'var(--cream-faint)',
-            backgroundColor: unlocked ? ch.colorSoft : isNext ? ch.colorSoft : 'rgba(255,255,255,0.02)',
-            border: `1px solid ${unlocked ? ch.border : isNext ? ch.border : 'rgba(255,255,255,0.06)'}`,
-          }}>
-            {milestone.requirement}
-          </span>
-        </div>
-
-        {/* Progress bar for next milestone */}
-        {isNext && progress && (
-          <div className="mt-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[0.7rem] text-sa-cream-faint">Progress</span>
-              <span className="text-[0.7rem] font-medium tabular-nums" style={{ color: ch.color }}>
-                {progress.current} / {progress.target}
+            {unlocked && (
+              <span className="flex items-center gap-1 text-[0.6rem] uppercase tracking-widest px-2 py-0.5 rounded-full font-medium"
+                style={{ color: ch.color, backgroundColor: ch.colorSoft, border: `1px solid ${ch.border}` }}>
+                <CheckCircle className="w-3 h-3" strokeWidth={2.5} /> Done
               </span>
-            </div>
-            <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="h-full rounded-full transition-all duration-700 ease-out" style={{
-                width: `${progressPct}%`,
-                backgroundColor: ch.color,
-                boxShadow: `0 0 8px ${ch.glow}`,
-              }} />
-            </div>
+            )}
+            {isNext && (
+              <span className="text-[0.6rem] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium"
+                style={{ color: '#131316', backgroundColor: ch.color }}>
+                Current
+              </span>
+            )}
+            {isLocked && <Lock className="w-3.5 h-3.5 text-sa-cream-faint opacity-40" />}
           </div>
-        )}
+
+          {/* Description */}
+          <p className={`text-[0.85rem] leading-relaxed mb-2.5 ${unlocked ? 'text-sa-cream-muted' : isNext ? 'text-sa-cream-soft' : 'text-sa-cream-faint'}`}>
+            {milestone.description}
+          </p>
+
+          {/* Completion context for unlocked milestones */}
+          {unlocked && completionText && (
+            <p className="text-[0.72rem] mb-2" style={{ color: ch.color }}>
+              {completionText}
+            </p>
+          )}
+
+          {/* Requirement tag */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-[0.72rem] px-2.5 py-1 rounded-sa-sm" style={{
+              color: unlocked ? ch.color : isNext ? ch.color : 'var(--cream-faint)',
+              backgroundColor: unlocked ? ch.colorSoft : isNext ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+              border: `1px solid ${unlocked ? ch.border : isNext ? ch.border : 'rgba(255,255,255,0.06)'}`,
+            }}>
+              {milestone.requirement}
+            </span>
+          </div>
+
+          {/* Progress bar for current milestone — prominent */}
+          {isNext && progress && (
+            <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${ch.border}` }}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[0.75rem] font-medium" style={{ color: ch.color }}>Progress</span>
+                <span className="text-[0.8rem] font-medium tabular-nums" style={{ color: ch.color }}>
+                  {progress.current} / {progress.target}
+                </span>
+              </div>
+              <div className="w-full h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                <div className="h-full rounded-full transition-all duration-700 ease-out" style={{
+                  width: `${progressPct}%`,
+                  backgroundColor: ch.color,
+                  boxShadow: `0 0 12px ${ch.glow}`,
+                }} />
+              </div>
+              {progressPct > 0 && progressPct < 100 && (
+                <p className="text-[0.7rem] text-sa-cream-faint mt-1.5">
+                  {progress.target - progress.current} more to unlock
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -254,7 +310,7 @@ function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
 function ChapterHeader({ chapter }: { chapter: MilestoneChapter }) {
   const ch = CHAPTER_META[chapter];
   return (
-    <div className="flex items-center gap-4 mb-6 mt-2">
+    <div className="flex items-center gap-4 mb-6 mt-3">
       <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: ch.color, boxShadow: `0 0 8px ${ch.glow}` }} />
       <div>
         <span className="text-[0.72rem] font-medium uppercase tracking-[0.16em] block" style={{ color: ch.color }}>{ch.label}</span>
@@ -269,7 +325,6 @@ function RankHeader({ unlocked, total, rank }: { unlocked: number; total: number
   const pct = total > 0 ? (unlocked / total) * 100 : 0;
   const color = pct >= 80 ? '#6ECB8B' : pct >= 40 ? '#6DB5F5' : '#C5A55A';
   const sz = 88, sw = 3, r = (sz-sw*2)/2, circ = 2*Math.PI*r, off = circ-(pct/100)*circ;
-
   return (
     <div className="sa-card-elevated mb-8">
       <div className="flex items-center justify-between flex-wrap gap-5">
@@ -340,7 +395,6 @@ function BronzeFrame({ color: c }: { color: string }) {
   return <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">{p.map(([pos,d],i)=><svg key={i} className={`absolute ${pos} w-8 h-8`} viewBox="0 0 32 32" fill="none"><path d={d} stroke={c} strokeWidth="1"/></svg>)}</div>;
 }
 function TierFrame({ tier }: { tier: ReportTier }) { const c = TIER_CONFIG[tier]; switch(tier){case 'diamond':return <DiamondFrame/>;case 'gold':return <GoldFrame/>;case 'silver':return <SilverFrame color={c.color}/>;case 'bronze':return <BronzeFrame color={c.color}/>;} }
-
 function ScoreRing({ score, tier, size=80 }: { score: number; tier: ReportTier; size?: number }) {
   const c=TIER_CONFIG[tier],sw=3,r=(size-sw*2)/2,ci=2*Math.PI*r,off=ci-(score/100)*ci;
   return <div className="relative" style={{width:size,height:size}}><svg width={size} height={size} className="transform -rotate-90"><circle cx={size/2} cy={size/2} r={r} stroke="rgba(255,255,255,0.05)" strokeWidth={sw} fill="none"/><circle cx={size/2} cy={size/2} r={r} stroke={c.color} strokeWidth={sw} fill="none" strokeLinecap="round" strokeDasharray={ci} strokeDashoffset={off} style={{transition:'stroke-dashoffset 0.8s ease-out'}}/></svg><div className="absolute inset-0 flex flex-col items-center justify-center"><span className="font-serif text-xl" style={{color:c.color}}>{score}</span></div></div>;
@@ -381,7 +435,6 @@ export function AchievementsView({ nonNegotiables, nnCompletions, habits, habitC
 
   const ctx = useMemo(() => computeCtx(nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, systemReports), [nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, systemReports]);
 
-  // Strict sequential
   const { unlockedCount, nextIndex } = useMemo(() => {
     let count = 0;
     for (const m of MILESTONES) { if (m.check(ctx)) count++; else break; }
@@ -389,6 +442,7 @@ export function AchievementsView({ nonNegotiables, nnCompletions, habits, habitC
   }, [ctx]);
 
   const rank = useMemo(() => getRank(unlockedCount), [unlockedCount]);
+  const status = useMemo(() => getStatusMessage(unlockedCount, nextIndex, ctx), [unlockedCount, nextIndex, ctx]);
 
   // Reports
   const currentMonth = useMemo(() => { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; }, []);
@@ -431,17 +485,15 @@ export function AchievementsView({ nonNegotiables, nnCompletions, habits, habitC
     return {avg:Math.round(systemReports.reduce((s,r)=>s+r.score,0)/systemReports.length),best:Math.max(...systemReports.map(r=>r.score)),goldCount:systemReports.filter(r=>r.tier==='gold'||r.tier==='diamond').length,total:systemReports.length};
   }, [systemReports]);
 
-  // Group milestones by chapter
   const chapters: { chapter: MilestoneChapter; milestones: { def: MilestoneDef; index: number }[] }[] = [
-    { chapter: 'foundation', milestones: MILESTONES.slice(0, 5).map((m, i) => ({ def: m, index: i })) },
-    { chapter: 'momentum', milestones: MILESTONES.slice(5, 10).map((m, i) => ({ def: m, index: i + 5 })) },
-    { chapter: 'mastery', milestones: MILESTONES.slice(10, 15).map((m, i) => ({ def: m, index: i + 10 })) },
+    { chapter: 'foundation', milestones: MILESTONES.slice(0,5).map((m,i) => ({ def: m, index: i })) },
+    { chapter: 'momentum', milestones: MILESTONES.slice(5,10).map((m,i) => ({ def: m, index: i+5 })) },
+    { chapter: 'mastery', milestones: MILESTONES.slice(10,15).map((m,i) => ({ def: m, index: i+10 })) },
   ];
 
   return (
     <div className="pt-6 max-w-2xl mx-auto">
       <style>{`
-        @keyframes milestoneGlow { 0%,100% { opacity: 1; } 50% { opacity: 0.92; } }
         @keyframes nodePulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0.1; } }
       `}</style>
 
@@ -466,24 +518,54 @@ export function AchievementsView({ nonNegotiables, nnCompletions, habits, habitC
         <div className="animate-rise delay-2">
           <RankHeader unlocked={unlockedCount} total={MILESTONES.length} rank={rank} />
 
-          {chapters.map(({ chapter, milestones: ms }) => (
-            <div key={chapter}>
-              <ChapterHeader chapter={chapter} />
-              <div className="ml-1">
-                {ms.map(({ def, index }) => (
-                  <MilestoneCard
-                    key={def.id}
-                    milestone={def}
-                    index={index}
-                    unlocked={index < unlockedCount}
-                    isNext={index === nextIndex}
-                    isLocked={index > (nextIndex ?? unlockedCount)}
-                    ctx={ctx}
-                  />
-                ))}
-              </div>
+          {/* ── Status message (the page talks) ── */}
+          <div className="mb-8 px-5 py-4 rounded-sa border flex items-start gap-3" style={{
+            borderColor: `${status.color}40`,
+            backgroundColor: `${status.color}08`,
+          }}>
+            <span className="text-base flex-shrink-0 mt-px" style={{ color: status.color }}>
+              {unlockedCount === MILESTONES.length ? '●' : unlockedCount === 0 ? '◆' : '◆'}
+            </span>
+            <p className="text-sm leading-relaxed" style={{ color: status.color }}>{status.message}</p>
+          </div>
+
+          {/* ── Atmospheric glow background ── */}
+          <div className="relative">
+            {/* Gold glow for Foundation */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at center, rgba(197,165,90,0.06) 0%, transparent 70%)',
+            }} />
+            {/* Blue glow for Momentum */}
+            <div className="absolute top-[35%] left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at center, rgba(109,181,245,0.05) 0%, transparent 70%)',
+            }} />
+            {/* Green glow for Mastery */}
+            <div className="absolute top-[65%] left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at center, rgba(110,203,139,0.05) 0%, transparent 70%)',
+            }} />
+
+            {/* ── The path ── */}
+            <div className="relative z-10">
+              {chapters.map(({ chapter, milestones: ms }) => (
+                <div key={chapter}>
+                  <ChapterHeader chapter={chapter} />
+                  <div className="ml-1">
+                    {ms.map(({ def, index }) => (
+                      <MilestoneCard
+                        key={def.id}
+                        milestone={def}
+                        index={index}
+                        unlocked={index < unlockedCount}
+                        isNext={index === nextIndex}
+                        isLocked={index > (nextIndex ?? unlockedCount)}
+                        ctx={ctx}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
 
           {unlockedCount === MILESTONES.length && (
             <div className="mt-8 py-8 px-8 text-center rounded-sa-lg" style={{ border: '1px solid rgba(110,203,139,0.3)', backgroundColor: 'rgba(110,203,139,0.06)' }}>
