@@ -54,9 +54,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Every system starts with a single decision: where is this going? Before you build habits, structure, or routine — you need a clear answer to that question. Today, you create the answer.",
     "principleLabel": "The Law of Cause and Effect",
     "principleParagraphs": [
-      "Every result has a cause. Every outcome — good or bad — traces back to a decision, a pattern, or a default you didn't know was running.",
-      "This is the foundational law of achievement. Nothing happens by accident. Success is not luck, and failure is not fate. Both are the predictable result of specific causes set in motion — often long before the result appears.",
-      "Once you internalize this, everything changes. You stop waiting for circumstances to improve. You stop blaming external conditions. You start asking a different question: <strong>what cause do I need to set in motion today?</strong>"
+      "Every result has a cause. Every outcome — good or bad — traces back to a decision, a pattern, or a default you didn't know was running."
     ],
     "sections": [
       {
@@ -69,22 +67,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "The answer is direction. A clear, specific, written definition of where you're going."
-          },
-          {
-            "type": "prose",
-            "html": "Without it, effort scatters. You respond to whatever feels urgent in the moment. You start projects without finishing them. You stay busy all day and end the week feeling like you haven't moved forward. This isn't a discipline problem — it's a <strong>direction problem</strong>. Your energy is going everywhere, which means it's going nowhere."
-          },
-          {
-            "type": "prose",
-            "html": "With a defined direction, something shifts. Your brain stops processing every option as equally valid and starts filtering. Opportunities that align with your direction stand out. Distractions that don't align become easier to ignore. Decisions that used to take twenty minutes take twenty seconds — because you have a reference point to measure them against."
-          },
-          {
-            "type": "prose",
-            "html": "This isn't a metaphor. There's a mechanism in your brain called the Reticular Activating System — a network of neurons that acts as a filter for the millions of data points hitting your senses every moment. When you set a clear intention, this system adjusts what it shows you. It's the reason you start noticing a certain car everywhere after you decide you want one. The cars were always there. Your filter changed."
-          },
-          {
-            "type": "prose",
-            "html": "By writing a clear direction statement today, you're programming that filter. You're telling your brain: <em>this is what matters now — show me everything that connects to it.</em>"
           }
         ]
       },
@@ -98,14 +80,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Direction is not a dream.</strong> A dream is vague and emotional — \"I want to be successful\" or \"I want to feel confident.\" Dreams don't give your brain anything to act on. They're pleasant to think about, but they don't change behavior."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Direction is not a goal.</strong> Goals are important, but they live in the future. They describe an outcome you're working toward. Direction describes <em>how you're operating right now</em> in service of that outcome. A goal says \"I want to lose 20 pounds.\" Direction says \"I am someone who trains 4 days a week and controls what I eat.\" The goal might take months. The direction starts today."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Direction is not motivation.</strong> Motivation is an emotion — it comes and goes. Direction is a decision. It doesn't require you to feel inspired. It requires you to be clear. The clearest, most successful people you know are not operating on motivation. They're operating on a locked direction that doesn't change with their mood."
           },
           {
             "type": "callout",
@@ -123,18 +97,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "A strong direction statement has three non-negotiable qualities:"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Specific.</strong> It describes behavior or conditions you can actually see and measure. Not abstract feelings like \"be more productive\" or \"feel better about myself.\" Those give your brain nothing to filter for. Instead: \"I complete my three most important tasks before noon every working day.\" That's specific. You can verify it. Your brain can act on it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Time-bound.</strong> It's anchored to these 21 days. This isn't a life direction (that comes later). It's a 21-day operating target — focused enough to create urgency, short enough to maintain intensity. You're not trying to change your entire life in three weeks. You're trying to install one clean operating system."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Self-referenced.</strong> It depends entirely on you — not on other people, not on external events, not on things you can't control. \"Get a promotion\" depends on your boss. \"Operate with the discipline and output that makes me undeniable\" depends on you. Always write direction statements that you can fulfill regardless of what happens around you."
           },
           {
             "type": "example",
@@ -163,35 +125,6 @@ export const LESSON_DATA: LessonData[] =
             "tag": "Another strong example",
             "quote": "\"By Day 21, I operate with calm discipline. I wake before 7, follow my morning routine without exception, protect my deep work block from distractions, and review my progress every evening.\"",
             "note": "Notice how this describes a way of operating — not an outcome. The outcomes will follow from the operation."
-          },
-          {
-            "type": "prose",
-            "html": "Read your direction statement back to yourself. If you can picture exactly what a day looks like when you're living it, it's strong. If it sounds nice but you can't see the specific behaviors, tighten it until you can."
-          }
-        ]
-      },
-      {
-        "title": "The role of indicators",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Your direction statement is the compass. Your indicators are the dashboard — the 3–5 specific, daily-checkable conditions that tell you whether you're on track."
-          },
-          {
-            "type": "prose",
-            "html": "Think of indicators as the evidence of direction in action. If your direction is operating correctly on any given day, these conditions will be true. If they're not, something needs adjusting."
-          },
-          {
-            "type": "prose",
-            "html": "Good indicators share three traits: they're <strong>observable</strong> (you can see or measure them), <strong>daily</strong> (they apply to each individual day, not over a week or month), and <strong>binary</strong> (they were either true today or they weren't — no gray area)."
-          },
-          {
-            "type": "callout",
-            "html": "<p><strong>Example indicators for the direction statement above:</strong></p>\n<p>• I completed my morning routine before 8 AM.</p>\n<p>• I finished my #1 priority before noon.</p>\n<p>• I did not check social media before my first work block.</p>\n<p>• I completed my evening review before 10 PM.</p>\n<p>Each one is observable, daily, and binary. At the end of any day, you know exactly where you stand.</p>"
-          },
-          {
-            "type": "prose",
-            "html": "Don't overcomplicate this. You're not building a performance scorecard. You're creating 3–5 simple checkpoints that keep your direction honest. If you hit most of them most days, the system is working. If you consistently miss one, it tells you exactly where to focus."
           }
         ]
       }
@@ -218,10 +151,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all four tasks before moving to Day 2.",
     "closingParagraphs": [
-      "What you wrote today is the single most referenced piece of your entire operating system. Every lesson, every review, every decision over the next 20 days connects back to this direction statement.",
-      "It doesn't need to be perfect. It needs to be clear. You can sharpen it as you learn more about yourself through this process — in fact, you will. On Day 7 and Day 14, you'll have structured opportunities to recalibrate.",
-      "But you can't start without it. A system with no direction is just activity. A system with a locked direction is a machine that produces results.",
-      "<strong>The first cause is set. Tomorrow, you build the structure to act on it.</strong>"
+      "What you wrote today is the single most referenced piece of your entire operating system. Every lesson, every review, every decision over the next 20 days connects back to this direction statement."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 2",
@@ -237,9 +167,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Direction without structure is just a statement pinned to a wall. Today you translate what you defined yesterday into something you can actually live inside — a daily rhythm that holds your time, your energy, and your attention together.",
     "principleLabel": "The Law of Control",
     "principleParagraphs": [
-      "You feel positive about yourself to the degree that you feel you are in control of your own life. You feel negative about yourself to the degree that you feel out of control — that external forces are directing your behavior.",
-      "This is not about controlling everything. It's about controlling the <strong>structure of your day</strong> — the container that holds your time. When the container is solid, everything inside it becomes more manageable.",
-      "People who feel overwhelmed rarely lack time. They lack structure. The hours are there — they're just leaking through the cracks of an unstructured day."
+      "You feel positive about yourself to the degree that you feel you are in control of your own life. You feel negative about yourself to the degree that you feel out of control — that external forces are directing your behavior."
     ],
     "sections": [
       {
@@ -252,18 +180,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Structure doesn't care how you feel. It works on Tuesday morning when you're tired. It works on Friday afternoon when you'd rather stop. It works on the days when nothing goes right — because the structure is already decided. You don't have to think about what comes next. <strong>You just move into the next block.</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "This is the difference between professionals and amateurs in every field. The professional doesn't wait for inspiration. They have a structure — a rhythm — and they show up within it. The writer sits down at 6 AM whether the muse arrives or not. The athlete trains at the same time every day regardless of how their body feels. The structure removes the negotiation between wanting to do something and actually doing it."
-          },
-          {
-            "type": "prose",
-            "html": "Think about the most productive periods in your life. Chances are, they weren't the times when you felt the most motivated — they were the times when you had the most structure. A school schedule. A demanding job. A training program. The structure carried you through the days when motivation alone would have failed."
-          },
-          {
-            "type": "prose",
-            "html": "Today, you build your own structure. Not one imposed by a school or employer — one that you design, own, and operate by choice."
           }
         ]
       },
@@ -279,32 +195,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "<strong>Anchor 1: The Morning Sequence.</strong> This is the first 30–60 minutes of your day. Its purpose is to set the tone — to transition you from sleep into operating mode deliberately rather than reactively. The biggest mistake most people make is reaching for their phone within minutes of waking up. In doing so, they hand the opening of their day to other people's agendas: emails, notifications, news, social media. Your morning sequence ensures that the first hour belongs to you."
           },
           {
-            "type": "prose",
-            "html": "Keep it simple. A good morning sequence might be: wake at a set time, drink water, review your direction statement and today's priorities, then begin your first task. That's it. No elaborate two-hour ritual. The goal is a consistent, quick transition from sleep to operational mode."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The key principle:</strong> Your morning sequence should be simple enough to do on your worst day. If it requires perfect conditions — a quiet house, plenty of time, a good mood — it will fail within a week. Design for your worst morning, and it will feel effortless on your best ones.</p>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Anchor 2: The Core Execution Block.</strong> This is your primary work window — the 2–4 hours where your most important work gets done. Not email. Not meetings. Not busywork. The tasks that directly move your top priorities forward."
-          },
-          {
-            "type": "prose",
-            "html": "This block needs protection. It should be the same time every day (or as close as possible), and during this window, everything else waits. No phone checks. No \"quick\" replies. No context switching. Research on cognitive performance consistently shows that deep, focused work produces exponentially more value than the same time spent switching between tasks. A single 3-hour block of focused work often outproduces an entire 8-hour day of fragmented effort."
-          },
-          {
-            "type": "prose",
-            "html": "Where you place this block matters. Ideally, it aligns with your highest-energy window (you'll map this on Day 11). For most people, this is the first half of the day — but not always. Pay attention to when you do your best thinking, and build around it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Anchor 3: The Evening Close-Out.</strong> This is the 10-minute routine that ends your day. Its purpose is simple: close today, prepare tomorrow. Without it, you carry open loops to bed — unfinished tasks, unprocessed thoughts, undefined plans — and they follow you into the next morning."
-          },
-          {
-            "type": "prose",
-            "html": "A good close-out has three steps: <strong>Review</strong> (what happened today — what did you accomplish, what's unfinished?), <strong>Capture</strong> (write down anything still in your head so you can let go of it), and <strong>Set</strong> (define your top 3 priorities for tomorrow). When you wake up, the thinking is already done. You move straight into execution."
           },
           {
             "type": "callout",
@@ -332,23 +224,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Notice what the structured version doesn't do: it doesn't schedule every hour. It doesn't require perfection. It creates three fixed points and lets everything else organize naturally between them. This is sustainable. A minute-by-minute schedule is not."
-          }
-        ]
-      },
-      {
-        "title": "The flexibility principle",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Structure is not rigidity. This is an important distinction. A rigid schedule breaks at the first disruption — an unexpected meeting, a sick child, a bad night of sleep. A structured day bends without breaking, because the anchors hold even when the details shift."
-          },
-          {
-            "type": "prose",
-            "html": "Your morning sequence might take 20 minutes instead of 40. Your core block might shift from morning to afternoon because of an appointment. Your close-out might happen at 8 PM instead of 9. <strong>That's fine.</strong> The structure held. The anchors happened. The day was operated, not drifted through."
-          },
-          {
-            "type": "prose",
-            "html": "The only thing that constitutes a structural failure is a day where none of the anchors happened at all. That's what you're protecting against — not minor variations in timing."
           }
         ]
       }
@@ -379,10 +254,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 3.",
     "closingParagraphs": [
-      "You now have two foundational components installed: a direction and a structure to move toward it.",
-      "Direction tells you where to go. Structure tells you how your day is organized to get there. One without the other doesn't work — direction without structure is a wish, structure without direction is just routine.",
-      "Tomorrow, we look at what's been quietly working against both of these — the unconscious patterns and habits that have been running your behavior without your awareness or permission. You can't build a new system on top of old defaults without first seeing what those defaults are.",
-      "<strong>Follow your structure tomorrow morning. Not perfectly — just deliberately. The system only works if you use it.</strong>"
+      "You now have two foundational components installed: a direction and a structure to move toward it."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 3",
@@ -398,9 +270,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You've set a direction and built a structure. But there's something else running in the background — an older system, assembled over years, made up of habits, reactions, and patterns you've repeated so often you don't even notice them anymore. Today, you see them.",
     "principleLabel": "The Law of Habit",
     "principleParagraphs": [
-      "Almost everything you do is the result of habit. From the moment you wake up to the moment you fall asleep, the vast majority of your actions are not conscious choices — they are automated patterns that run without your awareness.",
-      "Your habits have brought you to exactly where you are today. And if left unchanged, they will take you to the same place tomorrow, next month, and next year.",
-      "This is neither good nor bad — it's <strong>mechanical</strong>. Habits are tools. The question is whether you chose them deliberately or inherited them by accident. Today, you find out which is which."
+      "Almost everything you do is the result of habit. From the moment you wake up to the moment you fall asleep, the vast majority of your actions are not conscious choices — they are automated patterns that run without your awareness."
     ],
     "sections": [
       {
@@ -413,18 +283,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "This invisible system includes everything: what time you wake up, how you start your day, how you respond to stress, what you eat, how you spend your evenings, what you do when you're bored, what you avoid, what you say yes to automatically, how you talk to yourself when things go wrong."
-          },
-          {
-            "type": "prose",
-            "html": "None of these patterns are random. Each one was installed at some point — either through repetition, imitation, or emotional reinforcement. And each one is producing results in your life right now, whether you're aware of it or not."
-          },
-          {
-            "type": "prose",
-            "html": "This is the Law of Cause and Effect playing out at the behavioral level. Your current results — your health, your productivity, your relationships, your financial situation — are the effects. Your daily habits are the causes. <strong>Change the causes and the effects have no choice but to follow.</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "But you can't change what you can't see. And most people have never stopped to honestly catalog the patterns running their daily life. Today, you do exactly that."
           }
         ]
       },
@@ -438,14 +296,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "These two things are almost never the same. Most people dramatically overestimate how much time they spend on productive activities and dramatically underestimate how much time leaks into distraction, avoidance, and low-value behavior. Studies on time perception consistently show that people's estimates of how they spend their day are off by 2–3 hours in either direction."
-          },
-          {
-            "type": "prose",
-            "html": "This isn't a moral failing. It's a feature of how the brain works. Habitual behavior becomes invisible precisely because it's habitual — your brain has automated it to save processing power. Checking your phone, scrolling social media, snacking when you're not hungry, saying yes to requests you should decline — these happen on autopilot. You don't experience them as choices because they stopped being choices a long time ago."
-          },
-          {
-            "type": "prose",
-            "html": "The diagnostic makes the invisible visible again. Once you see a pattern clearly, you have a choice about it. Before you see it, you don't."
           }
         ]
       },
@@ -461,68 +311,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "<strong>Time defaults — where your time actually goes.</strong> Not where you think it goes. Not where you'd like it to go. Where it actually goes when you're not paying attention. The gaps between tasks. The transitions. The moments when you pick up your phone \"for a second\" and lose 20 minutes. The evenings that evaporate into scrolling or watching something you didn't plan to watch."
           },
           {
-            "type": "prose",
-            "html": "Here's a simple test: take your phone right now and look at your screen time data from the past week. Compare the number you see to the number you would have guessed. For most people, there's a significant gap. That gap is a time default in action."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Energy defaults — what drains you and what charges you.</strong> Some activities, people, and environments leave you feeling more capable and alive after engaging with them. Others leave you depleted, irritable, or foggy. Your energy defaults determine which ones you gravitate toward by habit."
-          },
-          {
-            "type": "prose",
-            "html": "Pay attention to the pattern, not the intention. You might intend to exercise after work, but if your energy default after a long day is to collapse on the couch and scroll, the default wins. You might intend to spend the weekend on a personal project, but if your energy default is social obligation, the project never happens."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Decision defaults — what you say yes and no to automatically.</strong> Everyone has a pattern in how they handle decisions, requests, and opportunities. Some people default to \"yes\" — they accept every invitation, take on every task, and agree to every favor, leaving no room for their own priorities. Others default to avoidance — they postpone difficult conversations, delay important decisions, and choose the easiest option regardless of whether it's the right one."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>A critical distinction:</strong> Defaults are not character flaws. They're not evidence that something is wrong with you. They're simply patterns — automated responses that were installed through repetition. You installed most of them unconsciously, which means you can <em>uninstall</em> them deliberately. But only after you've identified them with precision.</p>"
-          }
-        ]
-      },
-      {
-        "title": "How to map your defaults honestly",
-        "content": [
-          {
-            "type": "prose",
-            "html": "The key word is honestly. This exercise only works if you describe what you actually do — not what you wish you did or what you do on your best days. You're looking for the patterns that show up on a <em>typical</em> day, especially on the days when you're not being particularly intentional."
-          },
-          {
-            "type": "example",
-            "variant": "weak",
-            "tag": "Surface level",
-            "quote": "\"I sometimes procrastinate and I'm not great with time management.\"",
-            "note": "This is too vague to act on. It describes a feeling, not a pattern. You can't fix \"sometimes procrastinate\" — you can only fix specific, identified behaviors."
-          },
-          {
-            "type": "example",
-            "variant": "strong",
-            "tag": "Honest and specific",
-            "quote": "\"I check my phone within 5 minutes of waking up — usually Instagram first, then email. I default to easy tasks when I start working because they feel productive. I say yes to social plans even when I'm behind on priorities because I don't want to disappoint people. I stay up past midnight because I feel like the evening is 'my time' even though it ruins my morning.\"",
-            "note": "Every item here is specific, observable, and actionable. You can see exactly where the pattern conflicts with the direction and structure you've built."
-          },
-          {
-            "type": "prose",
-            "html": "The specific version gives you targets. The vague version just makes you feel bad about yourself. Specificity is the entire point of this exercise."
-          }
-        ]
-      },
-      {
-        "title": "Connecting defaults to direction",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Once you've mapped your defaults, the final step is connecting them to your Day 1 direction. Not every default is a problem. Some of your automated patterns may actually support your direction. The ones you're looking for are the defaults that <strong>directly conflict</strong> with where you're trying to go."
-          },
-          {
-            "type": "prose",
-            "html": "If your direction includes \"I complete my top priorities before noon\" but your time default is starting with easy tasks and checking email repeatedly — that's a direct conflict. If your direction includes \"I follow a consistent daily structure\" but your decision default is saying yes to every request that comes in — that's a direct conflict."
-          },
-          {
-            "type": "prose",
-            "html": "Mark these conflicts clearly. They're not all going to be addressed today — that's what the rest of the program is for. But you need to see them now, because awareness is the prerequisite for every change that follows."
           }
         ]
       }
@@ -552,10 +342,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 4.",
     "closingParagraphs": [
-      "Today wasn't about fixing anything. It was about seeing clearly. You can't redesign a system you haven't mapped, and now you have a clear inventory of the automated patterns running your daily behavior.",
-      "Some of what you found probably surprised you. Some of it you already knew but hadn't admitted. Both reactions are normal and both are useful — because now it's written down, visible, and no longer running in the background unexamined.",
-      "Tomorrow, you build the direct antidote to your most destructive defaults: non-negotiable behaviors that hold your system together regardless of mood, energy, or circumstances. These are the behavioral anchors that ensure your structure survives even when your defaults try to pull you off course.",
-      "<strong>Look at your list tonight. Let it sit. Tomorrow, you start replacing.</strong>"
+      "Today wasn't about fixing anything. It was about seeing clearly. You can't redesign a system you haven't mapped, and now you have a clear inventory of the automated patterns running your daily behavior."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 4",
@@ -571,9 +358,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You've defined your direction, built a structure, and mapped the patterns working against you. Now you install the behaviors that hold everything together — the actions that happen regardless of mood, energy, or circumstance.",
     "principleLabel": "The Law of Discipline",
     "principleParagraphs": [
-      "Discipline is the ability to do what you should do, when you should do it, whether you feel like it or not. It is the single most important quality for ensuring long-term success in any area of life.",
-      "But discipline is widely misunderstood. Most people think of it as willpower — forcing yourself through discomfort. That's not discipline. That's suffering with a deadline. Real discipline is structural. It's <strong>designing your commitments so clearly that not doing them becomes harder than doing them</strong>.",
-      "Non-negotiables are discipline made structural. When an action is non-negotiable, there's nothing to decide. The question \"should I do this today?\" is already answered. Always. Every day. No exceptions."
+      "Discipline is the ability to do what you should do, when you should do it, whether you feel like it or not. It is the single most important quality for ensuring long-term success in any area of life."
     ],
     "sections": [
       {
@@ -586,14 +371,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "They make their commitments flexible. \"I'll try to work out most days.\" \"I'll aim to wake up early.\" \"I'll do my best to follow the structure.\" Each of these sounds reasonable. Each one will fail — because flexibility in a commitment is just permission to skip it."
-          },
-          {
-            "type": "prose",
-            "html": "The word \"try\" is the most dangerous word in personal development. When you say you'll \"try\" to do something, you've already built in the expectation of failure. Your brain heard the word \"try\" and translated it into: \"this is optional.\" And anything optional gets sacrificed the moment conditions aren't perfect."
-          },
-          {
-            "type": "prose",
-            "html": "Non-negotiables eliminate this entirely. They don't flex. They don't negotiate. They don't care about your mood, your schedule, or your excuses. <strong>They are the behavioral floor below which you refuse to fall.</strong>"
           }
         ]
       },
@@ -607,18 +384,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Simple enough for your worst day.</strong> If a non-negotiable requires 90 minutes, good conditions, and a clear schedule, it will break within a week. Your worst days are the test. Sick days. Travel days. Days when everything goes wrong. If you can still do it on those days, it qualifies. If you can't, simplify until you can."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Completely within your control.</strong> \"Get a positive response from a client\" is not within your control. \"Send the follow-up email before noon\" is. Every non-negotiable must depend solely on your own action — no external factors, no other people, no conditions that need to be met."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Directly connected to your direction.</strong> Each non-negotiable should trace back to your Day 1 direction statement or your daily indicators. If it doesn't serve the direction, it doesn't belong on the list. You're not collecting good habits — you're installing the specific behaviors that keep your operating system running."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Binary.</strong> You either did it or you didn't. No partial credit. No \"almost.\" This makes tracking simple and self-deception impossible. At the end of the day, you check it off or you don't. The binary nature is what gives non-negotiables their power."
           },
           {
             "type": "callout",
@@ -652,23 +417,6 @@ export const LESSON_DATA: LessonData[] =
             "note": "Three items. Maybe 45 minutes total. Doable when you're sick. Doable when traveling. Doable when your day falls apart. That's the point."
           }
         ]
-      },
-      {
-        "title": "Non-negotiables vs. your Day 3 defaults",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Look at the defaults you identified yesterday — particularly the ones you marked as conflicting with your direction. For each destructive default, there should be at least one non-negotiable that directly counters it."
-          },
-          {
-            "type": "prose",
-            "html": "If your biggest time default is checking your phone first thing in the morning, your non-negotiable \"morning sequence by 8 AM — no phone until complete\" directly counters it. If your biggest decision default is saying yes to everything, your non-negotiable might be \"review any new commitment against my top 3 priorities before accepting.\""
-          },
-          {
-            "type": "prose",
-            "html": "The non-negotiables are not random good habits. They are <strong>strategic responses to the specific patterns you discovered are working against your direction</strong>. That's what makes them powerful — they're targeted."
-          }
-        ]
       }
     ],
     "tasks": [
@@ -696,9 +444,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 5.",
     "closingParagraphs": [
-      "You now have four components installed: direction, structure, pattern awareness, and behavioral anchors. These four form the foundation of your operating system. They answer the fundamental questions: where am I going, how is my day organized, what's working against me, and what do I do no matter what.",
-      "Tomorrow, you connect all of this to a tracking tool that makes your daily execution visible and measurable. Until now, your system has been running on self-assessment. From Day 5 forward, it runs on data.",
-      "<strong>Start tomorrow by doing your non-negotiables first. Before email. Before other people's agendas. Before anything else. That's the test.</strong>"
+      "You now have four components installed: direction, structure, pattern awareness, and behavioral anchors. These four form the foundation of your operating system. They answer the fundamental questions: where am I going, how is my day organized, what's working against me, and what do I do no matter what."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 5",
@@ -714,9 +460,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You have a direction, a structure, awareness of your defaults, and a set of non-negotiable behaviors. Today, you connect all of it to a tool that makes your daily execution visible and measurable — the Structured Achievement tracker.",
     "principleLabel": "The Law of Accumulation",
     "principleParagraphs": [
-      "Every great achievement is an accumulation of hundreds — sometimes thousands — of small efforts that no one sees or appreciates. Each individual effort may seem insignificant on its own. But compounded over time, they produce extraordinary results.",
-      "This is one of the most important and least understood laws of achievement. People overestimate what they can accomplish in a day and dramatically underestimate what they can accomplish in a month of consistent daily action.",
-      "The tracker makes this law visible. It takes the small, daily efforts that would otherwise disappear into memory and <strong>turns them into a visible, compounding record of who you're becoming</strong>."
+      "Every great achievement is an accumulation of hundreds — sometimes thousands — of small efforts that no one sees or appreciates. Each individual effort may seem insignificant on its own. But compounded over time, they produce extraordinary results."
     ],
     "sections": [
       {
@@ -729,14 +473,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Without tracking, you'll overestimate bad weeks and underestimate good ones. You'll forget a five-day streak because of one bad day. You'll feel like nothing is changing when the data would show otherwise. Human perception of personal progress is consistently biased toward the negative — we remember failures more vividly than successes and weigh recent setbacks more heavily than accumulated wins."
-          },
-          {
-            "type": "prose",
-            "html": "A tracker corrects this. It creates an objective record — a mirror that shows you exactly what happened, without opinion, emotion, or interpretation. On a bad day, you can open it and see seven consecutive days of completed non-negotiables. On a good day, it confirms that the consistency is real and documented. Over time, this record becomes <strong>proof that your system works</strong>."
-          },
-          {
-            "type": "prose",
-            "html": "There's also a psychological mechanism at play. The act of logging itself reinforces the behavior. When you check off a completed non-negotiable, your brain registers a small reward — a sense of completion. When you see an unbroken streak of logged days, the desire to maintain that streak becomes its own motivation. You're not just tracking behavior — you're building momentum through the act of tracking."
           }
         ]
       },
@@ -752,24 +488,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "Here's what goes in:"
           },
           {
-            "type": "prose",
-            "html": "<strong>Your non-negotiables.</strong> Each one gets a daily check. Did you do it? Yes or no. Binary. No partial credit. This is the core of the tracker and the data you'll use in every review."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Your daily indicators.</strong> The observable conditions from Day 1. Were they true today? These are your secondary data points — they tell you whether your direction is actively expressed in your daily behavior."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>A brief daily note.</strong> One to two sentences about how the day went. Not a journal entry — a status report. Think of it as a log entry, not a diary. \"Good execution day. Struggled with focus after lunch. All non-negotiables complete.\" That's enough."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The 2-minute rule:</strong> Your daily logging should take no more than 2 minutes. If it takes longer, you're tracking too much. The tracker serves you — you don't serve the tracker. If logging feels like a burden, simplify what you're tracking until it's fast enough to do every single day without resistance.</p>"
-          },
-          {
-            "type": "prose",
-            "html": "What <em>not</em> to track: mood (too subjective), time spent (too tedious), detailed task lists (use a separate tool), or anything that requires judgment calls. Keep it binary and fast."
           }
         ]
       },
@@ -783,27 +503,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Don't log in the morning for the previous day. Memory degrades overnight, and you'll either forget things or unconsciously round up your performance. Log while the day is still fresh."
-          },
-          {
-            "type": "prose",
-            "html": "Don't log multiple times throughout the day. That turns tracking into a task itself and creates unnecessary friction. One session, end of day, 2 minutes. That's the rhythm."
-          }
-        ]
-      },
-      {
-        "title": "The compound effect becomes visible",
-        "content": [
-          {
-            "type": "prose",
-            "html": "After one day of tracking, you have a data point. After a week, you have a pattern. After 21 days, you have a complete picture of your installation period — every day logged, every non-negotiable accounted for, every fluctuation recorded."
-          },
-          {
-            "type": "prose",
-            "html": "This is the Law of Accumulation in action. Each individual log entry seems trivial. But the aggregate — the full record of 21 days — becomes one of the most valuable tools in your system. It tells you exactly what works, what doesn't, when you're strongest, when you struggle, and how far you've come from Day 1."
-          },
-          {
-            "type": "prose",
-            "html": "Your Day 7 review (two days from now) will be your first opportunity to use this data. The quality of that review depends entirely on the quality of what you log between now and then. <strong>Start strong. Log honestly. The data is only useful if it's true.</strong>"
           }
         ]
       }
@@ -833,10 +532,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 6.",
     "closingParagraphs": [
-      "You now have a tool connected to your system. Direction, structure, non-negotiables, and a tracker to make it all visible and accountable. The invisible effort you've been putting in since Day 1 is now captured in data.",
-      "This is where the Law of Accumulation becomes tangible. Each logged day is a small deposit into a compounding account. By Day 7 — your first formal review — you'll already have meaningful data to analyze. By Day 14, the patterns will be undeniable. By Day 21, you'll have a complete record of your transformation.",
-      "Tomorrow, you address the environment surrounding your system — the physical, digital, and social spaces that either support your structure or silently undermine it every day.",
-      "<strong>Log tonight. Every evening from here through Day 21 is tracked. The record starts now.</strong>"
+      "You now have a tool connected to your system. Direction, structure, non-negotiables, and a tracker to make it all visible and accountable. The invisible effort you've been putting in since Day 1 is now captured in data."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 6",
@@ -852,9 +548,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Your system is installed and you're tracking daily. But there's a force constantly shaping your behavior that most people never consciously address — the environment you operate in. Today, you reshape it to work for your system instead of against it.",
     "principleLabel": "The Law of Correspondence",
     "principleParagraphs": [
-      "Your outer world is a mirror of your inner world. The conditions surrounding you — your workspace, your phone, your relationships — reflect and reinforce the patterns inside you.",
-      "But this law works in both directions. Change what surrounds you, and you change what happens within you. A person who sits at a clean desk with their phone in another room behaves differently than the same person at a cluttered desk with notifications buzzing every three minutes.",
-      "<strong>Environment design is the highest-leverage change you can make</strong> — because it works automatically, every day, without requiring willpower or conscious effort."
+      "Your outer world is a mirror of your inner world. The conditions surrounding you — your workspace, your phone, your relationships — reflect and reinforce the patterns inside you."
     ],
     "sections": [
       {
@@ -867,14 +561,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Here's a simple example: if a bowl of candy sits on your desk, you'll eat from it repeatedly throughout the day — not because you're hungry, not because you decided to, but because it's there. Remove the bowl and the behavior disappears. You didn't change your willpower. You changed the environment. The behavior followed automatically."
-          },
-          {
-            "type": "prose",
-            "html": "This principle applies to everything in your system. If your phone is on your desk during your core execution block, you'll check it. Not because you lack discipline, but because the environmental cue (phone visible, within reach) triggers the automated response (pick it up, check notifications). If your workspace is cluttered, your brain processes the visual noise as unfinished business, creating a low-level cognitive drain that reduces your capacity for deep work."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Most people try to power through environmental friction with willpower.</strong> They leave the phone on the desk and try not to look at it. They work in a noisy room and try to concentrate harder. This approach fails because it treats every moment as a willpower challenge — and willpower is a finite resource. The smarter approach is to remove the friction entirely so the right behavior becomes the easy behavior."
           }
         ]
       },
@@ -890,28 +576,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "Walk through your workspace right now (or visualize it). What's on your desk? Is every item there because it serves your work, or because it landed there and never got moved? Is the space organized in a way that supports your core execution block, or does it create friction? What's the first thing you see when you sit down — something that pulls you toward your direction, or something that distracts from it?"
           },
           {
-            "type": "prose",
-            "html": "<strong>Your digital environment.</strong> For most people, this is the most destructive environment of all. Your phone alone contains hundreds of interruption triggers — notifications, app badges, social media feeds, messaging apps — each one designed by teams of engineers to capture and hold your attention."
-          },
-          {
-            "type": "prose",
-            "html": "Consider this: the average person checks their phone 96 times per day. Each check creates a context switch that takes 5–15 minutes to recover from in terms of deep focus. Even if each check only lasts 30 seconds, the cognitive cost of the interruption far exceeds the time spent on it. Your digital environment isn't just stealing minutes — it's stealing hours of effective focus."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The highest-ROI digital change:</strong> Turn off all non-essential notifications. Every single one. Leave only phone calls and messages from people who genuinely need to reach you in real-time. This single change eliminates dozens of daily interruptions and reclaims hours of focus. Most people resist this change because they fear missing something. After a week, they realize they miss nothing — and gain everything.</p>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Your social environment.</strong> The people you spend the most time with shape your standards, your expectations, and your behavior — often more than you realize. This isn't about cutting people out of your life. It's about seeing the influence clearly and making conscious choices about who gets your time."
-          },
-          {
-            "type": "prose",
-            "html": "There's a well-known observation that you become the average of the five people you spend the most time with. Whether or not the math is literal, the principle is sound. If the people around you operate at a high level, their standards become your baseline. If they operate without direction or discipline, their patterns quietly become your norm."
-          },
-          {
-            "type": "prose",
-            "html": "You don't need to make dramatic social changes today. But you do need to see the pattern honestly. Which relationships support your direction? Which ones are neutral? And which ones consistently pull you toward old defaults — the ones you identified on Day 3?"
           }
         ]
       },
@@ -925,10 +591,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Want to work out in the morning? Sleep in your workout clothes and put your shoes by the bed. Want to stop checking social media? Delete the apps from your phone and only access them from a browser. Want to eat better? Don't keep junk food in the house. Want to read more? Put a book on your pillow."
-          },
-          {
-            "type": "prose",
-            "html": "Each of these changes is small. None require discipline in the moment. But they fundamentally alter the probability of the right behavior happening — because they change the default path. When the right behavior is the easiest behavior, consistency becomes almost automatic."
           }
         ]
       }
@@ -967,10 +629,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 7.",
     "closingParagraphs": [
-      "You've spent six days building from the inside out — direction, structure, awareness, discipline, tracking. Today you shaped the outside to match. The environment now supports the system instead of fighting it.",
-      "This is the Law of Correspondence in action: your outer world is beginning to reflect the inner system you've been building. A clean workspace, a controlled phone, conscious social choices — these aren't just nice-to-haves. They're structural reinforcements that make every other component work better.",
-      "Tomorrow is your first structured review — Day 7. You have six days of data, six installed components, and a clear picture of where you stand. You'll look at what's working, what's slipping, and what needs to be adjusted before Phase II begins.",
-      "<strong>Complete your evening close-out and log today. Tomorrow, we assess the full picture.</strong>"
+      "You've spent six days building from the inside out — direction, structure, awareness, discipline, tracking. Today you shaped the outside to match. The environment now supports the system instead of fighting it."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 7",
@@ -986,9 +645,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Six components installed in six days. Direction, structure, defaults mapped, non-negotiables set, tracker live, environment redesigned. Today you step back, look at the actual data, and assess what's holding, what's slipping, and what needs to change.",
     "principleLabel": "The Law of Feedback",
     "principleParagraphs": [
-      "Success is not a straight line. It's a continuous process of action, feedback, and correction. The people who achieve the most are not the ones who execute perfectly — they're the ones who review honestly, adjust quickly, and keep moving.",
-      "Without feedback, even the best system drifts off course. A ship crossing the ocean is off course more than 90% of the time — it arrives at its destination not through perfect navigation, but through <strong>continuous small corrections based on real-time data</strong>.",
-      "Your review today is that correction. The data doesn't judge you. It informs you."
+      "Success is not a straight line. It's a continuous process of action, feedback, and correction. The people who achieve the most are not the ones who execute perfectly — they're the ones who review honestly, adjust quickly, and keep moving."
     ],
     "sections": [
       {
@@ -1001,14 +658,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Most people skip reviews. They feel like they already know how the week went based on how they feel about it. But feelings are unreliable data. You might feel like the week was a failure because you missed two non-negotiables — while the data shows you completed 85% of them, followed your structure on five out of six days, and logged every single day in the tracker."
-          },
-          {
-            "type": "prose",
-            "html": "Conversely, you might feel like things went well because yesterday was a good day — while the data shows a pattern of strong starts followed by mid-week collapses. <strong>The review replaces feelings with facts.</strong> It's the most valuable 15 minutes you'll spend in the entire program."
-          },
-          {
-            "type": "prose",
-            "html": "Get used to this. Reviews are the mechanism that turns a temporary program into a permanent operating system. They're what separate people who complete things from people who just start them."
           }
         ]
       },
@@ -1022,22 +671,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Direction check.</strong> Read your Day 1 direction statement out loud. Does it still feel right? Does it still create clarity when you read it? Is it specific enough to guide daily decisions? After six days of experience, you may see ways to sharpen it. Not change it fundamentally — sharpen it. The direction should get clearer over time, not vaguer."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Structure check.</strong> How many of the six days did you follow your three anchors? Morning sequence, core execution block, evening close-out — which ones held and which ones slipped? More importantly: <em>why</em> did they slip? Was the structure too ambitious? Was there a recurring disruption you didn't account for? Did you fall back into a default pattern?"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Non-negotiable check.</strong> Look at your tracker data. What's your completion rate across the week? Which non-negotiables did you hit consistently and which ones did you miss? If you missed the same one multiple times, that's a signal — either the non-negotiable needs to be simplified, or there's a default pattern (Day 3) that's overpowering it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Default check.</strong> Did any of the patterns you identified on Day 3 reassert themselves this week? How did you respond when they showed up? This is important data for the rest of the program — your defaults don't disappear because you identified them. They fade gradually as your new patterns strengthen."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Environment check.</strong> Did the environmental changes you made yesterday help? Were there moments where your environment still undermined your system? Are there additional changes that would reduce friction further?"
           },
           {
             "type": "callout",
@@ -1055,23 +688,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "If your biggest issue was missing your morning sequence, the adjustment might be: \"set my alarm 15 minutes earlier\" or \"prepare my morning the night before.\" If your biggest issue was breaking your core execution block for phone checks, the adjustment might be: \"phone stays in another room during core block, starting tomorrow.\""
-          },
-          {
-            "type": "prose",
-            "html": "One change is enough because it's sustainable. Trying to fix everything at once is the same trap as having too many non-negotiables — it spreads your focus too thin and nothing actually changes. One targeted adjustment, implemented with discipline, creates more improvement than five adjustments implemented halfheartedly."
-          }
-        ]
-      },
-      {
-        "title": "Writing your status report",
-        "content": [
-          {
-            "type": "prose",
-            "html": "The final step of your review is a brief written summary — 3–5 sentences that capture where you are right now. Think of it as a status report to yourself. What's working. What's struggling. What you're adjusting. Where you are compared to Day 1."
-          },
-          {
-            "type": "prose",
-            "html": "This becomes part of your installation record. On Day 14 and Day 21, you'll look back at this report and see how far you've come. The value of the report isn't in the writing — it's in the comparison over time."
           }
         ]
       }
@@ -1106,10 +722,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 8.",
     "closingParagraphs": [
-      "Phase I is complete. In seven days, you've gone from zero structure to a functioning daily operating system with direction, rhythm, discipline, tracking, and environmental support. That's not nothing. That's the foundation everything else builds on.",
-      "Tomorrow you enter Phase II — Reconstruct. The foundation is stable. Now we go deeper. You'll work on identity, priorities, habit architecture, energy management, decision-making, and system simplification. The system stops being something you maintain through effort and starts becoming something that runs because it's <em>who you are</em>.",
-      "Phase I asked: can you build a structure and follow it? Phase II asks: can you make that structure a permanent part of how you operate?",
-      "<strong>Rest tonight. Review your status report. Tomorrow, Phase II begins with the most important question of the entire program: who are you?</strong>"
+      "Phase I is complete. In seven days, you've gone from zero structure to a functioning daily operating system with direction, rhythm, discipline, tracking, and environmental support. That's not nothing. That's the foundation everything else builds on."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 8",
@@ -1125,9 +738,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Phase II begins. Your system is stable — you have structure, discipline, and tracking in place. But structure alone won't hold long-term. What holds is identity. Today you define who you are becoming, and let your behavior follow from that decision.",
     "principleLabel": "The Law of Belief",
     "principleParagraphs": [
-      "Whatever you believe with conviction becomes your reality. You do not believe what you see — you see what you already believe. Your beliefs act as filters, shaping what you notice, what you attempt, and what you achieve.",
-      "This is why two people with identical circumstances can produce completely different results. One believes they're capable and acts accordingly. The other believes they're limited and acts accordingly. Both are right — because <strong>belief drives behavior, and behavior produces results that confirm the belief</strong>.",
-      "The most powerful belief you hold is the belief about who you are — your identity. Change that belief, and everything downstream changes with it."
+      "Whatever you believe with conviction becomes your reality. You do not believe what you see — you see what you already believe. Your beliefs act as filters, shaping what you notice, what you attempt, and what you achieve."
     ],
     "sections": [
       {
@@ -1140,18 +751,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Identity closes that gap. When you internalize a clear picture of who you are — not who you hope to become someday, but who you're choosing to be starting now — the behavior stops requiring effort. It becomes consistent with your self-concept. You don't have to force yourself to follow the morning sequence. You follow it because that's what someone like you does."
-          },
-          {
-            "type": "prose",
-            "html": "This is not positive thinking or visualization. It's a well-documented psychological mechanism. Your subconscious mind works continuously to maintain consistency between your self-concept and your actions. If you see yourself as \"not a morning person,\" your brain will generate resistance every time the alarm goes off. If you see yourself as \"someone who starts the day deliberately,\" the same alarm triggers a completely different internal response."
-          },
-          {
-            "type": "prose",
-            "html": "Most people try to build habits first and hope the identity follows. It rarely does. The person who forces themselves to exercise for 30 days but still sees themselves as \"not athletic\" will eventually stop. The person who decides \"I am someone who takes care of their body\" and then starts exercising has a completely different trajectory — because the identity supports the behavior instead of fighting it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Identity is the root system. Habits are the branches.</strong> When the root is healthy, the branches grow naturally. When the root is misaligned, every branch requires artificial support."
           }
         ]
       },
@@ -1165,14 +764,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "The key word is <em>present tense</em>. \"I am...\" not \"I will be...\" This isn't dishonesty — it's a decision. You're choosing to operate as this person starting now, even if the fit isn't perfect yet. The gap between the statement and your current reality is your growth edge. Every day you act consistently with the statement, the gap narrows."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Make it behavioral.</strong> Don't describe feelings or abstract qualities. Describe what this person <em>does</em>. \"I am disciplined\" is abstract. \"I follow my structure, complete my priorities, and review my day honestly\" is behavioral. The behavioral version gives your brain a script to follow. The abstract version gives it nothing."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Make it yours.</strong> This isn't a quote from a book or a copy of someone else's identity. It's a reflection of your specific direction, your specific priorities, and your specific system. Two people with different directions should have different identity statements."
           },
           {
             "type": "example",
@@ -1209,29 +800,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "When you follow your morning sequence, you're casting a vote for \"I am someone who starts deliberately.\" When you complete your non-negotiables, you're casting a vote for \"I am disciplined.\" When you do your evening close-out, you're casting a vote for \"I take my system seriously.\" Each vote is small on its own. But they accumulate. And eventually, the accumulated votes create a new self-concept that's so strong, the behavior becomes effortless."
           },
           {
-            "type": "prose",
-            "html": "This is the Law of Accumulation applied to identity. You don't transform overnight. You transform through hundreds of small, consistent actions that gradually rewrite your belief about who you are."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The gap is the growth edge:</strong> There will be a gap between your identity statement and your current behavior. That's not a problem — it's the entire point. The gap is where growth happens. Your job is not to eliminate the gap immediately. It's to close it a little more every day by acting consistently with the identity you've chosen. The tracker data from Phase I is evidence that you've already started.</p>"
-          }
-        ]
-      },
-      {
-        "title": "Connecting identity to direction",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Your identity statement should naturally produce your direction. If your identity describes someone who is disciplined, deliberate, and consistent — and your direction describes operating with structure and completing priorities — the two align. The identity is the cause. The direction is the effect."
-          },
-          {
-            "type": "prose",
-            "html": "Read them side by side. If the person described in your identity statement would naturally produce the behaviors described in your direction statement, they're aligned. If there's a disconnect — if the identity describes one kind of person but the direction requires a different kind of behavior — something needs to be adjusted."
-          },
-          {
-            "type": "prose",
-            "html": "This alignment is what makes Phase II different from Phase I. In Phase I, you followed the system because you committed to it. In Phase II, you follow the system because it's consistent with who you've decided to be. The motivation shifts from external (\"I said I would\") to internal (\"this is who I am\"). That shift is what makes the system permanent."
           }
         ]
       }
@@ -1269,10 +839,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 9.",
     "closingParagraphs": [
-      "You now have direction, structure, and an identity to operate from. This changes the nature of discipline entirely. It's no longer about forcing yourself to do things you don't want to do. It's about being consistent with who you've decided to be.",
-      "When resistance shows up — and it will — you now have a question to ask that's more powerful than \"should I do this?\": <strong>Is this what the person I've decided to be would do?</strong> That question cuts through every excuse, every rationalization, every moment of weakness. Not because it's motivating — because it's clarifying.",
-      "Tomorrow, we sharpen your focus further. You've defined who you are. Now you define what matters most — because the person you've described can't give energy to everything. Concentration is the multiplier.",
-      "<strong>Read your identity statement tonight. Let it settle. Tomorrow, we build your priority architecture.</strong>"
+      "You now have direction, structure, and an identity to operate from. This changes the nature of discipline entirely. It's no longer about forcing yourself to do things you don't want to do. It's about being consistent with who you've decided to be."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 9",
@@ -1288,9 +855,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You've defined who you are. Now you define what matters most. Because the person you described yesterday can't give equal energy to everything — and treating everything as equally important is the fastest way to make progress on nothing.",
     "principleLabel": "The Law of Concentration",
     "principleParagraphs": [
-      "The ability to concentrate single-mindedly on the most important thing and stay with it until it is complete is the essential quality of high achievement. Scattered effort produces scattered results.",
-      "Most people spread their energy across too many areas — career, health, relationships, finances, hobbies, learning, side projects — and end each week feeling like they barely moved on any of them. The problem isn't effort. The problem is <strong>diffusion</strong>.",
-      "Concentration means choosing fewer things and going deeper on them. It means accepting that some important areas of your life will be on maintenance mode while you focus intensely on the ones that matter most right now."
+      "The ability to concentrate single-mindedly on the most important thing and stay with it until it is complete is the essential quality of high achievement. Scattered effort produces scattered results."
     ],
     "sections": [
       {
@@ -1303,14 +868,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "You can't. This isn't a motivational claim — it's a cognitive reality. Your brain is designed for sequential focus, not parallel processing. When you try to focus on five priorities at once, you're not focusing on five things — you're rapidly switching between them, losing efficiency with every switch, and making meaningful progress on none."
-          },
-          {
-            "type": "prose",
-            "html": "This is why so many people feel busy but unproductive. They're not lazy. They're diluted. Their energy is spread so thin across so many \"priorities\" that none of them receive the concentrated attention required for real progress."
-          },
-          {
-            "type": "prose",
-            "html": "The fix is not working harder. It's <strong>choosing fewer things and giving them more</strong>."
           }
         ]
       },
@@ -1326,20 +883,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "<strong>Step 1: List your life domains.</strong> Write down every area of your life that competes for your attention. Be comprehensive. Most people have 6–10: career/work, health/fitness, relationships, finances, personal development, creative projects, education, social life, family, spirituality, hobbies. Get them all on paper."
           },
           {
-            "type": "prose",
-            "html": "<strong>Step 2: Choose your top 3.</strong> This is the hard part — and the most valuable. Look at your list and ask: if I could only make real progress in 3 of these areas over the next 14 days, which 3 would create the most meaningful impact on my direction and my life? Those are your active priorities. Everything else goes on the maintenance list."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The maintenance list is not a failure.</strong> Putting an area on maintenance doesn't mean you're abandoning it. It means you're handling it — keeping it functional — without investing concentrated creative energy in it during this period. Your health doesn't need to be a top-3 priority if your basic habits are already working. Your finances don't need concentrated attention if they're stable. The maintenance list is permission to stop trying to advance everything simultaneously.</p>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 3: Define one clear outcome for each priority.</strong> Not \"improve my health\" — that's a direction, not an outcome. \"Exercise 4 times per week and prepare meals in advance for the next 14 days.\" Specific. Measurable. Tied to behavior you control. For each of your top 3, write one sentence that describes what success looks like by Day 21."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 4: Create your \"not now\" list.</strong> Write down everything that didn't make the top 3. This serves two purposes. First, it acknowledges that these areas matter — you're not pretending they don't exist. Second, it gives your brain permission to stop worrying about them. One of the biggest energy drains is the guilt of not working on things you think you should be working on. The \"not now\" list resolves this by making the deferral explicit and intentional."
           }
         ]
       },
@@ -1355,10 +900,6 @@ export const LESSON_DATA: LessonData[] =
             "html": "If yes, consider it. If no, decline it or defer it. This sounds simple, and it is — but it requires practice, because most people are conditioned to say yes by default. They accept meetings, take on projects, agree to social commitments, and volunteer for things that have nothing to do with their actual priorities — because saying no feels uncomfortable."
           },
           {
-            "type": "prose",
-            "html": "The priority filter makes saying no easier, because it's not personal — it's structural. You're not saying \"I don't want to.\" You're saying \"this doesn't serve my current priorities.\" That distinction matters psychologically. It shifts the refusal from a character judgment to a system decision."
-          },
-          {
             "type": "example",
             "variant": "weak",
             "tag": "No filter",
@@ -1371,23 +912,6 @@ export const LESSON_DATA: LessonData[] =
             "tag": "Focused stack",
             "quote": "\"My top 3 for the next 14 days: (1) Career — complete the project milestone by Day 18. (2) Health — train 4x/week and meal prep Sundays. (3) Personal development — follow the Structured Achievement system with 100% consistency. Everything else is on maintenance.\"",
             "note": "Three priorities, each with a clear outcome. This person will make visible, measurable progress on all three because their energy is concentrated."
-          }
-        ]
-      },
-      {
-        "title": "Priorities and identity alignment",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Your top 3 priorities should align with the identity you defined yesterday. If your identity statement describes someone who is disciplined and career-focused, your priorities should reflect career and self-management. If your identity describes someone who values health and family, your priorities should reflect those domains."
-          },
-          {
-            "type": "prose",
-            "html": "When identity, direction, and priorities are all aligned, you get a level of focus and clarity that most people never experience. Every decision becomes simple. Every day has a clear purpose. Energy stops leaking into areas that don't matter right now, and concentrates on the areas that do."
-          },
-          {
-            "type": "prose",
-            "html": "This is the compound effect of Phase II. Each component — identity, priorities, habits — connects to and reinforces the others. By the end of this week, your system won't just be a set of external structures. It will be an integrated operating model that aligns who you are, what you focus on, and what you do every day."
           }
         ]
       }
@@ -1426,9 +950,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 10.",
     "closingParagraphs": [
-      "You now have direction, identity, and a focused priority stack. These three together form the strategic core of your operating system. They answer the three most important questions: where am I going, who am I being, and what deserves my concentrated energy?",
-      "Everything from here is tactical — the specific habits, routines, and systems that translate strategy into daily action. Tomorrow, you design the exact habits that turn your priorities into automatic daily behavior.",
-      "<strong>From today forward, every decision gets filtered through your top 3 priorities. If it doesn't serve them, it waits. That's not selfish — that's strategic.</strong>"
+      "You now have direction, identity, and a focused priority stack. These three together form the strategic core of your operating system. They answer the three most important questions: where am I going, who am I being, and what deserves my concentrated energy?"
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 10",
@@ -1444,9 +966,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You know who you are, what you're focused on, and what your priorities demand. Now you build the specific habits that turn all of it into daily action — the behavioral machinery that executes your strategy automatically.",
     "principleLabel": "The Law of Practice",
     "principleParagraphs": [
-      "Any thought, feeling, or behavior that you repeat often enough eventually becomes automatic. It requires no further effort, no conscious decision, and no willpower. It simply runs.",
-      "This is both the power and the danger of habit. The same mechanism that makes destructive patterns automatic can make constructive ones automatic too. The Law of Practice doesn't care about the content of the habit — only the repetition.",
-      "<strong>Your job is not to develop willpower. Your job is to practice the right behaviors until they no longer require willpower.</strong>"
+      "Any thought, feeling, or behavior that you repeat often enough eventually becomes automatic. It requires no further effort, no conscious decision, and no willpower. It simply runs."
     ],
     "sections": [
       {
@@ -1459,18 +979,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "A keystone habit is one that creates a chain reaction. When you do it, other positive behaviors follow naturally — not because you planned them, but because the keystone habit shifts your state, your momentum, or your environment in a way that makes the next good choice easier."
-          },
-          {
-            "type": "prose",
-            "html": "Exercise is a classic keystone habit. People who exercise regularly tend to eat better, sleep better, be more productive at work, and report higher life satisfaction — not because exercise directly causes all of those things, but because the discipline and energy from exercise ripples outward into other areas."
-          },
-          {
-            "type": "prose",
-            "html": "A morning planning session is another. When you start the day by reviewing your priorities and setting your top 3 tasks, you tend to make better decisions throughout the day, waste less time on low-value activities, and end the day with a stronger sense of accomplishment."
-          },
-          {
-            "type": "prose",
-            "html": "You don't need ten habits. You need <strong>the right two or three</strong> — the ones that are directly connected to your top priorities and that create the strongest positive ripple effect."
           }
         ]
       },
@@ -1484,14 +992,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Cue</strong> — the trigger that initiates the behavior. This can be a time (\"after I wake up\"), a location (\"when I sit at my desk\"), a preceding action (\"after I finish my morning coffee\"), or an emotional state (\"when I feel the urge to procrastinate\"). The more specific the cue, the more automatic the habit becomes. Vague cues produce vague habits."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Routine</strong> — the behavior itself. This is the part most people focus on exclusively, which is why their habits fail. The routine matters, but it's the cue and reward that determine whether the routine actually happens consistently. Keep the routine small — especially at first. A 10-minute workout is better than a planned 60-minute session that you skip. You can always scale up after the habit is automatic. <strong>Right now, consistency beats intensity.</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Reward</strong> — the payoff that tells your brain \"this was worth doing — do it again.\" The reward doesn't need to be elaborate. The satisfaction of checking the habit off in your tracker is often sufficient. A moment of acknowledgment — \"I did what I said I would\" — is a reward. The key is that the brain must associate the routine with a positive outcome, or it won't repeat it."
           },
           {
             "type": "callout",
@@ -1523,27 +1023,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "For each of your priorities, ask: <strong>what is the one daily behavior that, if done consistently, would make the biggest difference?</strong> That's your candidate keystone habit. For a career priority, it might be \"60 minutes of deep work on my most important project before checking email.\" For a health priority, it might be \"20-minute workout before 8 AM.\" For a personal development priority, it might be \"15 minutes of focused learning during lunch.\""
-          },
-          {
-            "type": "prose",
-            "html": "Choose 2–3. Not more. Each additional habit reduces the probability of consistently doing all of them. You're not building a perfect daily routine — you're installing the minimum number of high-impact behaviors that drive your priorities forward."
-          }
-        ]
-      },
-      {
-        "title": "Stacking habits onto existing anchors",
-        "content": [
-          {
-            "type": "prose",
-            "html": "The most effective way to install a new habit is to attach it to something you already do consistently. This is called habit stacking, and it works because the existing behavior serves as a reliable, automatic cue."
-          },
-          {
-            "type": "prose",
-            "html": "You already have built-in anchors: your morning sequence, your core execution block, your evening close-out. These are perfect attachment points. \"After my morning sequence, I [new habit].\" \"Before my evening close-out, I [new habit].\" The existing structure carries the new behavior until it becomes automatic on its own."
-          },
-          {
-            "type": "prose",
-            "html": "This is why we built structure before habits. The structure provides the scaffold. The habits attach to it. Without structure, habits float — they have no reliable trigger, no consistent context, and no stable routine to anchor to."
           }
         ]
       }
@@ -1578,10 +1057,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 11.",
     "closingParagraphs": [
-      "You've now bridged the gap between strategy and execution. Your system has a strategic layer — direction, identity, priorities — and an operational layer — structure, non-negotiables, keystone habits, tracking. The two layers are connected: the strategy determines what the operations focus on, and the operations produce the results that validate the strategy.",
-      "This is the architecture of a real personal operating system. Not a collection of good intentions. Not a productivity hack. A complete system with strategic clarity driving daily mechanical execution.",
-      "Tomorrow, we address the fuel behind all of it — your energy. Because the best system in the world produces nothing if you don't have the energy to run it.",
-      "<strong>Run your new keystone habits tomorrow. They don't need to be perfect. They need to happen. Consistency is the installation mechanism.</strong>"
+      "You've now bridged the gap between strategy and execution. Your system has a strategic layer — direction, identity, priorities — and an operational layer — structure, non-negotiables, keystone habits, tracking. The two layers are connected: the strategy determines what the operations focus on, and the operations produce the results that validate the strategy."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 11",
@@ -1597,9 +1073,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You have a system, habits, and priorities. But none of it runs without fuel. Today you learn to work with your natural energy cycles instead of fighting against them — because effort without energy management is just burnout with better intentions.",
     "principleLabel": "The Law of Applied Effort",
     "principleParagraphs": [
-      "All meaningful achievement requires the sustained application of effort in a concentrated direction. But the law has a qualifier most people miss: <em>sustained</em>. Not explosive. Not heroic. Sustained.",
-      "Sustainability requires energy management. You cannot sustain effort if you're running on empty. You cannot concentrate if your brain is foggy. You cannot execute at a high level during your lowest-energy hours and expect the same results as during your peak.",
-      "<strong>Working hard is not the same as working smart. Working smart means applying maximum effort at the times when your energy makes that effort most productive.</strong>"
+      "All meaningful achievement requires the sustained application of effort in a concentrated direction. But the law has a qualifier most people miss: <em>sustained</em>. Not explosive. Not heroic. Sustained."
     ],
     "sections": [
       {
@@ -1612,14 +1086,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Consider a task like writing a report or solving a complex problem. At peak energy — when your mind is sharp, your focus is clear, and your cognitive reserves are full — you might complete it in 90 minutes with excellent quality. At low energy — after a heavy lunch, during an afternoon slump, or at the end of an exhausting day — the same task might take 3 hours and produce mediocre output."
-          },
-          {
-            "type": "prose",
-            "html": "That's not a small difference. That's a 2x–3x multiplier based on energy alone. <strong>If you're doing your most important work during your lowest-energy windows, you're operating at a fraction of your capability</strong> — not because you lack skill or discipline, but because you've misaligned effort with energy."
-          },
-          {
-            "type": "prose",
-            "html": "Once you understand your own energy pattern, you can restructure your day so that important work happens during peak energy, routine work happens during mid-energy, and rest happens during valleys. Same number of hours. Dramatically different output."
           }
         ]
       },
@@ -1633,14 +1099,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Peak windows</strong> are your golden hours. This is when your prefrontal cortex — the part of your brain responsible for complex thinking, decision-making, and creative work — is functioning at its highest level. Your most demanding work belongs here: deep thinking, strategic planning, creative projects, critical decisions, anything requiring sustained concentration."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Mid-energy windows</strong> are your workhorse hours. Cognitive function is good but not exceptional. This is ideal for structured work: meetings, communication, routine tasks, administrative work, and collaborative activities. Important but not requiring peak performance."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Low-energy valleys</strong> are your recovery windows. Cognitive function is reduced and willpower is depleted. Fighting through these with caffeine and determination is a losing strategy — you'll produce poor work and drain yourself further. Instead, use these windows for genuine rest: light admin, a walk, a screen-free break, or simple physical tasks."
           },
           {
             "type": "callout",
@@ -1658,44 +1116,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "To map your pattern, you don't need a scientific study. You need honest observation. Think about the past week: When did you feel most alert and capable? When did you feel foggy or distracted? When did ideas flow? When did everything feel like effort?"
-          },
-          {
-            "type": "prose",
-            "html": "Once you see the pattern, compare it to your current daily structure. Is your core execution block aligned with your peak energy? If it's during a valley or mid-energy window, you're leaving significant performance on the table. Today's adjustment might be the single highest-leverage change in the entire program."
-          }
-        ]
-      },
-      {
-        "title": "Building recovery into the structure",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Recovery is not laziness. It is a structural requirement of sustained high performance. Every elite athlete builds recovery into their training schedule — not as a reward for hard work, but as a necessary component of the process. Mental work follows the same principle."
-          },
-          {
-            "type": "prose",
-            "html": "Your daily structure should include at least one intentional recovery point. Not scrolling your phone — that's stimulation, not recovery. Not watching TV — that's distraction, not restoration. Actual recovery: a walk with no headphones, a meal eaten without screens, a 20-minute nap, quiet time in a different environment, or simple physical activity."
-          },
-          {
-            "type": "prose",
-            "html": "The people who produce the most over long periods are not the ones who push hardest every hour. They're the ones who <strong>alternate between intense focus and genuine recovery</strong>, creating a rhythm that can be sustained indefinitely rather than a sprint that leads to burnout."
-          }
-        ]
-      },
-      {
-        "title": "Sleep as the foundation",
-        "content": [
-          {
-            "type": "prose",
-            "html": "No discussion of energy management is complete without addressing sleep. Sleep is not optional time you borrow from for productivity. It is the single most important factor in your cognitive performance, emotional regulation, and physical recovery."
-          },
-          {
-            "type": "prose",
-            "html": "Research consistently shows that sleeping less than 7 hours reduces cognitive performance by 20–30%. Decision quality drops. Creative thinking diminishes. Emotional reactivity increases. Willpower depletes faster. Every component of your system — structure, habits, non-negotiables, tracking — is harder to maintain when you're sleep-deprived."
-          },
-          {
-            "type": "prose",
-            "html": "If you're consistently sleeping less than 7 hours, that is almost certainly the single biggest lever you can pull for system improvement. Not a new habit. Not a better morning routine. Sleep. Everything else gets easier when this foundation is solid."
           }
         ]
       }
@@ -1734,9 +1154,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 12.",
     "closingParagraphs": [
-      "Energy is the multiplier that makes everything else in your system more effective. The same structure, habits, and priorities — performed at the right energy levels — produce dramatically better results with less strain.",
-      "Tomorrow, we strip the system back to essentials. You've been building for 11 days. Some of what you've built is driving real results. Some of it may be adding weight without adding value. It's time to audit honestly and eliminate everything that isn't earning its place.",
-      "<strong>Pay attention to your energy tomorrow. Notice when you're sharp and when you're drained. Run your most important work during your peak. Let the valleys be valleys. The system works with your biology, not against it.</strong>"
+      "Energy is the multiplier that makes everything else in your system more effective. The same structure, habits, and priorities — performed at the right energy levels — produce dramatically better results with less strain."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 12",
@@ -1752,9 +1170,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "You've been building for 11 days — adding components, installing habits, expanding your system. Today you do the opposite. You strip everything back to what actually works and remove everything that doesn't earn its place.",
     "principleLabel": "The Law of Forced Efficiency",
     "principleParagraphs": [
-      "There is never enough time to do everything, but there is always enough time to do the most important thing. When you accept this fully, you stop trying to fit everything in and start making hard choices about what truly deserves your energy.",
-      "Forced efficiency is what happens when you impose constraints deliberately. Paradoxically, doing less — but doing it with full focus — produces more results than doing everything at half capacity.",
-      "<strong>Simplification is not a retreat. It's an engineering decision.</strong> You're removing parts that create friction so the parts that drive results can work without resistance."
+      "There is never enough time to do everything, but there is always enough time to do the most important thing. When you accept this fully, you stop trying to fit everything in and start making hard choices about what truly deserves your energy."
     ],
     "sections": [
       {
@@ -1767,10 +1183,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Think about where you are right now. Over 11 days, you've installed: a direction statement, daily indicators, a three-anchor structure, pattern awareness, non-negotiables, a tracker, environmental changes, an identity statement, a priority stack, keystone habits, and energy management. That's substantial infrastructure."
-          },
-          {
-            "type": "prose",
-            "html": "Some of it is probably working brilliantly. Some may be creating friction without adding value. And some may have been quietly abandoned — it faded because there was too much to maintain. <strong>Complexity is the enemy of consistency.</strong> Today you cut back to what works."
           }
         ]
       },
@@ -1784,14 +1196,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Is it active?</strong> Am I actually doing this daily, or has it become something I think about but don't execute? A component that exists in theory but not in practice is dead weight. Either recommit or remove it. Carrying dead commitments is worse than having fewer commitments — the dead ones create guilt without producing results."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Is it producing results?</strong> Can I point to a specific positive outcome from this component? Does my tracker data show improvement connected to it? If a habit has been running for a week without visible impact, it might be targeting the wrong leverage point."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Could it be simpler?</strong> A 45-minute morning routine completed 60% of the time is less effective than a 15-minute version completed every day. A 5-item non-negotiable list hit 3 out of 5 is less valuable than a 3-item list hit 100%. Look for complexity you can strip without losing the core value."
           },
           {
             "type": "callout",
@@ -1823,23 +1227,6 @@ export const LESSON_DATA: LessonData[] =
             "tag": "Lean and effective",
             "quote": "\"3 non-negotiables, 2 keystone habits, a 20-minute morning sequence, 3 priorities, 2-minute evening log. Everything fits on one page. I never feel overwhelmed by the system itself.\"",
             "note": "Lean enough to maintain indefinitely. Simple enough that the system disappears into the background and the work takes center stage."
-          }
-        ]
-      },
-      {
-        "title": "The art of elimination",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Eliminating something you've built feels like failure. It's not. It's data-driven iteration. The most successful companies in the world constantly kill features, products, and initiatives that aren't producing results — not because they were bad ideas, but because maintaining them costs more than they return."
-          },
-          {
-            "type": "prose",
-            "html": "Your system follows the same principle. Every component has a cost (time, energy, attention) and a return (progress toward your direction). If the cost exceeds the return, the component goes — regardless of how good it sounded when you created it."
-          },
-          {
-            "type": "prose",
-            "html": "This is the Law of Forced Efficiency in practice. By constraining your system to only what works, you force every remaining component to carry its weight. The result is a leaner, faster, more consistent operating system."
           }
         ]
       }
@@ -1877,10 +1264,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 13.",
     "closingParagraphs": [
-      "Your system should feel lighter now. Not weaker — leaner. Every component that remains has earned its place through 12 days of real use and honest evaluation.",
-      "This is a skill you'll use permanently. Every month, every quarter, the system needs to be audited and simplified. What worked last month might not work next month. What mattered three months ago might not matter now. The willingness to eliminate is what keeps the system alive and relevant.",
-      "Tomorrow, you build a framework for making decisions faster — so you stop wasting energy on choices you could resolve once and never think about again.",
-      "<strong>Less is not a compromise. Less done consistently is the entire strategy.</strong>"
+      "Your system should feel lighter now. Not weaker — leaner. Every component that remains has earned its place through 12 days of real use and honest evaluation."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 13",
@@ -1896,9 +1280,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "One of the biggest drains on your energy and focus isn't bad decisions — it's unmade ones. The same choices recycling through your mind every day, never fully resolved. Today you create rules that decide for you, freeing your brain for the decisions that actually matter.",
     "principleLabel": "The Law of Determination",
     "principleParagraphs": [
-      "Decisiveness is a characteristic of all high-performing men and women. Almost any decision is better than no decision at all. The habit of making decisions quickly and changing them slowly is a hallmark of people who achieve extraordinary things.",
-      "Most people do the opposite. They make decisions slowly — or not at all — and change them quickly when discomfort arises. This creates a life of chronic indecision, where energy is consumed not by action but by <strong>the endless deliberation about whether to act</strong>.",
-      "Decision rules eliminate this drain. When you pre-decide your response to recurring situations, you free enormous mental capacity for the decisions that genuinely require your judgment."
+      "Decisiveness is a characteristic of all high-performing men and women. Almost any decision is better than no decision at all. The habit of making decisions quickly and changing them slowly is a hallmark of people who achieve extraordinary things."
     ],
     "sections": [
       {
@@ -1911,14 +1293,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Each of these seems trivial. But research on decision fatigue shows that the cumulative cost is enormous. By mid-afternoon, most people have made hundreds of micro-decisions and have significantly depleted their cognitive resources. The quality of their decisions drops. Their willpower weakens. They default to whatever is easiest rather than whatever is best."
-          },
-          {
-            "type": "prose",
-            "html": "This is why you make great food choices at 8 AM and terrible ones at 8 PM. It's why you can resist distraction in the morning but cave to your phone in the afternoon. It's not a character flaw — it's a resource problem. Your decision-making capacity is finite, and you've been spending it on choices that don't deserve it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>High performers don't have more willpower. They have fewer decisions.</strong> They've pre-decided. They've built rules that handle the routine automatically, preserving their cognitive energy for the strategic choices that actually require judgment."
           }
         ]
       },
@@ -1932,14 +1306,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Time rules</strong> govern when things happen. \"I never schedule meetings before 11 AM.\" \"I check email twice a day — noon and 5 PM.\" \"I stop working by 9 PM, no exceptions.\" These rules protect your time by eliminating the daily negotiation about how to spend it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Commitment rules</strong> govern what you say yes and no to. \"If it doesn't serve my top 3 priorities, the answer is no.\" \"I don't take on new commitments without sleeping on it first.\" \"If someone asks for a favor that takes more than 30 minutes, I check my capacity before answering.\" These rules protect your energy by preventing overcommitment."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Behavior rules</strong> govern your daily defaults. \"I eat the same breakfast every weekday.\" \"I don't check my phone during meals.\" \"If I'm tempted to skip a non-negotiable, I do a 5-minute version instead of skipping entirely.\" These rules automate the small decisions that would otherwise drain you throughout the day."
           },
           {
             "type": "callout",
@@ -1957,35 +1323,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "The format is simple: <strong>\"If [trigger situation], then [predetermined response].\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "\"If I feel like skipping my workout, then I do 10 minutes minimum.\" The rule doesn't say you have to do the full workout. It says you have to start. And starting is almost always the hardest part — once you're moving, momentum usually carries you further."
-          },
-          {
-            "type": "prose",
-            "html": "\"If someone asks me to take on a task that conflicts with my priorities, then I say 'let me check my schedule and get back to you tomorrow.'\" This creates a buffer between the request and your response, preventing the default \"yes\" that leads to overcommitment."
-          },
-          {
-            "type": "prose",
-            "html": "\"If I'm still working past 9 PM, then I stop immediately and do my evening close-out.\" This prevents the \"just one more thing\" pattern that destroys your sleep schedule and morning routine."
-          },
-          {
-            "type": "prose",
-            "html": "Each if-then rule takes a known failure point and installs an automatic bypass. You don't have to think in the moment. The rule already decided for you."
-          }
-        ]
-      },
-      {
-        "title": "Rules are not rigidity",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Decision rules might sound inflexible. They're not. They're defaults — strong defaults that you follow automatically unless there's a genuine reason not to. The key word is genuine. \"I don't feel like it\" is not a genuine reason. \"There's a legitimate emergency\" is."
-          },
-          {
-            "type": "prose",
-            "html": "The rules handle the 95% of situations that are routine, predictable, and don't require judgment. The other 5% — the genuinely novel, complex, or high-stakes decisions — get your full, undepleted attention. That's the trade. You automate the routine so you can be fully present for the exceptional."
           }
         ]
       }
@@ -2024,9 +1361,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 14.",
     "closingParagraphs": [
-      "You've just eliminated dozens of future energy drains. Every decision rule you created today is one less negotiation with yourself tomorrow, next week, and next month.",
-      "Tomorrow is your midpoint review — Day 14. Two full weeks of building, testing, and refining. You'll assess everything you've installed, recalibrate what needs it, and prepare for the final phase that locks everything in permanently.",
-      "<strong>Notice how many decisions you make tomorrow. Watch for the ones your rules already handle. That automatic efficiency is what compound discipline feels like.</strong>"
+      "You've just eliminated dozens of future energy drains. Every decision rule you created today is one less negotiation with yourself tomorrow, next week, and next month."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 14",
@@ -2042,9 +1377,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Fourteen days in. Halfway through the installation. Today you take the most honest look yet at where you are — what's holding, what's drifting, and what needs to change before the final phase locks everything in for the long term.",
     "principleLabel": "The Law of Flexibility",
     "principleParagraphs": [
-      "Success requires the flexibility to adapt your approach while keeping your goal constant. The direction stays fixed. The methods evolve based on feedback, experience, and changing conditions.",
-      "Rigidity is not discipline — it's fragility. A system that can't adapt to what you've learned over 14 days of real-world testing is a system that will eventually break. <strong>The willingness to recalibrate is what separates a living system from a dead plan.</strong>",
-      "Today you exercise that flexibility deliberately — adjusting what needs adjusting while preserving what's working."
+      "Success requires the flexibility to adapt your approach while keeping your goal constant. The direction stays fixed. The methods evolve based on feedback, experience, and changing conditions."
     ],
     "sections": [
       {
@@ -2057,10 +1390,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Over the past two weeks, you've built and tested: direction, structure, defaults awareness, non-negotiables, tracking, environment, identity, priorities, habits, energy management, simplification, and decision rules. That's twelve distinct components. Some are working well. Some may need significant adjustment. And some may need to be redesigned entirely."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>This is the review where you stop being attached to what you planned and start being honest about what's real.</strong> The plan was a hypothesis. The past 14 days were the experiment. Now you read the results."
           }
         ]
       },
@@ -2074,22 +1403,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Are there specific days of the week where your non-negotiable completion drops? That reveals structural vulnerabilities tied to your schedule."
-          },
-          {
-            "type": "prose",
-            "html": "Is there a specific non-negotiable you consistently miss? That reveals either a design problem (it's too hard) or a priority conflict (something else is winning)."
-          },
-          {
-            "type": "prose",
-            "html": "Do your daily notes show a pattern in mood or energy? Recurring phrases like \"struggled after lunch\" or \"great morning, lost the evening\" reveal energy misalignment."
-          },
-          {
-            "type": "prose",
-            "html": "Did the simplification on Day 12 make a visible difference in your consistency? If your completion rate improved after cutting components, that confirms the system was too heavy."
-          },
-          {
-            "type": "prose",
-            "html": "The data doesn't lie. It doesn't flatter you or make excuses. It just shows you what happened. <strong>Your job is to read it without defensiveness and extract the signal.</strong>"
           }
         ]
       },
@@ -2105,41 +1418,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "<strong>Direction statement.</strong> Read it out loud. Is it still the right target? Has your understanding of what you want deepened or shifted? After 14 days of real experience, you know more about what actually drives you than you did on Day 1. Update if needed — this is healthy evolution, not failure."
           },
           {
-            "type": "prose",
-            "html": "<strong>Identity statement.</strong> Read it alongside your tracker data. Are you living closer to this identity than you were a week ago? The gap should be narrowing. If it's not, either the identity needs to be more grounded or there's a specific behavior pattern blocking the alignment."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Priority stack.</strong> Are your top 3 still the right top 3? Has one been largely addressed? Has a new one emerged? Priorities can and should shift as you make progress. Keeping a completed priority in the active stack wastes the focus that could go to the next one."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Daily structure.</strong> Is it working? Really? Look at the data, not the plan. If your morning sequence happens 4 out of 7 days, something needs adjusting — either the timing, the content, or the trigger."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Habits and non-negotiables.</strong> What's your actual completion rate? Not your feeling about it — the number. If any item is below 70% completion, it needs to be simplified or replaced."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The recalibration rule:</strong> Change no more than 2–3 things. The goal is targeted adjustment, not a system overhaul. If you change everything, you lose the data comparison. If you change nothing despite clear problems, you're being rigid instead of disciplined. Find the 2–3 adjustments that would produce the biggest improvement and make those only.</p>"
-          }
-        ]
-      },
-      {
-        "title": "Preparing for Phase III",
-        "content": [
-          {
-            "type": "prose",
-            "html": "Phase III — Install — begins tomorrow. Its purpose is to make everything you've built permanent. Accountability, resilience, self-talk mastery, and the review cycles that keep the system running indefinitely."
-          },
-          {
-            "type": "prose",
-            "html": "For Phase III to work, the system entering it needs to be clean, honest, and functional. Not perfect — functional. You should be able to look at your one-page system overview and say: \"I am doing most of this most days, and the parts I'm not doing have been identified and addressed.\""
-          },
-          {
-            "type": "prose",
-            "html": "If that's true, you're ready. If it's not, today's recalibration is your opportunity to get there. Don't carry known problems into the final phase. Address them now."
           }
         ]
       }
@@ -2173,10 +1453,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 15.",
     "closingParagraphs": [
-      "Phase II is complete. Over the past week, you rebuilt your operating system from the inside out — identity, priorities, habits, energy, simplification, decision-making, and now a thorough recalibration. The system is no longer being held together by effort alone. It has real architecture.",
-      "The final phase starts tomorrow. Phase III is about permanence — accountability structures, resilience protocols, mastering your internal dialogue, and building the review cycles that keep everything running long after Day 21.",
-      "Phase I asked: can you build a structure? Phase II asked: can you make it yours? Phase III asks: <strong>can you make it last?</strong>",
-      "<strong>You're not the same person who started this 14 days ago. Your tracker proves it. Your system proves it. Now we lock it in.</strong>"
+      "Phase II is complete. Over the past week, you rebuilt your operating system from the inside out — identity, priorities, habits, energy, simplification, decision-making, and now a thorough recalibration. The system is no longer being held together by effort alone. It has real architecture."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 15",
@@ -2192,9 +1469,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Your system works when conditions are good and motivation is high. The real question is: what keeps it running when they're not? Today you build the accountability structure that makes quitting harder than continuing.",
     "principleLabel": "The Law of Responsibility",
     "principleParagraphs": [
-      "You are fully responsible for everything you are, everything you have, and everything you become. No one is coming to rescue you. No external force will make your system work for you. This is the most confronting — and most empowering — truth in the psychology of achievement.",
-      "Accountability is the structural expression of responsibility. It's the mechanism that ensures you follow through on what you've committed to — <strong>not through guilt, but through design</strong>.",
-      "When the system is designed so that following through is easier than quitting, discipline becomes almost effortless. That's the goal today."
+      "You are fully responsible for everything you are, everything you have, and everything you become. No one is coming to rescue you. No external force will make your system work for you. This is the most confronting — and most empowering — truth in the psychology of achievement."
     ],
     "sections": [
       {
@@ -2207,10 +1482,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "The people who look disciplined from the outside aren't running on willpower. They've built structures — environments, commitments, and social contracts — that make the right behavior the default behavior. They don't resist temptation better than you. <strong>They've engineered their lives so they face less temptation.</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "Accountability is the final layer of that engineering. It adds an external force that supports your internal commitment. Not because you're weak. Because you're smart enough to know that even strong people need structure."
           }
         ]
       },
@@ -2224,18 +1495,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Level 1: Self-accountability.</strong> Your tracker, your reviews, your system overview. This is your baseline — you've been building it since Day 1. Self-accountability works well for people with strong internal motivation, but it has a weakness: you can negotiate with yourself. You can rationalize a missed day. You can lower the bar without anyone noticing. That's why it works best when paired with at least one external layer."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Level 2: Social accountability.</strong> Telling someone specific what you're doing and setting up a regular check-in. This could be a partner, a friend, a mentor, or a small group. The social cost of reporting a missed commitment is a powerful motivator — not because of judgment, but because the act of telling someone you fell short makes the falling short more real. It's harder to rationalize when you have to say it out loud."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Level 3: Public accountability.</strong> Making your commitment visible to a broader audience — a social media post, a blog, a community. The leverage here isn't likes or comments. It's the knowledge that others are aware of your commitment. You've made a public promise, and the desire to maintain consistency between your public statements and your private actions is deeply wired into human psychology."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Level 4: Consequence accountability.</strong> Building real stakes into your system. If you miss your non-negotiables for 3 consecutive days, something specific happens — a donation to a cause you don't support, the loss of a privilege, a financial penalty. The consequence has to be meaningful enough that you genuinely want to avoid it, but not so severe that it creates anxiety rather than motivation."
           },
           {
             "type": "callout",
@@ -2253,14 +1512,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Most people, when they miss a day, enter a shame spiral. \"I missed yesterday, so what's the point? I'll start again Monday. Actually, next month.\" One missed day becomes a week. A week becomes a month. The system is abandoned not because of the miss, but because of the story about the miss."
-          },
-          {
-            "type": "prose",
-            "html": "A failure protocol prevents this. It's a pre-decided response to a missed day: specific, immediate, and non-negotiable. Something like: \"If I miss a day, I do my full morning sequence the next morning plus a 5-minute review of what happened and why. No skipping two days in a row. Ever.\""
-          },
-          {
-            "type": "prose",
-            "html": "The protocol works because it turns a potential crisis into a planned variation. The miss is acknowledged, the response is executed, and the system resumes. No drama. No spiral. Just a correction and a continuation."
           }
         ]
       }
@@ -2294,9 +1545,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 16.",
     "closingParagraphs": [
-      "Your system now has structural support beyond your own willpower. On strong days, you won't need it. On weak days — the days that determine whether a system survives or dies — the accountability layer holds you in place when motivation can't.",
-      "Tomorrow, you prepare for the absolute worst — the days when nothing goes right, your schedule implodes, and your energy is depleted. You'll design a minimum viable day that keeps the system alive no matter what life throws at you.",
-      "<strong>Your accountability is now active. The system has witnesses. That changes the game.</strong>"
+      "Your system now has structural support beyond your own willpower. On strong days, you won't need it. On weak days — the days that determine whether a system survives or dies — the accountability layer holds you in place when motivation can't."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 16",
@@ -2312,9 +1561,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Everything works when conditions are favorable. The true test of a system is whether it survives when conditions are terrible. Today you design for the worst — not out of pessimism, but because every system that lasts has a contingency plan.",
     "principleLabel": "The Law of Persistence",
     "principleParagraphs": [
-      "The willingness to persist in the face of adversity is the one quality that, more than anything else, guarantees eventual success. Not talent. Not intelligence. Not resources. Persistence.",
-      "But persistence is widely misunderstood. It's not about gritting your teeth and powering through at full intensity no matter what. That's how people burn out and quit permanently. True persistence is about <strong>having a plan that keeps you moving forward even when you can't operate at full capacity</strong>.",
-      "Today you build that plan. So when the bad day comes — and it will — you don't break. You bend, you adapt, and you continue."
+      "The willingness to persist in the face of adversity is the one quality that, more than anything else, guarantees eventual success. Not talent. Not intelligence. Not resources. Persistence."
     ],
     "sections": [
       {
@@ -2327,22 +1574,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Travel days.</strong> Your structure, environment, and routine are all disrupted simultaneously. The morning sequence happens in a hotel. The core execution block competes with airports, meetings, and unfamiliar environments. The evening close-out gets lost in exhaustion."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Illness or low energy.</strong> Your body is depleted. The non-negotiables that felt simple on a good day feel like climbing a mountain. The temptation to \"take a day off\" from the system is overwhelming — and that day off often becomes a week."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Emotional disruption.</strong> A conflict, a disappointment, bad news, a personal setback. Your prefrontal cortex — the part of the brain that drives discipline and planning — gets hijacked by the emotional brain. The system feels irrelevant compared to what you're feeling."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Schedule explosions.</strong> An unexpected deadline. A family emergency. A day where nothing goes as planned and there's literally no time for your normal routine."
-          },
-          {
-            "type": "prose",
-            "html": "Most people respond to these moments by abandoning the system entirely. \"I'll get back to it when things settle down.\" But things never fully settle down. Life is a continuous stream of disruptions with calm periods in between. <strong>If your system only works during calm periods, it only works half the time.</strong>"
           }
         ]
       },
@@ -2356,10 +1587,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "A good minimum viable day has 2–3 actions that take no more than 15–20 minutes total. It should be so simple that there is genuinely no valid excuse not to do it. Sick in bed? You can still do it. Stuck in an airport? You can still do it. Having the worst day of your month? You can still do it."
-          },
-          {
-            "type": "prose",
-            "html": "The specific actions should preserve the core identity of your system. At minimum: one brief moment of intentional direction (reading your direction statement), one meaningful action (even a tiny one), and one moment of accountability (a 2-minute tracker log)."
           },
           {
             "type": "example",
@@ -2387,14 +1614,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "What happens next determines everything. Without a restart protocol, the gap triggers the shame spiral: \"I missed a day → I'm failing → What's the point → I'll restart when I feel ready.\" This spiral has killed more systems than any external disruption."
-          },
-          {
-            "type": "prose",
-            "html": "A restart protocol is your pre-decided response to a total miss. It activates the morning after a gap and has three steps: <strong>Acknowledge</strong> (what happened and why — in one sentence, with no drama), <strong>Reset</strong> (do your full morning sequence as if the gap didn't happen), and <strong>Log</strong> (note the miss in the tracker with the reason, then move on)."
-          },
-          {
-            "type": "prose",
-            "html": "The critical rule: <strong>never miss twice in a row.</strong> One miss is human. Two misses is a pattern starting. The restart protocol ensures that every miss is followed immediately by a return to operation."
           }
         ]
       }
@@ -2429,9 +1648,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 17.",
     "closingParagraphs": [
-      "Your system now has a contingency layer. Good days get your full structure, habits, and energy alignment. Bad days get the minimum viable version. Total misses trigger the restart protocol. In every scenario, the system has a response.",
-      "Tomorrow, you address the most personal component of the entire program — your internal dialogue. The voice in your head that either supports execution or undermines it. Your external system is now robust. It's time to align the internal one.",
-      "<strong>You won't need the minimum viable day every day. But when you do, you'll be glad it exists. The people who last aren't the ones who never struggle. They're the ones who planned for the struggle.</strong>"
+      "Your system now has a contingency layer. Good days get your full structure, habits, and energy alignment. Bad days get the minimum viable version. Total misses trigger the restart protocol. In every scenario, the system has a response."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 17",
@@ -2447,9 +1664,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Your system is built, tracked, stress-proofed, and accountable. But there's one variable that can override all of it — the voice inside your head. The stories you tell yourself about who you are, what's possible, and whether this is working. Today you learn to manage that voice.",
     "principleLabel": "The Law of Subconscious Activity",
     "principleParagraphs": [
-      "Your subconscious mind makes your words and actions fit a pattern consistent with your self-concept and your deepest beliefs about yourself. It operates continuously, below the level of awareness, shaping your behavior to match the story you're telling yourself.",
-      "If your internal narrative says \"I always give up,\" your subconscious will find reasons and create conditions that make giving up seem reasonable. If your narrative says \"I follow through no matter what,\" your subconscious will generate energy, creativity, and persistence to make that true.",
-      "<strong>The voice isn't just commentary. It's a command system.</strong> Whatever script it runs, your behavior follows."
+      "Your subconscious mind makes your words and actions fit a pattern consistent with your self-concept and your deepest beliefs about yourself. It operates continuously, below the level of awareness, shaping your behavior to match the story you're telling yourself."
     ],
     "sections": [
       {
@@ -2462,14 +1677,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Most people don't realize this voice is an active force in their behavior. They experience it as \"how they feel\" or \"the truth about themselves.\" But it's neither. It's a pattern — a script that was written through years of experience, feedback, and repetition, and that now plays on autopilot."
-          },
-          {
-            "type": "prose",
-            "html": "The script was usually written during formative experiences: a parent's criticism, a teacher's assessment, a failure that hit hard, a success that never got acknowledged. Over time, these individual experiences crystallized into a narrative. \"I'm not disciplined enough.\" \"I always start things and never finish.\" \"Other people have it figured out; I'm behind.\""
-          },
-          {
-            "type": "prose",
-            "html": "<strong>You cannot control whether the voice speaks. But you can control which script it runs.</strong> That's what today is about."
           }
         ]
       },
@@ -2483,18 +1690,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>The perfectionist script:</strong> <em>\"If I can't do it perfectly, why bother doing it at all?\"</em> This kills more progress than laziness ever has. It creates an impossible standard that guarantees failure, then uses that failure as proof that you shouldn't have tried. The antidote: done is better than perfect. Every time."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>The imposter script:</strong> <em>\"This isn't really me. I'm just pretending. I'll go back to my old ways eventually.\"</em> This directly undermines the identity work from Day 8. It tells you that your new operating identity is a performance, not a reality. The antidote: your tracker data is evidence. You've been \"performing\" for 17 days. At what point does consistent performance become identity?"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>The comparison script:</strong> <em>\"Other people have it figured out. I'm behind. Everyone else is doing better than me.\"</em> This steals focus from your own direction and replaces it with an imaginary race against people you don't actually know. The antidote: compare yourself to your Day 1 self. That's the only comparison that matters."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>The tomorrow script:</strong> <em>\"I'll start fresh tomorrow. Today doesn't count.\"</em> This is the most dangerous one. It's the exit door from any system. It sounds reasonable — a new start! — but it's actually permission to disengage right now, combined with a promise your future self rarely keeps. The antidote: there is no tomorrow in which starting will be easier. Start now, even imperfectly."
           },
           {
             "type": "callout",
@@ -2512,47 +1707,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Instead of</strong> \"I don't feel like it\" → <strong>\"I don't need to feel like it. I need to do it.\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Instead of</strong> \"I'll start tomorrow\" → <strong>\"I'll do the minimum viable version right now.\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Instead of</strong> \"This isn't working\" → <strong>\"I've been consistent for 17 days. The data says it's working.\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Instead of</strong> \"I always give up\" → <strong>\"I'm still here. That narrative is outdated.\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Instead of</strong> \"I'm not disciplined enough\" → <strong>\"Discipline is what I've been practicing for over two weeks. The evidence is in my tracker.\"</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "This isn't positive thinking. It's accurate thinking. You're not lying to yourself — you're correcting the lies the old scripts told. Every replacement is grounded in evidence from your actual behavior over the past 17 days."
-          }
-        ]
-      },
-      {
-        "title": "The personal mantra",
-        "content": [
-          {
-            "type": "prose",
-            "html": "A mantra is a single sentence that captures your operating identity and cuts through resistance in the moment. Not an inspirational quote from someone else. A personal, operational statement that you can deploy when a sabotage script starts running."
-          },
-          {
-            "type": "prose",
-            "html": "The best mantras are short, present-tense, and tied to your identity statement from Day 8. They should feel like something the person you're becoming would say — not something you'd put on a bumper sticker."
-          },
-          {
-            "type": "prose",
-            "html": "Examples: \"I am the person who follows through.\" \"I execute, then I feel. Not the other way around.\" \"The system works because I work the system.\" \"I don't negotiate with resistance.\""
-          },
-          {
-            "type": "prose",
-            "html": "Your mantra isn't magic. It's a pattern interrupt — a tool that breaks the sabotage script mid-sentence and redirects your focus back to action. Use it in the moment, when you feel resistance rising. Say it internally. Say it out loud if needed. The repetition is what gives it power over time."
           }
         ]
       }
@@ -2587,10 +1741,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 18.",
     "closingParagraphs": [
-      "You've just addressed the most personal — and often the most powerful — component of the entire system. The external architecture is solid. Now the internal dialogue matches it.",
-      "The sabotage scripts don't disappear overnight. They'll surface again — during stress, during doubt, during the moments that test your commitment. But now you have a response for each one. And every time you choose the replacement over the script, the old pattern weakens and the new one strengthens.",
-      "Tomorrow, you build the mechanism that keeps everything running permanently — your weekly review cycle. This is where 21 days of installation becomes a lifelong operating rhythm.",
-      "<strong>Listen to your voice tomorrow. Notice which script plays. Choose the replacement. That's the practice.</strong>"
+      "You've just addressed the most personal — and often the most powerful — component of the entire system. The external architecture is solid. Now the internal dialogue matches it."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 18",
@@ -2606,9 +1757,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "The installation ends on Day 21. What keeps the system alive after that is the review cycle. Today you build the single most important retention mechanism in the entire program — the habit that protects all the other habits.",
     "principleLabel": "The Law of Feedback",
     "principleParagraphs": [
-      "Continuous improvement requires continuous feedback. Without a regular mechanism to assess what's working and what isn't, even the best system gradually drifts off course — not because it failed, but because it stopped being actively maintained.",
-      "The weekly review is that mechanism. It's not optional. It's not a nice-to-have. It is <strong>the heartbeat of your operating system</strong> — the single practice that keeps everything else calibrated, relevant, and alive.",
-      "Every successful operating system — from personal to corporate — has a feedback loop. Without it, performance degrades. With it, performance compounds."
+      "Continuous improvement requires continuous feedback. Without a regular mechanism to assess what's working and what isn't, even the best system gradually drifts off course — not because it failed, but because it stopped being actively maintained."
     ],
     "sections": [
       {
@@ -2621,14 +1770,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "This pattern is so common it's almost universal. And the reason is always the same: <strong>the program ended, and nothing replaced the structure of daily lessons with a self-sustaining feedback loop.</strong>"
-          },
-          {
-            "type": "prose",
-            "html": "The daily lessons gave you structure, accountability, and fresh input every 24 hours. After Day 21, those lessons stop. If nothing takes their place, the system loses its pulse. The weekly review is what replaces them. It's the mechanism that keeps you engaged with your own system — reviewing, adjusting, recommitting — without needing external input."
-          },
-          {
-            "type": "prose",
-            "html": "This is arguably the most important thing you build in the entire 21 days. Not the direction statement. Not the habits. The review. Because the review is what keeps everything else maintained."
           }
         ]
       },
@@ -2642,22 +1783,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Minutes 1–3: Data review.</strong> Open your tracker. Look at the past 7 days. Check your non-negotiable completion rate. Note your keystone habit consistency. Read your daily notes. What patterns do you see? Where were you strong? Where were the gaps?"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Minutes 4–5: Direction and identity check.</strong> Read your direction statement and identity statement. Do they still resonate? Are your daily actions aligned with them? Is the gap between identity and behavior narrowing or widening?"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Minutes 6–7: Priority check.</strong> Are your top 3 priorities getting concentrated attention? Or has drift started — new commitments creeping in, focus scattering across too many areas?"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Minutes 8–9: One adjustment.</strong> Based on the review, identify one thing to keep doing (it's working), one thing to improve (it needs attention), and one thing to stop or simplify (it's not earning its place)."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Minute 10: Next week's intention.</strong> One sentence about what you want the coming week to look like. Not a detailed plan — a directional statement. \"This week, I protect my core execution block every day.\" That's enough."
           },
           {
             "type": "callout",
@@ -2675,18 +1800,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Drift.</strong> Small deviations accumulate unnoticed. You miss a non-negotiable here, skip a habit there. Each miss is minor. But over weeks, they compound into a significant departure from your system. The review catches drift while it's still small and correctable."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Staleness.</strong> Your direction, priorities, and habits become stale if never revisited. What was relevant a month ago might not be relevant today. The review keeps the system current and responsive to your evolving life."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Disconnection.</strong> You stop feeling connected to your own system. It becomes something you did once rather than something you actively operate. The review re-engages you with your direction and identity on a weekly basis, preventing the gradual emotional disconnection that precedes behavioral disconnection."
-          },
-          {
-            "type": "prose",
-            "html": "Ten minutes a week prevents all three. That's possibly the highest return-on-time investment in personal development."
           }
         ]
       }
@@ -2724,9 +1837,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 19.",
     "closingParagraphs": [
-      "You've just built the single most important retention mechanism in the entire program. The weekly review is what transforms 21 days of installation into a permanent operating system. Without it, the system has an expiration date. With it, the system has a heartbeat.",
-      "Tomorrow, you build the longer-cycle version — the monthly recalibration that keeps your direction and priorities evolving as you grow. The weekly review keeps you calibrated week to week. The monthly recalibration keeps you aligned month to month.",
-      "<strong>Your first real weekly review happens at the end of this week. You're ready for it. The template is built. The time is set. The system sustains itself.</strong>"
+      "You've just built the single most important retention mechanism in the entire program. The weekly review is what transforms 21 days of installation into a permanent operating system. Without it, the system has an expiration date. With it, the system has a heartbeat."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 19",
@@ -2742,9 +1853,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Weekly reviews keep you calibrated week to week. Monthly recalibrations keep your system alive month to month — ensuring your direction, identity, and priorities evolve as you grow instead of becoming stale artifacts you outgrow and abandon.",
     "principleLabel": "The Law of Goal Setting",
     "principleParagraphs": [
-      "Goals are the fuel in the furnace of achievement. Without them, there's nothing to drive toward. But goals that never evolve become prisons instead of fuel — fixed targets in a changing life.",
-      "The most successful people don't just set goals — they revisit, refine, and sometimes completely replace them as their understanding deepens and their circumstances change.",
-      "<strong>A system that can't adapt is a system with an expiration date.</strong> The monthly recalibration ensures your system remains a living, evolving tool — not a relic of who you were a month ago."
+      "Goals are the fuel in the furnace of achievement. Without them, there's nothing to drive toward. But goals that never evolve become prisons instead of fuel — fixed targets in a changing life."
     ],
     "sections": [
       {
@@ -2757,14 +1866,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "The monthly recalibration operates at the strategic level. It asks bigger questions: Is my direction still the right direction? Has my identity evolved? Are my priorities still the right priorities? These questions don't need weekly attention — they change slowly. But they absolutely need monthly attention, because slow change is still change."
-          },
-          {
-            "type": "prose",
-            "html": "Consider where you were on Day 1 versus where you are now. Your understanding of yourself has deepened. Your definition of what matters has sharpened. Your sense of what's possible has expanded. That evolution happened in just 19 days. Over the coming months, it will continue — and your system needs to evolve with it."
-          },
-          {
-            "type": "prose",
-            "html": "Without monthly recalibration, you'll eventually find yourself running a system designed for someone you used to be. The habits will still work, but they'll feel disconnected from your current direction. The priorities will still be checked off, but they won't produce the same satisfaction. <strong>The system will be technically functional but emotionally dead.</strong> Monthly recalibration prevents this by keeping the strategic layer fresh and aligned."
           }
         ]
       },
@@ -2778,22 +1879,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Step 1: Review the month's weekly reviews (5 minutes).</strong> You have 4 weekly reviews to look back on. What themes emerged? Where was consistency strong across the month? Where did it repeatedly slip? The weekly reviews are your raw data — the monthly recalibration is where you synthesize them into insight."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 2: Reassess your direction (5 minutes).</strong> Read your current direction statement. Is it still the right target? Has your definition of success shifted based on what you've experienced and learned? A direction that was perfect on Day 1 may need sharpening or expanding after a full month of real operation. Update it if needed."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 3: Reassess your identity (5 minutes).</strong> Read your identity statement. Are you living closer to it than a month ago? Has the gap narrowed? Has your understanding of your operating identity deepened? Rewrite it to reflect who you're becoming — not who you were when you first wrote it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 4: Reassess your priorities (5 minutes).</strong> Are your top 3 still the right top 3? Has one been largely accomplished and ready to move to maintenance? Has a new domain emerged that deserves concentrated attention? The priority stack should be dynamic — reflecting your current reality, not last month's plan."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Step 5: Set next month's focus (10 minutes).</strong> Based on your updated direction, identity, and priorities: what is the single most important area to concentrate on in the coming month? Write a one-paragraph month intention that describes what success looks like 30 days from now."
           },
           {
             "type": "callout",
@@ -2811,18 +1896,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Daily:</strong> Execute your structure. Complete your non-negotiables and keystone habits. Log in the tracker during your evening close-out. Time: 2 minutes for logging."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Weekly:</strong> Run your 10-minute review. Assess the week's data. Make one adjustment. Set next week's intention. Time: 10 minutes."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Monthly:</strong> Run your 30-minute recalibration. Reassess direction, identity, and priorities. Set the month's focus. Time: 30 minutes."
-          },
-          {
-            "type": "prose",
-            "html": "Daily execution keeps the system running. Weekly reviews keep it calibrated. Monthly recalibrations keep it evolving. Together, they form a self-sustaining cycle that requires no external input — no coach, no course, no motivation. Just you, your data, and your commitment to honest maintenance."
           }
         ]
       }
@@ -2860,9 +1933,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 20.",
     "closingParagraphs": [
-      "You now have every maintenance mechanism in place. Daily execution keeps the system moving. Weekly reviews keep it calibrated. Monthly recalibrations keep it evolving. Three nested cycles, each serving a different time horizon, together creating a self-sustaining operating rhythm.",
-      "Tomorrow, you pull everything together. Every component, every principle, every tool — consolidated into a single operating manual that you'll reference for as long as you run the system.",
-      "<strong>The system doesn't need you to be motivated. It needs you to show up for maintenance. Ten minutes a week. Thirty minutes a month. That's the cost of permanent operation.</strong>"
+      "You now have every maintenance mechanism in place. Daily execution keeps the system moving. Weekly reviews keep it calibrated. Monthly recalibrations keep it evolving. Three nested cycles, each serving a different time horizon, together creating a self-sustaining operating rhythm."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 20",
@@ -2878,9 +1949,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Twenty days of building. Every component, every principle, every decision — scattered across notes, your tracker, and your memory. Today, you bring it all together into one clear, complete document: your personal operating manual.",
     "principleLabel": "The Law of Clarity",
     "principleParagraphs": [
-      "The greater clarity you have about who you are and what you want, the more you accomplish in a shorter period of time. Clarity eliminates hesitation. It removes the friction of uncertainty. It turns intention into immediate action.",
-      "Over 20 days, you've built tremendous clarity — about your direction, your identity, your priorities, your habits, your energy, your weak points, and your maintenance cycles. Today, <strong>all of that clarity gets consolidated into a single reference document</strong> that you can access in seconds and rely on for months.",
-      "A system you can see in full is a system you can maintain in full. A system scattered across a dozen locations is a system waiting to fragment."
+      "The greater clarity you have about who you are and what you want, the more you accomplish in a shorter period of time. Clarity eliminates hesitation. It removes the friction of uncertainty. It turns intention into immediate action."
     ],
     "sections": [
       {
@@ -2893,10 +1962,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "That's substantial. And it's probably distributed across multiple locations — notebook pages, phone notes, tracker entries, mental memory. Some of it you remember clearly. Some of it has faded. Some of it was updated at various points and you may not be sure which version is current."
-          },
-          {
-            "type": "prose",
-            "html": "Today fixes this. You bring everything into one place — your operating manual — organized, current, and immediately accessible. This is the document you'll open during every weekly review and monthly recalibration. It's the single source of truth for how you operate."
           }
         ]
       },
@@ -2910,50 +1975,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Section 1: Direction.</strong> Your current direction statement — updated through today. This is the destination, the \"where am I going?\""
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 2: Identity.</strong> Your current identity statement — who you are when you're operating at your best. This is the \"who am I being?\""
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 3: Priorities.</strong> Your top 3 active priorities with one clear outcome for each. This is the \"what deserves my concentrated energy?\""
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 4: Daily structure.</strong> Your three anchors: morning sequence, core execution block, evening close-out. Times and key actions for each."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 5: Non-negotiables.</strong> Your 3–5 daily non-negotiable actions. The behavioral floor."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 6: Keystone habits.</strong> Your 2–3 keystone habits with cue-routine-reward for each."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 7: Decision rules.</strong> Your pre-made rules for recurring decisions and your if-then protocols."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 8: Energy notes.</strong> Your peak, mid, and valley windows. How your structure aligns. Recovery points."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 9: Contingency protocols.</strong> Minimum viable day. Restart protocol. Failure protocol. What happens when things go wrong."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 10: Internal dialogue.</strong> Your top sabotage scripts and their replacements. Your personal mantra."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 11: Maintenance rhythm.</strong> Weekly review day/time and template. Monthly recalibration date and template."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Section 12: Accountability.</strong> What layers are active. Who's involved. How check-ins work."
           },
           {
             "type": "callout",
@@ -2971,10 +1992,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "Store it somewhere permanent and accessible. A dedicated note in your phone. A document in your files. A printed page in a notebook. Whatever format ensures you can access it within 30 seconds at any time. If it's buried in a folder you never open, it's useless. If it's one tap or one glance away, it becomes a daily reference."
-          },
-          {
-            "type": "prose",
-            "html": "Some people find it helpful to create two versions: a full version with all details and a wallet card version with just the essentials — direction, non-negotiables, mantra, and the weekly review day. The wallet card is what you carry. The full version is what you reference during reviews."
           }
         ]
       }
@@ -3008,9 +2025,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks before moving to Day 21.",
     "closingParagraphs": [
-      "Your system is now documented, complete, and consolidated. Everything you've built over 20 days lives in one place — organized, accessible, and ready for permanent use.",
-      "Tomorrow is Day 21. The final day. Not the end of the system — the moment it becomes fully and permanently yours. The installation concludes. Operational mode begins. And everything you need to run it is right here in the manual you just built.",
-      "<strong>Read your operating manual tonight. All of it. You built every word of it through 20 days of effort. Tomorrow, you activate it for good.</strong>"
+      "Your system is now documented, complete, and consolidated. Everything you've built over 20 days lives in one place — organized, accessible, and ready for permanent use."
     ],
     "nextDay": {
       "eyebrow": "Tomorrow — Day 21",
@@ -3026,9 +2041,7 @@ export const LESSON_DATA: LessonData[] =
     "heroIntro": "Twenty-one days ago, you had a direction but no system. Now you have both — a complete, documented, stress-tested personal operating system built on the psychology of achievement and tailored entirely to your life. Today, the installation ends. Operational mode begins.",
     "principleLabel": "The Law of Cause and Effect",
     "principleParagraphs": [
-      "We return to where we started. Every result has a cause. Every outcome traces back to a decision, a pattern, or a system that produced it.",
-      "Twenty-one days ago, you set the first cause — a clear direction. Every day since then, you've added another cause to the chain. Structure. Awareness. Discipline. Tracking. Environment. Identity. Priorities. Habits. Energy. Simplification. Decision rules. Accountability. Resilience. Self-talk mastery. Review cycles. Consolidation.",
-      "<strong>Today, the chain is complete. The system you built is now the cause of everything that follows.</strong>"
+      "We return to where we started. Every result has a cause. Every outcome traces back to a decision, a pattern, or a system that produced it."
     ],
     "sections": [
       {
@@ -3041,18 +2054,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "<strong>Phase I — Stabilize (Days 1–7):</strong> You went from zero structure to a functioning daily system. Direction locked. Three-anchor structure in place. Unconscious default patterns identified. Non-negotiable behaviors installed. Tracker live and logging. Environment redesigned. First review completed. You went from reactive to grounded."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Phase II — Reconstruct (Days 8–14):</strong> You went deeper — from structure to strategy. Operating identity defined. Priority stack built with concentrated focus. Keystone habits installed with cue-routine-reward precision. Energy cycles mapped and structure aligned. System simplified to only what works. Decision rules created. Midpoint recalibration completed. You went from grounded to deliberate."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Phase III — Install (Days 15–21):</strong> You made it permanent. Accountability layers activated. Stress-proof protocols designed. Internal dialogue mastered. Weekly review cycle built. Monthly recalibration process planned. Complete operating manual assembled. You went from deliberate to autonomous."
-          },
-          {
-            "type": "prose",
-            "html": "That's the progression: reactive → grounded → deliberate → autonomous. Each phase built on the last. Each day installed one more component. The result is not a collection of tips or a set of good intentions. <strong>It's a complete operating system with strategic clarity, operational mechanics, maintenance cycles, and contingency protocols.</strong>"
           }
         ]
       },
@@ -3066,22 +2067,6 @@ export const LESSON_DATA: LessonData[] =
           {
             "type": "prose",
             "html": "What continues is the rhythm you've built:"
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Daily:</strong> Execute your structure. Morning sequence, core block, evening close-out. Complete your non-negotiables and keystone habits. Log in the tracker. Two minutes of logging. That's it."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Weekly:</strong> Run your 10-minute review. Check the data. Assess alignment. Make one adjustment. Set the week's intention."
-          },
-          {
-            "type": "prose",
-            "html": "<strong>Monthly:</strong> Run your 30-minute recalibration. Reassess direction, identity, priorities. Update the operating manual. Set the month's focus."
-          },
-          {
-            "type": "prose",
-            "html": "No new information needed. No external motivation required. The system runs because it was designed to run — and because you've spent 21 days practicing the mechanics until they've become part of how you operate."
           }
         ]
       },
@@ -3097,37 +2082,8 @@ export const LESSON_DATA: LessonData[] =
             "html": "Day 22 won't feel dramatically different from Day 21. Day 50 will. Day 100 will be transformative. The daily actions are small. The compound effect is not."
           },
           {
-            "type": "prose",
-            "html": "Think about it mathematically. If your system makes you just 1% more effective each day — through better focus, fewer wasted hours, more consistent execution — the compound effect over a year is staggering. 1% daily improvement, compounded over 365 days, is a 37x improvement. Not 37%. 37 times. The math of consistency is almost unreasonably powerful."
-          },
-          {
-            "type": "prose",
-            "html": "You don't need to believe that number exactly. You just need to believe the principle: <strong>small, consistent actions, maintained over time, produce extraordinary results.</strong> You've already proven this to yourself over 21 days. Now you extend it indefinitely."
-          },
-          {
             "type": "callout",
             "html": "<p><strong>The question that matters:</strong> What will your tracker look like on Day 100? What will your monthly recalibration reveal after 3 months of consistent operation? What will your identity statement say after a year of living it? You can't answer these questions today. But you've built the system that will answer them. All you have to do is keep running it.</p>"
-          }
-        ]
-      },
-      {
-        "title": "A note on the days ahead",
-        "content": [
-          {
-            "type": "prose",
-            "html": "There will be hard days. Days when the system feels like a burden. Days when the old scripts return and whisper that this was temporary, that you'll go back to how things were, that real change doesn't happen like this."
-          },
-          {
-            "type": "prose",
-            "html": "When those days come — and they will — open your operating manual. Read your direction. Read your identity. Look at your tracker data. The evidence of who you've become is there, documented, undeniable. The scripts lie. The data doesn't."
-          },
-          {
-            "type": "prose",
-            "html": "And on those days, remember: you don't need to have a great day. You just need to have a minimum viable day. The streak survives. The system holds. Tomorrow is another opportunity to operate at full capacity."
-          },
-          {
-            "type": "prose",
-            "html": "That's the entire secret. Not perfection. Not motivation. Not inspiration. Just a system, maintained honestly, operated consistently, reviewed regularly. Day after day after day."
           }
         ]
       }
@@ -3165,10 +2121,7 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasksSubtitle": "Complete all tasks to finalize your installation.",
     "closingParagraphs": [
-      "You built this. Every component. Every day. Every decision. Yours.",
-      "The installation is complete. What you have now is rare: a structured, personal operating system grounded in the psychology of achievement, tested through 21 days of real execution, documented in a complete operating manual, and supported by maintenance cycles that keep it alive indefinitely.",
-      "The question was never whether you could finish 21 days. The question is what you do on Day 22, Day 50, Day 100. The answer is the same every time: execute, review, recalibrate. The system handles the rest.",
-      "<strong>The system is installed. Operational mode begins now.</strong>"
+      "You built this. Every component. Every day. Every decision. Yours."
     ]
   }
 ];
