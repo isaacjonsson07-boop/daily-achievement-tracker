@@ -127,7 +127,7 @@ function SidebarCommandCenter({
   percentage, completedItems, totalItems, currentStreak, weekConsistency, systemAge,
   statusMsg, statusColor, nextReviewDay,
   nnDone, nnTotal, habitsDone, habitsTotal, tasksDone, tasksTotal,
-  weekDayData, milestoneInfo, onNavigate, dateLabel,
+  weekDayData, milestoneInfo, onNavigate, dateLabel, isReviewDay,
 }: {
   percentage: number; completedItems: number; totalItems: number;
   currentStreak: number; weekConsistency: number; systemAge: number;
@@ -135,8 +135,9 @@ function SidebarCommandCenter({
   nnDone: number; nnTotal: number; habitsDone: number; habitsTotal: number; tasksDone: number; tasksTotal: number;
   weekDayData: { label: string; pct: number }[];
   milestoneInfo: { title: string; current: number; target: number } | null;
-  onNavigate?: (tab: string) => void;
+  onNavigate?: (tab: string, subTab?: string) => void;
   dateLabel: string;
+  isReviewDay: boolean;
 }) {
   const ringColor = percentage >= 80 ? '#6ECB8B' : percentage >= 50 ? '#C5A55A' : percentage > 0 ? '#E07070' : 'rgba(255,255,255,0.1)';
   const ringSize = 100;
@@ -234,11 +235,20 @@ function SidebarCommandCenter({
         </>
       )}
 
-      {/* Next review */}
+      {/* Weekly review */}
       <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.15), transparent)' }} />
-      <p className="text-[0.68rem] text-sa-cream-faint text-center">
-        Weekly review: <span className="text-sa-cream-muted">{nextReviewDay}</span>
-      </p>
+      {isReviewDay ? (
+        <button onClick={() => onNavigate?.('reviews', 'weekly')}
+          className="relative w-full py-3 border border-sa-gold-border rounded-xl text-center overflow-hidden transition-all duration-300 hover:border-sa-gold hover:-translate-y-[1px] group">
+          <div className="absolute inset-0 bg-gradient-to-br from-sa-gold-glow to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <p className="relative font-serif text-[0.9rem] text-sa-gold">Weekly Review →</p>
+          <p className="relative text-[0.65rem] text-sa-cream-faint mt-1">Reflect on your week and recalibrate.</p>
+        </button>
+      ) : (
+        <p className="text-[0.68rem] text-sa-cream-faint text-center">
+          Weekly review: <span className="text-sa-cream-muted">{nextReviewDay}</span>
+        </p>
+      )}
     </div>
   );
 }
@@ -322,7 +332,7 @@ interface TodayViewProps {
   onAddTask: (task: DailyTask) => void;
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
-  onNavigate?: (tab: string) => void;
+  onNavigate?: (tab: string, subTab?: string) => void;
 }
 
 export function TodayView({
@@ -456,6 +466,8 @@ export function TodayView({
     const d = dow === 0 ? 0 : 7 - dow;
     return d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : new Date(Date.now() + d * 86400000).toLocaleDateString('en-US', { weekday: 'long' });
   }, []);
+
+  const isReviewDay = new Date().getDay() === 0; // Sunday
 
   const handleAddTask = () => {
     if (!newTaskTitle.trim()) return;
@@ -748,6 +760,18 @@ export function TodayView({
             </div>
           </section>
 
+          {/* ════ WEEKLY REVIEW (mobile — shows all day on review day) ════ */}
+          {isToday && isReviewDay && (
+            <div className="mb-11 xl:hidden">
+              <button onClick={() => onNavigate?.('reviews', 'weekly')}
+                className="relative w-full py-6 border border-sa-gold-border rounded-xl text-center overflow-hidden transition-all duration-300 hover:border-sa-gold hover:-translate-y-[1px] group">
+                <div className="absolute inset-0 bg-gradient-to-br from-sa-gold-glow to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <p className="relative font-serif text-[1.05rem] text-sa-gold">Weekly Review →</p>
+                <p className="relative text-[0.78rem] text-sa-cream-faint mt-1.5">Reflect on your week and recalibrate.</p>
+              </button>
+            </div>
+          )}
+
           {/* ════ PLAN TOMORROW (mobile only — desktop version is in sidebar) ════ */}
           {isToday && isEvening && (
             <div className="mb-11 xl:hidden">
@@ -805,6 +829,7 @@ export function TodayView({
                   milestoneInfo={milestoneInfo}
                   onNavigate={onNavigate}
                   dateLabel={dateLabel}
+                  isReviewDay={isReviewDay}
                 />
               </div>
 
