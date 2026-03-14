@@ -404,10 +404,10 @@ function SystemCard({ report: rp, onClick }: { report: SystemReport; onClick: ()
 
 function ExpandedReport({ report: rp, onClose }: { report: SystemReport; onClose: () => void }) {
   const c = TIER_CONFIG[rp.tier];
-  return <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose} style={{backgroundColor:'rgba(0,0,0,0.7)',backdropFilter:'blur(8px)'}}>
-    <div className="relative w-full max-w-lg rounded-sa-lg" onClick={e=>e.stopPropagation()} style={{border:`1px solid ${c.border}`,backgroundColor:'#151518',boxShadow:rp.tier==='diamond'?'0 0 40px rgba(184,212,232,0.10)':rp.tier==='gold'?'0 0 30px rgba(197,165,90,0.08)':'none'}}>
+  return <div className="fixed inset-0 z-50 flex items-center justify-center p-6" onClick={onClose} style={{backgroundColor:'rgba(0,0,0,0.85)',backdropFilter:'blur(12px)'}}>
+    <div className="relative w-full max-w-lg max-h-[80vh] rounded-sa-lg overflow-hidden" onClick={e=>e.stopPropagation()} style={{border:`1px solid ${c.border}`,backgroundColor:'#151518',boxShadow:rp.tier==='diamond'?'0 0 40px rgba(184,212,232,0.10)':rp.tier==='gold'?'0 0 30px rgba(197,165,90,0.08)':'none'}}>
       <TierFrame tier={rp.tier}/>
-      <div className="max-h-[80vh] overflow-y-auto rounded-sa-lg"><div className="relative z-20 p-6 sm:p-10">
+      <div className="overflow-y-auto max-h-[80vh] rounded-sa-lg"><div className="relative z-20 p-6 sm:p-10">
         <button onClick={onClose} className="absolute top-4 right-4 p-1.5 text-sa-cream-faint hover:text-sa-cream transition-colors rounded-sa-sm hover:bg-sa-bg-lift z-30"><X className="w-4 h-4"/></button>
         <div className="text-center mb-6"><p className="text-[0.65rem] uppercase tracking-[0.2em] text-sa-cream-faint mb-3">System Report</p><h2 className="font-serif text-2xl text-sa-cream mb-1">{getMonthLabel(rp.month)}</h2>{rp.isInstallationReport&&<p className="text-xs mt-1" style={{color:c.color}}>Installation Complete — Day 21</p>}<div className="flex justify-center mt-5 mb-3"><ScoreRing score={rp.score} tier={rp.tier} size={80}/></div><div className="flex items-center justify-center gap-3"><span className="text-sm font-medium uppercase tracking-wider" style={{color:c.color}}>{c.label}</span><DeltaBadge delta={rp.scoreDelta}/></div>{rp.scoreCapped&&<div className="flex items-center justify-center gap-1.5 mt-2"><AlertTriangle className="w-3.5 h-3.5 text-sa-cream-faint"/><span className="text-xs text-sa-cream-faint">Score capped — below minimums</span></div>}</div>
         <div className="h-px mb-5" style={{background:`linear-gradient(90deg, transparent, ${c.border}, transparent)`}}/>
