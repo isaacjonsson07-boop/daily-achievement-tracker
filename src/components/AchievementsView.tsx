@@ -259,7 +259,7 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
   const isDiamond = report.tier === 'diamond';
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       onClick={onClose}
       style={{ backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
       <div className="relative w-full max-w-lg max-h-[85vh] rounded-sa-lg"
