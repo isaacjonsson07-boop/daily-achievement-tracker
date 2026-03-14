@@ -275,6 +275,7 @@ function App() {
             onAddTask={addDailyTask}
             onToggleTask={toggleDailyTask}
             onDeleteTask={deleteDailyTask}
+            onNavigate={(tab) => setCurrentTab(tab as TabType)}
           />
         )}
 
