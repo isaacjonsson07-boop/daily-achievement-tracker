@@ -263,7 +263,7 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       onClick={onClose}
       style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)' }}>
-      <div className="relative w-full max-w-lg max-h-[85vh] rounded-sa-lg"
+      <div className="relative w-full max-w-lg max-h-[85vh] rounded-sa-lg overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         style={{
           border: `1px solid ${config.border}`,
