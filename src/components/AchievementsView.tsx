@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Trophy, TrendingUp, TrendingDown, Minus, Target, Flame, Calendar, CheckCircle, AlertTriangle, X, Gem,
-  Zap, Shield, FileText, Award, Star, Clock, Anchor, Power, Lock } from 'lucide-react';
+import { Trophy, TrendingUp, TrendingDown, Minus, Target, Flame, Calendar, CheckCircle, AlertTriangle, X, Gem, Zap, Shield, FileText, Award, Star, Clock, Anchor, Power, Lock } from 'lucide-react';
 import {
   NonNegotiable, NonNegotiableCompletion,
   Habit, HabitCompletion, DailyTask,
@@ -20,9 +19,7 @@ interface AchievementsViewProps {
   onSaveSystemReport: (report: SystemReport) => void;
 }
 
-// ═══════════════════════════════════════
-// ORIGINAL REPORT COMPONENTS (untouched)
-// ═══════════════════════════════════════
+// ── Month helpers ──
 
 function getMonthLabel(month: string): string {
   const [y, m] = month.split('-');
@@ -386,12 +383,9 @@ function EmptyState({ onGenerate }: { onGenerate: () => void }) {
   );
 }
 
-// ═══════════════════════════════════════
-// MAIN COMPONENT
-// ═══════════════════════════════════════
 
 // ═══════════════════════════════════════
-// MILESTONE SYSTEM
+// MILESTONE SYSTEM (new feature)
 // ═══════════════════════════════════════
 
 type MilestoneChapter = 'foundation' | 'momentum' | 'mastery';
@@ -445,7 +439,7 @@ const MILESTONES: MilestoneDef[] = [
   { id: '7-day-streak', title: '7-Day Streak', description: '7 consecutive days at 80%+ completion. Operational discipline.', chapter: 'momentum', icon: Flame,
     check: c => c.longestStreak80 >= 7, requirement: '7-day streak at 80%+',
     progressFn: c => ({ current: Math.min(c.longestStreak80, 7), target: 7 }) },
-  { id: 'nn-lock', title: 'Non-Negotiable Lock', description: '7 days straight without missing a single non-negotiable. This proves they\u2019re locked in.', chapter: 'momentum', icon: Shield,
+  { id: 'nn-lock', title: 'Non-Negotiable Lock', description: '7 days straight without missing a single non-negotiable.', chapter: 'momentum', icon: Shield,
     check: c => c.longestNNStreak >= 7, requirement: '7-day perfect NN streak',
     progressFn: c => ({ current: Math.min(c.longestNNStreak, 7), target: 7 }) },
   { id: 'first-report', title: 'First Report', description: 'Generate your first monthly System Report.', chapter: 'momentum', icon: FileText,
@@ -456,7 +450,7 @@ const MILESTONES: MilestoneDef[] = [
     progressFn: c => ({ current: Math.min(c.totalTasksCompleted, 50), target: 50 }) },
   { id: 'silver-caliber', title: 'Silver Caliber', description: 'Earn Silver tier or higher in a monthly System Report.', chapter: 'momentum', icon: Award,
     check: c => c.systemReports.some(r => ['silver','gold','diamond'].includes(r.tier)), requirement: 'Silver+ monthly report' },
-  { id: '14-day-streak', title: '14-Day Streak', description: 'Two unbroken weeks at 80%+ completion. This is where most people fall off. You didn\u2019t.', chapter: 'mastery', icon: TrendingUp,
+  { id: '14-day-streak', title: '14-Day Streak', description: 'Two unbroken weeks at 80%+ completion. Most people fall off here. You didn\u2019t.', chapter: 'mastery', icon: TrendingUp,
     check: c => c.longestStreak80 >= 14, requirement: '14-day streak at 80%+',
     progressFn: c => ({ current: Math.min(c.longestStreak80, 14), target: 14 }) },
   { id: 'gold-standard', title: 'Gold Standard', description: 'Earn Gold tier in a monthly report. 75%+ execution across the board.', chapter: 'mastery', icon: Star,
@@ -487,23 +481,33 @@ function computeMilestoneCtx(nns: NonNegotiable[], nnC: NonNegotiableCompletion[
   tasks.filter(t => t.completed).forEach(t => allDates.add(t.task_date));
   const sorted = Array.from(allDates).sort();
   const evalDates: string[] = [];
-  if (sorted.length > 0) { const cursor = new Date(sorted[0]+'T00:00:00'); const end = new Date(); while (cursor <= end) { evalDates.push(fmtDateISO(cursor)); cursor.setDate(cursor.getDate()+1); } }
+  if (sorted.length > 0) {
+    const cursor = new Date(sorted[0] + 'T00:00:00');
+    const end = new Date();
+    while (cursor <= end) {
+      evalDates.push(fmtDateISO(cursor));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+  }
   let hasAnyFullDay = false, longestStreak80 = 0, cur80 = 0, longestNNStreak = 0, curNN = 0;
   for (const date of evalDates) {
-    const d = new Date(date+'T00:00:00'), di = d.getDay(), ds = d.getTime();
-    const nnsDay = activeNNs.filter(nn => new Date(nn.created_at).getTime() <= ds+86400000);
+    const d = new Date(date + 'T00:00:00'), di = d.getDay(), ds = d.getTime();
+    const nnsDay = activeNNs.filter(nn => new Date(nn.created_at).getTime() <= ds + 86400000);
     const nnDone = nnsDay.filter(nn => nnC.some(c => c.non_negotiable_id === nn.id && c.completion_date === date)).length;
-    const habDay = habits.filter(h => h.days_of_week.includes(di) && new Date(h.created_at).getTime() <= ds+86400000);
+    const habDay = habits.filter(h => h.days_of_week.includes(di) && new Date(h.created_at).getTime() <= ds + 86400000);
     const habDone = habDay.filter(h => hC.some(c => c.habit_id === h.id && c.completion_date === date)).length;
     const tDay = tasks.filter(t => t.task_date === date), tDone = tDay.filter(t => t.completed).length;
     const total = nnsDay.length + habDay.length + tDay.length, done = nnDone + habDone + tDone;
-    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
     if (pct === 100 && total > 0) hasAnyFullDay = true;
     if (pct >= 80 && total > 0) { cur80++; longestStreak80 = Math.max(longestStreak80, cur80); } else cur80 = 0;
     if (nnsDay.length > 0 && nnDone === nnsDay.length) { curNN++; longestNNStreak = Math.max(longestNNStreak, curNN); } else if (nnsDay.length > 0) curNN = 0;
   }
-  return { activeNNs, habits, nnCompletions: nnC, habitCompletions: hC, dailyTasks: tasks, systemReports: reports,
-    totalActiveDays: allDates.size, totalTasksCompleted: tasks.filter(t => t.completed).length, longestStreak80, longestNNStreak, hasAnyFullDay };
+  return {
+    activeNNs, habits, nnCompletions: nnC, habitCompletions: hC, dailyTasks: tasks, systemReports: reports,
+    totalActiveDays: allDates.size, totalTasksCompleted: tasks.filter(t => t.completed).length,
+    longestStreak80, longestNNStreak, hasAnyFullDay,
+  };
 }
 
 function getMilestoneStatus(unlockedCount: number, nextIndex: number | null, ctx: MilestoneContext): { message: string; color: string } {
@@ -632,15 +636,15 @@ function ChapterHeader({ chapter }: { chapter: MilestoneChapter }) {
 function MilestoneRankHeader({ unlocked, total, rank }: { unlocked: number; total: number; rank: { title: string; next: string | null } }) {
   const pct = total > 0 ? (unlocked / total) * 100 : 0;
   const color = pct >= 80 ? '#6ECB8B' : pct >= 40 ? '#6DB5F5' : '#C5A55A';
-  const sz = 88, sw = 3, r = (sz-sw*2)/2, circ = 2*Math.PI*r, off = circ-(pct/100)*circ;
+  const sz = 88, sw = 3, r = (sz - sw * 2) / 2, circ = 2 * Math.PI * r, off = circ - (pct / 100) * circ;
   return (
     <div className="sa-card-elevated mb-8">
       <div className="flex items-center justify-between flex-wrap gap-5">
         <div className="flex items-center gap-5">
           <div className="relative" style={{ width: sz, height: sz }}>
             <svg width={sz} height={sz} className="transform -rotate-90">
-              <circle cx={sz/2} cy={sz/2} r={r} stroke="rgba(255,255,255,0.05)" strokeWidth={sw} fill="none" />
-              <circle cx={sz/2} cy={sz/2} r={r} stroke={color} strokeWidth={sw} fill="none"
+              <circle cx={sz / 2} cy={sz / 2} r={r} stroke="rgba(255,255,255,0.05)" strokeWidth={sw} fill="none" />
+              <circle cx={sz / 2} cy={sz / 2} r={r} stroke={color} strokeWidth={sw} fill="none"
                 strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off}
                 style={{ transition: 'stroke-dashoffset 1s ease-out' }} />
             </svg>
@@ -656,7 +660,7 @@ function MilestoneRankHeader({ unlocked, total, rank }: { unlocked: number; tota
           </div>
         </div>
         <div className="flex gap-2">
-          {(['foundation','momentum','mastery'] as const).map(c => {
+          {(['foundation', 'momentum', 'mastery'] as const).map(c => {
             const meta = CHAPTER_META[c];
             const tot = MILESTONES.filter(m => m.chapter === c).length;
             const start = c === 'foundation' ? 0 : c === 'momentum' ? 5 : 10;
@@ -686,7 +690,7 @@ export function AchievementsView({
   const [expandedReport, setExpandedReport] = useState<SystemReport | null>(null);
   const [activeSection, setActiveSection] = useState<'milestones' | 'reports'>('milestones');
 
-  // Milestone computation
+  // ── Milestone computation ──
   const ctx = useMemo(() => computeMilestoneCtx(nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, systemReports), [nonNegotiables, nnCompletions, habits, habitCompletions, dailyTasks, systemReports]);
   const { unlockedCount, nextIndex } = useMemo(() => {
     let count = 0;
@@ -695,14 +699,13 @@ export function AchievementsView({
   }, [ctx]);
   const rank = useMemo(() => getRankFromCount(unlockedCount), [unlockedCount]);
   const status = useMemo(() => getMilestoneStatus(unlockedCount, nextIndex, ctx), [unlockedCount, nextIndex, ctx]);
-
   const chapters: { chapter: MilestoneChapter; milestones: { def: MilestoneDef; index: number }[] }[] = [
-    { chapter: 'foundation', milestones: MILESTONES.slice(0,5).map((m,i) => ({ def: m, index: i })) },
-    { chapter: 'momentum', milestones: MILESTONES.slice(5,10).map((m,i) => ({ def: m, index: i+5 })) },
-    { chapter: 'mastery', milestones: MILESTONES.slice(10,15).map((m,i) => ({ def: m, index: i+10 })) },
+    { chapter: 'foundation', milestones: MILESTONES.slice(0, 5).map((m, i) => ({ def: m, index: i })) },
+    { chapter: 'momentum', milestones: MILESTONES.slice(5, 10).map((m, i) => ({ def: m, index: i + 5 })) },
+    { chapter: 'mastery', milestones: MILESTONES.slice(10, 15).map((m, i) => ({ def: m, index: i + 10 })) },
   ];
 
-  // Report logic (original)
+  // ── Report logic (original, unchanged) ──
   const currentMonth = useMemo(() => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -775,6 +778,7 @@ export function AchievementsView({
         <p className="text-sm text-sa-cream-muted">Your operational history. Milestones earned. Performance recorded.</p>
       </div>
 
+      {/* Tab switcher */}
       <div className="flex gap-1 mb-8 animate-rise delay-1">
         {(['milestones', 'reports'] as const).map(s => (
           <button key={s} onClick={() => setActiveSection(s)}
@@ -784,6 +788,7 @@ export function AchievementsView({
         ))}
       </div>
 
+      {/* ════ MILESTONES TAB ════ */}
       {activeSection === 'milestones' && (
         <div className="animate-rise delay-2">
           <MilestoneRankHeader unlocked={unlockedCount} total={MILESTONES.length} rank={rank} />
@@ -817,6 +822,7 @@ export function AchievementsView({
         </div>
       )}
 
+      {/* ════ REPORTS TAB (original layout, unchanged) ════ */}
       {activeSection === 'reports' && (
         <div className="animate-rise delay-2">
           {reports.length === 0 ? (
