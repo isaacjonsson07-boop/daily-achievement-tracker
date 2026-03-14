@@ -127,7 +127,7 @@ function SidebarCommandCenter({
   percentage, completedItems, totalItems, currentStreak, weekConsistency, systemAge,
   statusMsg, statusColor, nextReviewDay,
   nnDone, nnTotal, habitsDone, habitsTotal, tasksDone, tasksTotal,
-  weekDayData, milestoneInfo,
+  weekDayData, milestoneInfo, onNavigate,
 }: {
   percentage: number; completedItems: number; totalItems: number;
   currentStreak: number; weekConsistency: number; systemAge: number;
@@ -135,6 +135,7 @@ function SidebarCommandCenter({
   nnDone: number; nnTotal: number; habitsDone: number; habitsTotal: number; tasksDone: number; tasksTotal: number;
   weekDayData: { label: string; pct: number }[];
   milestoneInfo: { title: string; current: number; target: number } | null;
+  onNavigate?: (tab: string) => void;
 }) {
   const ringColor = percentage >= 80 ? '#6ECB8B' : percentage >= 50 ? '#C5A55A' : percentage > 0 ? '#E07070' : 'rgba(255,255,255,0.1)';
   const ringSize = 100;
@@ -214,9 +215,9 @@ function SidebarCommandCenter({
       {milestoneInfo && (
         <>
           <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(197,165,90,0.15), transparent)' }} />
-          <div>
+          <button onClick={() => onNavigate?.('achievements')} className="w-full text-left group">
             <p className="text-[0.6rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-2">Next Milestone</p>
-            <p className="text-[0.8rem] text-sa-cream mb-2">{milestoneInfo.title}</p>
+            <p className="text-[0.8rem] text-sa-cream mb-2 group-hover:text-sa-gold transition-colors">{milestoneInfo.title}</p>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
                 <div className="h-full rounded-full transition-all duration-500" style={{
@@ -226,7 +227,8 @@ function SidebarCommandCenter({
               </div>
               <span className="text-[0.65rem] tabular-nums text-sa-gold">{milestoneInfo.current}/{milestoneInfo.target}</span>
             </div>
-          </div>
+            <p className="text-[0.6rem] text-sa-cream-faint mt-1.5 group-hover:text-sa-gold transition-colors">View milestones →</p>
+          </button>
         </>
       )}
 
@@ -318,12 +320,14 @@ interface TodayViewProps {
   onAddTask: (task: DailyTask) => void;
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
+  onNavigate?: (tab: string) => void;
 }
 
 export function TodayView({
   nonNegotiables, nnCompletions, onToggleNN,
   habits, habitCompletions, onToggleHabit,
   dailyTasks, onAddTask, onToggleTask, onDeleteTask,
+  onNavigate,
 }: TodayViewProps) {
   const [dayOffset, setDayOffset] = useState(0);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -794,6 +798,7 @@ export function TodayView({
                   tasksDone={tasksForDate.filter(t => t.completed).length} tasksTotal={tasksForDate.length}
                   weekDayData={weekDayData}
                   milestoneInfo={milestoneInfo}
+                  onNavigate={onNavigate}
                 />
               </div>
             </div>
