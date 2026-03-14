@@ -25,6 +25,7 @@ function App() {
 
   // === STATE ===
   const [currentTab, setCurrentTab] = useState<TabType>('today');
+  const [reviewsInitialTab, setReviewsInitialTab] = useState<'snapshot' | 'weekly' | 'quarterly'>('snapshot');
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Dual-mode data (localStorage + Supabase)
@@ -243,7 +244,7 @@ function App() {
     <div className="min-h-screen bg-sa-bg">
       <Navigation
         currentTab={currentTab}
-        onTabChange={setCurrentTab}
+        onTabChange={(tab) => { setReviewsInitialTab('snapshot'); setCurrentTab(tab); }}
         user={user}
         plan={plan}
         trialEndsAt={trialEndsAt}
@@ -275,7 +276,12 @@ function App() {
             onAddTask={addDailyTask}
             onToggleTask={toggleDailyTask}
             onDeleteTask={deleteDailyTask}
-            onNavigate={(tab) => setCurrentTab(tab as TabType)}
+            onNavigate={(tab, subTab) => {
+              if (tab === 'reviews' && subTab) {
+                setReviewsInitialTab(subTab as 'snapshot' | 'weekly' | 'quarterly');
+              }
+              setCurrentTab(tab as TabType);
+            }}
           />
         )}
 
@@ -311,6 +317,7 @@ function App() {
             onAddNonNegotiable={addNonNegotiable}
             onHabitsChange={() => loadHabits(true)}
             user={user}
+            initialTab={reviewsInitialTab}
           />
         )}
 
