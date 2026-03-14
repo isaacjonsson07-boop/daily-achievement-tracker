@@ -192,7 +192,6 @@ function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
   const Icon = milestone.icon;
   const progress = isNext && milestone.progressFn ? milestone.progressFn(ctx) : null;
   const progressPct = progress ? Math.round((progress.current / progress.target) * 100) : 0;
-  const completionText = unlocked && milestone.completionLabel ? milestone.completionLabel(ctx) : null;
 
   return (
     <div className={`relative flex gap-5 ${isLocked ? 'opacity-30' : ''}`}>
@@ -256,27 +255,22 @@ function MilestoneCard({ milestone, index, unlocked, isNext, isLocked, ctx }: {
           </div>
 
           {/* Description */}
-          <p className={`text-[0.85rem] leading-relaxed mb-2.5 ${unlocked ? 'text-sa-cream-muted' : isNext ? 'text-sa-cream-soft' : 'text-sa-cream-faint'}`}>
+          <p className={`text-[0.85rem] leading-relaxed ${unlocked ? 'text-sa-cream-muted' : isNext ? 'text-sa-cream-soft mb-2.5' : 'text-sa-cream-faint mb-2.5'}`}>
             {milestone.description}
           </p>
 
-          {/* Completion context for unlocked milestones */}
-          {unlocked && completionText && (
-            <p className="text-[0.72rem] mb-2" style={{ color: ch.color }}>
-              {completionText}
-            </p>
+          {/* Requirement tag — only for current and locked (completed already proved it) */}
+          {!unlocked && (
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-[0.72rem] px-2.5 py-1 rounded-sa-sm" style={{
+                color: isNext ? ch.color : 'var(--cream-faint)',
+                backgroundColor: isNext ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${isNext ? ch.border : 'rgba(255,255,255,0.06)'}`,
+              }}>
+                {milestone.requirement}
+              </span>
+            </div>
           )}
-
-          {/* Requirement tag */}
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-[0.72rem] px-2.5 py-1 rounded-sa-sm" style={{
-              color: unlocked ? ch.color : isNext ? ch.color : 'var(--cream-faint)',
-              backgroundColor: unlocked ? ch.colorSoft : isNext ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
-              border: `1px solid ${unlocked ? ch.border : isNext ? ch.border : 'rgba(255,255,255,0.06)'}`,
-            }}>
-              {milestone.requirement}
-            </span>
-          </div>
 
           {/* Progress bar for current milestone — prominent */}
           {isNext && progress && (
