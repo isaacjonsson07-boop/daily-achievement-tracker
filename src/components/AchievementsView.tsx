@@ -361,62 +361,351 @@ function RankHeader({ unlocked, total, rank }: { unlocked: number; total: number
 }
 
 // ═══════════════════════════════════════════════════════
-// REPORT COMPONENTS (preserved)
+// REPORT COMPONENTS (original)
 // ═══════════════════════════════════════════════════════
 
-function getMonthLabel(m: string) { const [y, mo] = m.split('-'); return new Date(parseInt(y), parseInt(mo)-1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }); }
-function getShortMonthLabel(m: string) { const [y, mo] = m.split('-'); return new Date(parseInt(y), parseInt(mo)-1).toLocaleDateString('en-US', { month: 'short' }); }
-function getYearLabel(m: string) { return m.split('-')[0]; }
+function getMonthLabel(month: string): string {
+  const [y, m] = month.split('-');
+  const date = new Date(parseInt(y), parseInt(m) - 1);
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
 
+function getShortMonthLabel(month: string): string {
+  const [y, m] = month.split('-');
+  const date = new Date(parseInt(y), parseInt(m) - 1);
+  return date.toLocaleDateString('en-US', { month: 'short' });
+}
+
+function getYearLabel(month: string): string {
+  return month.split('-')[0];
+}
+
+// ═══════════════════════════════════════
+// ORNATE SVG FRAMES (modal only)
+// ═══════════════════════════════════════
+
+// Diamond frame — real ornamental corner piece
 function DiamondFrame() {
-  const s = (t: string): React.CSSProperties => ({ position: 'absolute', width: 85, height: 85, opacity: 0.85, transform: t, pointerEvents: 'none', filter: 'drop-shadow(0 0 6px rgba(184,212,232,0.4))' });
-  return <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
-    {[['scaleY(-1)','top','left'],['scale(-1,-1)','top','right'],['none','bottom','left'],['scaleX(-1)','bottom','right']].map(([t,v,h],i) => <img key={i} src="/corner-diamond.svg" alt="" style={{...s(t),[v]:0,[h]:0}} />)}
-  </div>;
-}
-function GoldFrame() {
-  const s = (t: string): React.CSSProperties => ({ position: 'absolute', width: 65, height: 65, opacity: 0.75, transform: t, pointerEvents: 'none', filter: 'drop-shadow(0 0 4px rgba(197,165,90,0.3))' });
-  return <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
-    {[['none','top','left'],['scaleX(-1)','top','right'],['scaleY(-1)','bottom','left'],['scale(-1,-1)','bottom','right']].map(([t,v,h],i) => <img key={i} src="/corner-gold.svg" alt="" style={{...s(t),[v]:0,[h]:0}} />)}
-  </div>;
-}
-function SilverFrame({ color: c }: { color: string }) {
-  const p = [['top-0 left-0','M4 24 L4 8 C4 6,6 4,8 4 L24 4','M8 4 L4 4 L4 8'],['top-0 right-0','M44 24 L44 8 C44 6,42 4,40 4 L24 4','M40 4 L44 4 L44 8'],['bottom-0 left-0','M4 24 L4 40 C4 42,6 44,8 44 L24 44','M8 44 L4 44 L4 40'],['bottom-0 right-0','M44 24 L44 40 C44 42,42 44,40 44 L24 44','M40 44 L44 44 L44 40']];
-  return <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">{p.map(([pos,d1,d2],i)=><svg key={i} className={`absolute ${pos} w-12 h-12`} viewBox="0 0 48 48" fill="none"><path d={d1} stroke={c} strokeWidth="1"/><path d={d2} stroke={c} strokeWidth="1.5"/></svg>)}</div>;
-}
-function BronzeFrame({ color: c }: { color: string }) {
-  const p = [['top-0 left-0','M4 16 L4 6 C4 5,5 4,6 4 L16 4'],['top-0 right-0','M28 16 L28 6 C28 5,27 4,26 4 L16 4'],['bottom-0 left-0','M4 16 L4 26 C4 27,5 28,6 28 L16 28'],['bottom-0 right-0','M28 16 L28 26 C28 27,27 28,26 28 L16 28']];
-  return <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">{p.map(([pos,d],i)=><svg key={i} className={`absolute ${pos} w-8 h-8`} viewBox="0 0 32 32" fill="none"><path d={d} stroke={c} strokeWidth="1"/></svg>)}</div>;
-}
-function TierFrame({ tier }: { tier: ReportTier }) { const c = TIER_CONFIG[tier]; switch(tier){case 'diamond':return <DiamondFrame/>;case 'gold':return <GoldFrame/>;case 'silver':return <SilverFrame color={c.color}/>;case 'bronze':return <BronzeFrame color={c.color}/>;} }
-function ScoreRing({ score, tier, size=80 }: { score: number; tier: ReportTier; size?: number }) {
-  const c=TIER_CONFIG[tier],sw=3,r=(size-sw*2)/2,ci=2*Math.PI*r,off=ci-(score/100)*ci;
-  return <div className="relative" style={{width:size,height:size}}><svg width={size} height={size} className="transform -rotate-90"><circle cx={size/2} cy={size/2} r={r} stroke="rgba(255,255,255,0.05)" strokeWidth={sw} fill="none"/><circle cx={size/2} cy={size/2} r={r} stroke={c.color} strokeWidth={sw} fill="none" strokeLinecap="round" strokeDasharray={ci} strokeDashoffset={off} style={{transition:'stroke-dashoffset 0.8s ease-out'}}/></svg><div className="absolute inset-0 flex flex-col items-center justify-center"><span className="font-serif text-xl" style={{color:c.color}}>{score}</span></div></div>;
-}
-function DeltaBadge({ delta }: { delta?: number }) { if(delta==null)return null; if(delta>0)return <span className="inline-flex items-center gap-1 text-xs text-sa-green"><TrendingUp className="w-3 h-3"/>+{delta}</span>; if(delta<0)return <span className="inline-flex items-center gap-1 text-xs text-sa-rose"><TrendingDown className="w-3 h-3"/>{delta}</span>; return <span className="inline-flex items-center gap-1 text-xs text-sa-cream-faint"><Minus className="w-3 h-3"/>0</span>; }
-function CategoryBar({ label, score, color }: { label: string; score: number; color: string }) { return <div className="space-y-1.5"><div className="flex items-center justify-between"><span className="text-xs text-sa-cream-muted">{label}</span><span className="text-xs font-medium tabular-nums" style={{color}}>{score}%</span></div><div className="w-full h-1.5 bg-sa-bg-lift rounded-full overflow-hidden"><div className="h-full rounded-full transition-all duration-700 ease-out" style={{width:`${score}%`,backgroundColor:color}}/></div></div>; }
+  const cornerStyle = (transform: string): React.CSSProperties => ({
+    position: 'absolute',
+    width: '85px',
+    height: '85px',
+    opacity: 0.85,
+    transform,
+    pointerEvents: 'none',
+    filter: 'drop-shadow(0 0 6px rgba(184, 212, 232, 0.4))',
+  });
 
-function SystemCard({ report: rp, onClick }: { report: SystemReport; onClick: () => void }) {
-  const c = TIER_CONFIG[rp.tier];
-  return <button onClick={onClick} className="w-full text-left group relative rounded-sa-lg transition-all duration-200 hover:scale-[1.01]" style={{border:`1px solid ${c.border}`,backgroundColor:c.bg}}>
-    <div className="relative p-5"><div className="flex items-center gap-4"><ScoreRing score={rp.score} tier={rp.tier} size={64}/><div className="flex-1 min-w-0"><div className="flex items-center gap-2 mb-1"><span className="font-serif text-base text-sa-cream">{getShortMonthLabel(rp.month)}</span><span className="text-xs text-sa-cream-faint">{getYearLabel(rp.month)}</span>{rp.isInstallationReport&&<span className="text-[0.6rem] uppercase tracking-wider px-1.5 py-0.5 rounded" style={{color:c.color,backgroundColor:c.bg,border:`1px solid ${c.border}`}}>Day 21</span>}</div><div className="flex items-center gap-3"><span className="text-xs font-medium uppercase tracking-wider" style={{color:c.color}}>{c.label}</span><DeltaBadge delta={rp.scoreDelta}/></div>{rp.scoreCapped&&<div className="flex items-center gap-1 mt-1"><AlertTriangle className="w-3 h-3 text-sa-cream-faint"/><span className="text-[0.65rem] text-sa-cream-faint">Below minimums</span></div>}</div></div></div></button>;
-}
-
-function ExpandedReport({ report: rp, onClose }: { report: SystemReport; onClose: () => void }) {
-  const c = TIER_CONFIG[rp.tier];
-  return <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose} style={{backgroundColor:'rgba(0,0,0,0.7)',backdropFilter:'blur(8px)'}}>
-    <div className="relative w-full max-w-lg rounded-sa-lg" onClick={e=>e.stopPropagation()} style={{border:`1px solid ${c.border}`,backgroundColor:'#151518',boxShadow:rp.tier==='diamond'?'0 0 40px rgba(184,212,232,0.10)':rp.tier==='gold'?'0 0 30px rgba(197,165,90,0.08)':'none'}}>
-      <TierFrame tier={rp.tier}/>
-      <div className="max-h-[90vh] overflow-y-auto rounded-sa-lg"><div className="relative z-20 p-8 sm:p-10">
-        <button onClick={onClose} className="absolute top-4 right-4 p-1.5 text-sa-cream-faint hover:text-sa-cream transition-colors rounded-sa-sm hover:bg-sa-bg-lift z-30"><X className="w-4 h-4"/></button>
-        <div className="text-center mb-8"><p className="text-[0.65rem] uppercase tracking-[0.2em] text-sa-cream-faint mb-3">System Report</p><h2 className="font-serif text-2xl text-sa-cream mb-1">{getMonthLabel(rp.month)}</h2>{rp.isInstallationReport&&<p className="text-xs mt-1" style={{color:c.color}}>Installation Complete — Day 21</p>}<div className="flex justify-center mt-6 mb-3"><ScoreRing score={rp.score} tier={rp.tier} size={100}/></div><div className="flex items-center justify-center gap-3"><span className="text-sm font-medium uppercase tracking-wider" style={{color:c.color}}>{c.label}</span><DeltaBadge delta={rp.scoreDelta}/></div>{rp.scoreCapped&&<div className="flex items-center justify-center gap-1.5 mt-2"><AlertTriangle className="w-3.5 h-3.5 text-sa-cream-faint"/><span className="text-xs text-sa-cream-faint">Score capped — below minimums</span></div>}</div>
-        <div className="h-px mb-6" style={{background:`linear-gradient(90deg, transparent, ${c.border}, transparent)`}}/>
-        <div className="space-y-4 mb-8"><p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint">Performance</p><CategoryBar label={`Habits (${rp.habitsCount})`} score={rp.habitsScore} color={c.color}/><CategoryBar label={`Tasks (${rp.tasksAvgPerDay}/day)`} score={rp.tasksScore} color={c.color}/><CategoryBar label={`NNs (${rp.nnCount})`} score={rp.nnScore} color={c.color}/></div>
-        <div className="grid grid-cols-2 gap-3 mb-8">{[{icon:CheckCircle,l:'Tasks',v:rp.totalTasksCompleted},{icon:Flame,l:'Streak',v:`${rp.longestStreak}d`},{icon:Calendar,l:'Active',v:`${rp.totalDaysActive}d`},{icon:Target,l:'Score',v:rp.score,useC:true}].map(s=>{const I=s.icon;return <div key={s.l} className="p-3 rounded-sa" style={{backgroundColor:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}><div className="flex items-center gap-1.5 mb-1"><I className="w-3.5 h-3.5" style={{color:c.color}}/><span className="text-[0.65rem] uppercase tracking-wider text-sa-cream-faint">{s.l}</span></div><span className="font-serif text-xl" style={{color:(s as any).useC?c.color:'var(--cream)'}}>{String(s.v)}</span></div>;})}</div>
-        <div className="text-center"><div className="h-px mb-5" style={{background:`linear-gradient(90deg, transparent, ${c.border}, transparent)`}}/><p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-3">Highlight</p><p className="text-sm text-sa-cream-soft italic leading-relaxed">"{rp.personalHighlight}"</p></div>
-      </div></div>
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
+      <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('scaleY(-1)'), top: 0, left: 0 }} />
+      <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('scale(-1, -1)'), top: 0, right: 0 }} />
+      <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('none'), bottom: 0, left: 0 }} />
+      <img src="/corner-diamond.svg" alt="" style={{ ...cornerStyle('scaleX(-1)'), bottom: 0, right: 0 }} />
     </div>
-  </div>;
+  );
+}
+
+// Gold frame — real ornamental corner piece
+function GoldFrame() {
+  const cornerStyle = (transform: string): React.CSSProperties => ({
+    position: 'absolute',
+    width: '65px',
+    height: '65px',
+    opacity: 0.75,
+    transform,
+    pointerEvents: 'none',
+    filter: 'drop-shadow(0 0 4px rgba(197, 165, 90, 0.3))',
+  });
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
+      <img src="/corner-gold.svg" alt="" style={{ ...cornerStyle('none'), top: 0, left: 0 }} />
+      <img src="/corner-gold.svg" alt="" style={{ ...cornerStyle('scaleX(-1)'), top: 0, right: 0 }} />
+      <img src="/corner-gold.svg" alt="" style={{ ...cornerStyle('scaleY(-1)'), bottom: 0, left: 0 }} />
+      <img src="/corner-gold.svg" alt="" style={{ ...cornerStyle('scale(-1, -1)'), bottom: 0, right: 0 }} />
+    </div>
+  );
+}
+
+// Silver frame — clean geometric corners
+function SilverFrame({ color }: { color: string }) {
+  const c = color;
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
+      <svg className="absolute top-0 left-0 w-12 h-12" viewBox="0 0 48 48" fill="none">
+        <path d="M4 24 L4 8 C4 6, 6 4, 8 4 L24 4" stroke={c} strokeWidth="1" />
+        <path d="M8 4 L4 4 L4 8" stroke={c} strokeWidth="1.5" />
+      </svg>
+      <svg className="absolute top-0 right-0 w-12 h-12" viewBox="0 0 48 48" fill="none">
+        <path d="M44 24 L44 8 C44 6, 42 4, 40 4 L24 4" stroke={c} strokeWidth="1" />
+        <path d="M40 4 L44 4 L44 8" stroke={c} strokeWidth="1.5" />
+      </svg>
+      <svg className="absolute bottom-0 left-0 w-12 h-12" viewBox="0 0 48 48" fill="none">
+        <path d="M4 24 L4 40 C4 42, 6 44, 8 44 L24 44" stroke={c} strokeWidth="1" />
+        <path d="M8 44 L4 44 L4 40" stroke={c} strokeWidth="1.5" />
+      </svg>
+      <svg className="absolute bottom-0 right-0 w-12 h-12" viewBox="0 0 48 48" fill="none">
+        <path d="M44 24 L44 40 C44 42, 42 44, 40 44 L24 44" stroke={c} strokeWidth="1" />
+        <path d="M40 44 L44 44 L44 40" stroke={c} strokeWidth="1.5" />
+      </svg>
+    </div>
+  );
+}
+
+// Bronze frame — minimal corner marks
+function BronzeFrame({ color }: { color: string }) {
+  const c = color;
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden rounded-sa-lg">
+      <svg className="absolute top-0 left-0 w-8 h-8" viewBox="0 0 32 32" fill="none">
+        <path d="M4 16 L4 6 C4 5, 5 4, 6 4 L16 4" stroke={c} strokeWidth="1" />
+      </svg>
+      <svg className="absolute top-0 right-0 w-8 h-8" viewBox="0 0 32 32" fill="none">
+        <path d="M28 16 L28 6 C28 5, 27 4, 26 4 L16 4" stroke={c} strokeWidth="1" />
+      </svg>
+      <svg className="absolute bottom-0 left-0 w-8 h-8" viewBox="0 0 32 32" fill="none">
+        <path d="M4 16 L4 26 C4 27, 5 28, 6 28 L16 28" stroke={c} strokeWidth="1" />
+      </svg>
+      <svg className="absolute bottom-0 right-0 w-8 h-8" viewBox="0 0 32 32" fill="none">
+        <path d="M28 16 L28 26 C28 27, 27 28, 26 28 L16 28" stroke={c} strokeWidth="1" />
+      </svg>
+    </div>
+  );
+}
+
+// Frame selector
+function TierFrame({ tier }: { tier: ReportTier }) {
+  const config = TIER_CONFIG[tier];
+  switch (tier) {
+    case 'diamond': return <DiamondFrame />;
+    case 'gold': return <GoldFrame />;
+    case 'silver': return <SilverFrame color={config.color} />;
+    case 'bronze': return <BronzeFrame color={config.color} />;
+  }
+}
+
+// ═══════════════════════════════════════
+// SHARED COMPONENTS
+// ═══════════════════════════════════════
+
+function ScoreRing({ score, tier, size = 80 }: { score: number; tier: ReportTier; size?: number }) {
+  const config = TIER_CONFIG[tier];
+  const strokeWidth = 3;
+  const radius = (size - strokeWidth * 2) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={radius}
+          stroke="rgba(255,255,255,0.05)" strokeWidth={strokeWidth} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={radius}
+          stroke={config.color} strokeWidth={strokeWidth} fill="none"
+          strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
+          style={{ transition: 'stroke-dashoffset 0.8s ease-out' }} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-serif text-xl" style={{ color: config.color }}>{score}</span>
+      </div>
+    </div>
+  );
+}
+
+function DeltaBadge({ delta }: { delta?: number }) {
+  if (delta === undefined || delta === null) return null;
+  if (delta > 0) return (
+    <span className="inline-flex items-center gap-1 text-xs text-sa-green">
+      <TrendingUp className="w-3 h-3" />+{delta} <span className="text-sa-cream-faint">vs last</span>
+    </span>
+  );
+  if (delta < 0) return (
+    <span className="inline-flex items-center gap-1 text-xs text-sa-rose">
+      <TrendingDown className="w-3 h-3" />{delta} <span className="text-sa-cream-faint">vs last</span>
+    </span>
+  );
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-sa-cream-faint">
+      <Minus className="w-3 h-3" />0 vs last
+    </span>
+  );
+}
+
+function CategoryBar({ label, score, color }: { label: string; score: number; color: string }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-sa-cream-muted">{label}</span>
+        <span className="text-xs font-medium tabular-nums" style={{ color }}>{score}%</span>
+      </div>
+      <div className="w-full h-1.5 bg-sa-bg-lift rounded-full overflow-hidden">
+        <div className="h-full rounded-full transition-all duration-700 ease-out"
+          style={{ width: `${score}%`, backgroundColor: color }} />
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════
+// SYSTEM CARD (compact, clean — no frame)
+// ═══════════════════════════════════════
+
+function SystemCard({ report, onClick }: { report: SystemReport; onClick: () => void }) {
+  const config = TIER_CONFIG[report.tier];
+
+  return (
+    <button onClick={onClick}
+      className="w-full text-left group relative rounded-sa-lg transition-all duration-200 hover:scale-[1.01]"
+      style={{ border: `1px solid ${config.border}`, backgroundColor: config.bg }}>
+      <div className="relative p-5">
+        <div className="flex items-center gap-4">
+          <ScoreRing score={report.score} tier={report.tier} size={64} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-serif text-base text-sa-cream">{getShortMonthLabel(report.month)}</span>
+              <span className="text-xs text-sa-cream-faint">{getYearLabel(report.month)}</span>
+              {report.isInstallationReport && (
+                <span className="text-[0.6rem] uppercase tracking-wider px-1.5 py-0.5 rounded"
+                  style={{ color: config.color, backgroundColor: config.bg, border: `1px solid ${config.border}` }}>
+                  Day 21
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: config.color }}>
+                {config.label}
+              </span>
+              <DeltaBadge delta={report.scoreDelta} />
+            </div>
+            {report.scoreCapped && (
+              <div className="flex items-center gap-1 mt-1">
+                <AlertTriangle className="w-3 h-3 text-sa-cream-faint" />
+                <span className="text-[0.65rem] text-sa-cream-faint">Below minimums — score capped</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// ═══════════════════════════════════════
+// EXPANDED REPORT (with ornate frame)
+// ═══════════════════════════════════════
+
+function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: () => void }) {
+  const config = TIER_CONFIG[report.tier];
+  const isDiamond = report.tier === 'diamond';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+      style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <div className="relative w-full max-w-lg rounded-sa-lg"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          border: `1px solid ${config.border}`,
+          backgroundColor: '#151518',
+          boxShadow: isDiamond
+            ? '0 0 40px rgba(184, 212, 232, 0.10), 0 0 80px rgba(184, 212, 232, 0.04)'
+            : report.tier === 'gold' ? '0 0 30px rgba(197, 165, 90, 0.08)' : 'none',
+        }}>
+
+        {/* Ornate tier frame */}
+        <TierFrame tier={report.tier} />
+
+        {/* Scrollable content */}
+        <div className="max-h-[90vh] overflow-y-auto rounded-sa-lg">
+          <div className="relative z-20 p-8 sm:p-10">
+            <button onClick={onClose}
+              className="absolute top-4 right-4 p-1.5 text-sa-cream-faint hover:text-sa-cream transition-colors rounded-sa-sm hover:bg-sa-bg-lift z-30">
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="text-center mb-8">
+              <p className="text-[0.65rem] uppercase tracking-[0.2em] text-sa-cream-faint mb-3">System Report</p>
+              <h2 className="font-serif text-2xl text-sa-cream mb-1">{getMonthLabel(report.month)}</h2>
+              {report.isInstallationReport && (
+                <p className="text-xs mt-1" style={{ color: config.color }}>Installation Complete — Day 21</p>
+              )}
+              <div className="flex justify-center mt-6 mb-3">
+                <ScoreRing score={report.score} tier={report.tier} size={100} />
+              </div>
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-sm font-medium uppercase tracking-wider" style={{ color: config.color }}>
+                  {config.label}
+                </span>
+                <DeltaBadge delta={report.scoreDelta} />
+              </div>
+              {report.scoreCapped && (
+                <div className="flex items-center justify-center gap-1.5 mt-2">
+                  <AlertTriangle className="w-3.5 h-3.5 text-sa-cream-faint" />
+                  <span className="text-xs text-sa-cream-faint">Score capped at 75 — below system minimums</span>
+                </div>
+              )}
+            </div>
+
+            <div className="h-px mb-6" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
+
+            <div className="space-y-4 mb-8">
+              <p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint">Performance Breakdown</p>
+              <CategoryBar label={`Habits (${report.habitsCount} tracked)`} score={report.habitsScore} color={config.color} />
+              <CategoryBar label={`Tasks (avg ${report.tasksAvgPerDay}/day)`} score={report.tasksScore} color={config.color} />
+              <CategoryBar label={`Non-Negotiables (${report.nnCount} active)`} score={report.nnScore} color={config.color} />
+            </div>
+
+            {!report.meetsMinimums && (
+              <div className="mb-6 p-3 rounded-sa text-xs text-sa-cream-faint"
+                style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <p className="font-medium text-sa-cream-muted mb-1">Below system minimums</p>
+                <p>
+                  Full scoring requires {report.habitsCount < 3 ? `3+ habits (you have ${report.habitsCount})` : ''}
+                  {report.habitsCount < 3 && report.tasksAvgPerDay < 3 ? ', ' : ''}
+                  {report.tasksAvgPerDay < 3 ? `3+ tasks/day avg (you avg ${report.tasksAvgPerDay})` : ''}
+                  {(report.habitsCount < 3 || report.tasksAvgPerDay < 3) && report.nnCount < 2 ? ', ' : ''}
+                  {report.nnCount < 2 ? `2+ non-negotiables (you have ${report.nnCount})` : ''}.
+                </p>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-3 mb-8">
+              {[
+                { icon: CheckCircle, label: 'Tasks Done', value: String(report.totalTasksCompleted), suffix: '' },
+                { icon: Flame, label: 'Streak', value: String(report.longestStreak), suffix: 'days' },
+                { icon: Calendar, label: 'Days Active', value: String(report.totalDaysActive), suffix: '' },
+                { icon: Target, label: 'Score', value: String(report.score), suffix: '/100', useColor: true },
+              ].map(stat => {
+                const Icon = stat.icon;
+                return (
+                  <div key={stat.label} className="p-3 rounded-sa"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Icon className="w-3.5 h-3.5" style={{ color: config.color }} />
+                      <span className="text-[0.65rem] uppercase tracking-wider text-sa-cream-faint">{stat.label}</span>
+                    </div>
+                    <span className="font-serif text-xl" style={{ color: stat.useColor ? config.color : 'var(--cream)' }}>
+                      {stat.value}
+                      {stat.suffix && <span className="text-sm text-sa-cream-faint ml-1">{stat.suffix}</span>}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mb-2 text-center">
+              <div className="h-px mb-5" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
+              <p className="text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-3">Personal Highlight</p>
+              <p className="text-sm text-sa-cream-soft italic leading-relaxed">"{report.personalHighlight}"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ═══════════════════════════════════════════════════════
