@@ -276,21 +276,21 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
         {/* Ornate tier frame */}
         <TierFrame tier={report.tier} />
 
-        {/* Content — compact for mobile */}
+        {/* Content */}
         <div className="rounded-sa-lg">
-          <div className="relative z-20 p-4 sm:p-8">
+          <div className="relative z-20 p-4 sm:p-8 md:p-10">
             <button onClick={onClose}
-              className="absolute top-3 right-3 p-1.5 text-sa-cream-faint hover:text-sa-cream transition-colors rounded-sa-sm hover:bg-sa-bg-lift z-30">
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 text-sa-cream-faint hover:text-sa-cream transition-colors rounded-sa-sm hover:bg-sa-bg-lift z-30">
               <X className="w-4 h-4" />
             </button>
 
-            <div className="text-center mb-3 sm:mb-5">
-              <p className="text-[0.6rem] uppercase tracking-[0.2em] text-sa-cream-faint mb-1.5">System Report</p>
+            <div className="text-center mb-3 sm:mb-8">
+              <p className="text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.2em] text-sa-cream-faint mb-1.5 sm:mb-3">System Report</p>
               <h2 className="font-serif text-xl sm:text-2xl text-sa-cream mb-1">{getMonthLabel(report.month)}</h2>
               {report.isInstallationReport && (
                 <p className="text-xs mt-1" style={{ color: config.color }}>Installation Complete — Day 21</p>
               )}
-              <div className="flex justify-center mt-3 mb-1.5">
+              <div className="flex justify-center mt-3 sm:mt-6 mb-1.5 sm:mb-3">
                 <ScoreRing score={report.score} tier={report.tier} size={70} />
               </div>
               <div className="flex items-center justify-center gap-3">
@@ -300,26 +300,26 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
                 <DeltaBadge delta={report.scoreDelta} />
               </div>
               {report.scoreCapped && (
-                <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                  <AlertTriangle className="w-3 h-3 text-sa-cream-faint" />
-                  <span className="text-[0.65rem] text-sa-cream-faint">Score capped at 75 — below minimums</span>
+                <div className="flex items-center justify-center gap-1.5 mt-1.5 sm:mt-2">
+                  <AlertTriangle className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-sa-cream-faint" />
+                  <span className="text-[0.65rem] sm:text-xs text-sa-cream-faint">Score capped at 75 — below system minimums</span>
                 </div>
               )}
             </div>
 
-            <div className="h-px mb-3" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
+            <div className="h-px mb-3 sm:mb-6" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
 
-            <div className="space-y-2.5 mb-3">
-              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-sa-cream-faint">Performance Breakdown</p>
+            <div className="space-y-2.5 sm:space-y-4 mb-3 sm:mb-8">
+              <p className="text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint">Performance Breakdown</p>
               <CategoryBar label={`Habits (${report.habitsCount} tracked)`} score={report.habitsScore} color={config.color} />
               <CategoryBar label={`Tasks (avg ${report.tasksAvgPerDay}/day)`} score={report.tasksScore} color={config.color} />
               <CategoryBar label={`Non-Negotiables (${report.nnCount} active)`} score={report.nnScore} color={config.color} />
             </div>
 
             {!report.meetsMinimums && (
-              <div className="mb-3 p-2 rounded-sa text-[0.65rem] text-sa-cream-faint"
+              <div className="mb-3 sm:mb-6 p-2 sm:p-3 rounded-sa text-[0.65rem] sm:text-xs text-sa-cream-faint"
                 style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <p className="font-medium text-sa-cream-muted mb-0.5">Below system minimums</p>
+                <p className="font-medium text-sa-cream-muted mb-0.5 sm:mb-1">Below system minimums</p>
                 <p>
                   Full scoring requires {report.habitsCount < 3 ? `3+ habits (you have ${report.habitsCount})` : ''}
                   {report.habitsCount < 3 && report.tasksAvgPerDay < 3 ? ', ' : ''}
@@ -330,7 +330,7 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-1.5 mb-3">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-3 mb-3 sm:mb-8">
               {[
                 { icon: CheckCircle, label: 'Tasks Done', value: String(report.totalTasksCompleted), suffix: '' },
                 { icon: Flame, label: 'Streak', value: String(report.longestStreak), suffix: 'days' },
@@ -339,15 +339,15 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
               ].map(stat => {
                 const Icon = stat.icon;
                 return (
-                  <div key={stat.label} className="p-2 rounded-sa"
+                  <div key={stat.label} className="p-2 sm:p-3 rounded-sa"
                     style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <Icon className="w-3 h-3" style={{ color: config.color }} />
-                      <span className="text-[0.55rem] uppercase tracking-wider text-sa-cream-faint">{stat.label}</span>
+                    <div className="flex items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1">
+                      <Icon className="w-3 sm:w-3.5 h-3 sm:h-3.5" style={{ color: config.color }} />
+                      <span className="text-[0.55rem] sm:text-[0.65rem] uppercase tracking-wider text-sa-cream-faint">{stat.label}</span>
                     </div>
-                    <span className="font-serif text-base" style={{ color: stat.useColor ? config.color : 'var(--cream)' }}>
+                    <span className="font-serif text-base sm:text-xl" style={{ color: stat.useColor ? config.color : 'var(--cream)' }}>
                       {stat.value}
-                      {stat.suffix && <span className="text-[0.65rem] text-sa-cream-faint ml-1">{stat.suffix}</span>}
+                      {stat.suffix && <span className="text-[0.65rem] sm:text-sm text-sa-cream-faint ml-1">{stat.suffix}</span>}
                     </span>
                   </div>
                 );
@@ -355,9 +355,9 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
             </div>
 
             <div className="text-center">
-              <div className="h-px mb-2.5" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
-              <p className="text-[0.6rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-1.5">Personal Highlight</p>
-              <p className="text-[0.8rem] text-sa-cream-soft italic leading-relaxed">"{report.personalHighlight}"</p>
+              <div className="h-px mb-2.5 sm:mb-5" style={{ background: `linear-gradient(90deg, transparent, ${config.border}, transparent)` }} />
+              <p className="text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.15em] text-sa-cream-faint mb-1.5 sm:mb-3">Personal Highlight</p>
+              <p className="text-[0.8rem] sm:text-sm text-sa-cream-soft italic leading-relaxed">"{report.personalHighlight}"</p>
             </div>
           </div>
         </div>
