@@ -131,7 +131,7 @@ function SidebarCommandCenter({
 }: {
   percentage: number; completedItems: number; totalItems: number;
   currentStreak: number; weekConsistency: number; systemAge: number;
-  statusMsg: string; statusColor: string; nextReviewDay: string;
+  statusMsg: string; statusColor: string; nextReviewDay: { label: string; daysLeft: number };
   nnDone: number; nnTotal: number; habitsDone: number; habitsTotal: number; tasksDone: number; tasksTotal: number;
   weekDayData: { label: string; pct: number }[];
   milestoneInfo: { title: string; current: number; target: number } | null;
@@ -246,7 +246,7 @@ function SidebarCommandCenter({
         </button>
       ) : (
         <p className="text-[0.68rem] text-sa-cream-faint text-center">
-          Weekly review: <span className="text-sa-cream-muted">{nextReviewDay}</span>
+          Weekly review in <span className="text-sa-cream-muted">{nextReviewDay.daysLeft} day{nextReviewDay.daysLeft !== 1 ? 's' : ''}</span>
         </p>
       )}
     </div>
@@ -464,7 +464,7 @@ export function TodayView({
   const nextReviewDay = useMemo(() => {
     const dow = new Date().getDay();
     const d = dow === 0 ? 0 : 7 - dow;
-    return d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : new Date(Date.now() + d * 86400000).toLocaleDateString('en-US', { weekday: 'long' });
+    return { label: d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : new Date(Date.now() + d * 86400000).toLocaleDateString('en-US', { weekday: 'long' }), daysLeft: d };
   }, []);
 
   const isReviewDay = new Date().getDay() === 0; // Sunday
