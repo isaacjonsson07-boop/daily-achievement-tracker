@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Trophy, TrendingUp, TrendingDown, Minus, Target, Flame, Calendar, CheckCircle, AlertTriangle, X, Gem, Zap, Shield, FileText, Award, Star, Clock, Anchor, Power, Lock } from 'lucide-react';
 import {
   NonNegotiable, NonNegotiableCompletion,
@@ -258,7 +259,7 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
   const config = TIER_CONFIG[report.tier];
   const isDiamond = report.tier === 'diamond';
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       onClick={onClose}
       style={{ backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
@@ -361,7 +362,8 @@ function ExpandedReport({ report, onClose }: { report: SystemReport; onClose: ()
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
