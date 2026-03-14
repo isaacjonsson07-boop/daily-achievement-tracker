@@ -523,43 +523,25 @@ export function AchievementsView({ nonNegotiables, nnCompletions, habits, habitC
             <p className="text-sm leading-relaxed" style={{ color: status.color }}>{status.message}</p>
           </div>
 
-          {/* ── Atmospheric glow background ── */}
-          <div className="relative">
-            {/* Gold glow for Foundation */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at center, rgba(197,165,90,0.06) 0%, transparent 70%)',
-            }} />
-            {/* Blue glow for Momentum */}
-            <div className="absolute top-[35%] left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at center, rgba(109,181,245,0.05) 0%, transparent 70%)',
-            }} />
-            {/* Green glow for Mastery */}
-            <div className="absolute top-[65%] left-1/2 -translate-x-1/2 w-[300px] h-[400px] pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at center, rgba(110,203,139,0.05) 0%, transparent 70%)',
-            }} />
-
-            {/* ── The path ── */}
-            <div className="relative z-10">
-              {chapters.map(({ chapter, milestones: ms }) => (
-                <div key={chapter}>
-                  <ChapterHeader chapter={chapter} />
-                  <div className="ml-1">
-                    {ms.map(({ def, index }) => (
-                      <MilestoneCard
-                        key={def.id}
-                        milestone={def}
-                        index={index}
-                        unlocked={index < unlockedCount}
-                        isNext={index === nextIndex}
-                        isLocked={index > (nextIndex ?? unlockedCount)}
-                        ctx={ctx}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
+          {/* ── The path ── */}
+          {chapters.map(({ chapter, milestones: ms }) => (
+            <div key={chapter}>
+              <ChapterHeader chapter={chapter} />
+              <div className="ml-1">
+                {ms.map(({ def, index }) => (
+                  <MilestoneCard
+                    key={def.id}
+                    milestone={def}
+                    index={index}
+                    unlocked={index < unlockedCount}
+                    isNext={index === nextIndex}
+                    isLocked={index > (nextIndex ?? unlockedCount)}
+                    ctx={ctx}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
 
           {unlockedCount === MILESTONES.length && (
             <div className="mt-8 py-8 px-8 text-center rounded-sa-lg" style={{ border: '1px solid rgba(110,203,139,0.3)', backgroundColor: 'rgba(110,203,139,0.06)' }}>
