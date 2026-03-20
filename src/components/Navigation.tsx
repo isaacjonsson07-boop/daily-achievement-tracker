@@ -1,16 +1,19 @@
 import React from 'react';
-import { CheckCircle, BookOpen, BarChart3, Trophy, Layers, Settings, User, LogOut } from 'lucide-react';
+import { CheckCircle, BookOpen, BarChart3, Trophy, Layers, Settings, User, LogOut, Lock } from 'lucide-react';
 import { TabType } from '../types';
+import { getTabLockInfo } from '../utils/progressUtils';
 
 interface NavigationProps {
   currentTab: TabType;
   onTabChange: (tab: TabType) => void;
+  onLockedTabClick: (tab: TabType) => void;
   user?: { email?: string } | null;
   plan?: 'free' | 'paid';
   trialEndsAt?: string | null;
   onSignOut: () => void;
   onShowAuth?: () => void;
   installationDay?: number;
+  highestCompletedDay: number;
 }
 
 const tabs: { id: TabType; label: string; mobileLabel: string; icon: React.ElementType }[] = [
@@ -25,14 +28,25 @@ const tabs: { id: TabType; label: string; mobileLabel: string; icon: React.Eleme
 export function Navigation({
   currentTab,
   onTabChange,
+  onLockedTabClick,
   user,
   plan = 'free',
   trialEndsAt,
   onSignOut,
   onShowAuth,
   installationDay,
+  highestCompletedDay,
 }: NavigationProps) {
   const isTrialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
+
+  const handleTabClick = (tabId: TabType) => {
+    const lockInfo = getTabLockInfo(tabId, highestCompletedDay);
+    if (lockInfo.locked) {
+      onLockedTabClick(tabId);
+    } else {
+      onTabChange(tabId);
+    }
+  };
 
   return (
     <>
@@ -55,19 +69,33 @@ export function Navigation({
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
+            const lockInfo = getTabLockInfo(tab.id, highestCompletedDay);
+            const isLocked = lockInfo.locked;
+
             return (
               <button
                 key={tab.id}
-                onClick={() => onTabChange(tab.id)}
+                onClick={() => handleTabClick(tab.id)}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-[10px] text-[0.88rem] transition-all duration-200 border ${
-                  isActive
+                  isLocked
+                    ? 'text-sa-cream-faint/50 border-transparent cursor-default'
+                    : isActive
                     ? 'text-sa-gold bg-sa-gold-glow border-sa-gold-border'
                     : 'text-sa-cream-muted border-transparent hover:text-sa-cream-soft hover:bg-sa-gold-soft'
                 }`}
               >
-                <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'}`} />
-                <span className="flex-1 text-left">{tab.label}</span>
-                {tab.id === 'installation' && installationDay != null && installationDay <= 21 && (
+                {isLocked ? (
+                  <Lock className="w-[18px] h-[18px] flex-shrink-0 opacity-40" />
+                ) : (
+                  <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'}`} />
+                )}
+                <span className={`flex-1 text-left ${isLocked ? 'opacity-40' : ''}`}>{tab.label}</span>
+                {isLocked && lockInfo.requiredDay && (
+                  <span className="text-[0.65rem] text-sa-cream-faint/40 font-medium tabular-nums">
+                    Day {lockInfo.requiredDay}
+                  </span>
+                )}
+                {!isLocked && tab.id === 'installation' && installationDay != null && installationDay <= 21 && (
                   <span className="text-xs text-sa-gold/60 font-medium tabular-nums">
                     {installationDay}/21
                   </span>
@@ -146,23 +174,32 @@ export function Navigation({
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
+            const lockInfo = getTabLockInfo(tab.id, highestCompletedDay);
+            const isLocked = lockInfo.locked;
+
             return (
               <button
                 key={tab.id}
-                onClick={() => onTabChange(tab.id)}
+                onClick={() => handleTabClick(tab.id)}
                 className={`relative flex-1 flex flex-col items-center justify-center gap-1 py-1.5 rounded-sa-sm transition-colors duration-150 ${
-                  isActive
+                  isLocked
+                    ? 'text-sa-cream-faint/30'
+                    : isActive
                     ? 'text-sa-gold'
                     : 'text-sa-cream-faint active:text-sa-cream-muted'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.2]' : 'stroke-[1.6]'}`} />
+                {isLocked ? (
+                  <Lock className="w-5 h-5 stroke-[1.6] opacity-40" />
+                ) : (
+                  <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.2]' : 'stroke-[1.6]'}`} />
+                )}
                 <span className={`text-[0.6rem] leading-none ${
-                  isActive ? 'font-medium' : 'font-normal'
+                  isLocked ? 'opacity-40' : isActive ? 'font-medium' : 'font-normal'
                 }`}>
                   {tab.mobileLabel}
                 </span>
-                {tab.id === 'installation' && installationDay != null && installationDay <= 21 && (
+                {!isLocked && tab.id === 'installation' && installationDay != null && installationDay <= 21 && (
                   <span className="absolute top-0.5 right-1 w-2 h-2 rounded-full bg-sa-gold" />
                 )}
               </button>

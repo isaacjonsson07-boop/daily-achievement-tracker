@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   TabType, Habit, HabitCompletion, Goal,
 } from './types';
@@ -15,6 +15,8 @@ import { JournalingView } from './components/JournalingView';
 import { ReviewsView } from './components/ReviewsView';
 import { SystemView } from './components/SystemView';
 import { AchievementsView } from './components/AchievementsView';
+import { getHighestCompletedDay, getDefaultTab, getTabLockInfo } from './utils/progressUtils';
+import { Lock, BookOpen } from 'lucide-react';
 
 function App() {
   const {
@@ -24,9 +26,11 @@ function App() {
   } = useAuth();
 
   // === STATE ===
-  const [currentTab, setCurrentTab] = useState<TabType>('today');
+  const [currentTab, setCurrentTab] = useState<TabType>('installation');
   const [reviewsInitialTab, setReviewsInitialTab] = useState<'snapshot' | 'weekly' | 'quarterly'>('snapshot');
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [lockedTabInfo, setLockedTabInfo] = useState<{ tab: TabType; message: string; requiredDay: number } | null>(null);
+  const [defaultTabSet, setDefaultTabSet] = useState(false);
 
   // Dual-mode data (localStorage + Supabase)
   const {
@@ -64,6 +68,27 @@ function App() {
   useEffect(() => {
     if (user && plan === 'paid') setShowAuthModal(false);
   }, [user, plan]);
+
+  // === PROGRESSIVE UNLOCK ===
+  const highestCompletedDay = useMemo(
+    () => getHighestCompletedDay(journalEntries),
+    [journalEntries]
+  );
+
+  // Set default tab based on installation progress (once data loads)
+  useEffect(() => {
+    if (!dataLoading && !defaultTabSet) {
+      setCurrentTab(getDefaultTab(highestCompletedDay));
+      setDefaultTabSet(true);
+    }
+  }, [dataLoading, defaultTabSet, highestCompletedDay]);
+
+  const handleLockedTabClick = (tab: TabType) => {
+    const info = getTabLockInfo(tab, highestCompletedDay);
+    if (info.locked && info.requiredDay) {
+      setLockedTabInfo({ tab, message: info.message, requiredDay: info.requiredDay });
+    }
+  };
 
   const loadHabits = async (force = false) => {
     try {
@@ -245,11 +270,13 @@ function App() {
       <Navigation
         currentTab={currentTab}
         onTabChange={(tab) => { setReviewsInitialTab('snapshot'); setCurrentTab(tab); }}
+        onLockedTabClick={handleLockedTabClick}
         user={user}
         plan={plan}
         trialEndsAt={trialEndsAt}
         onSignOut={handleSignOut}
         onShowAuth={() => setShowAuthModal(true)}
+        highestCompletedDay={highestCompletedDay}
       />
 
       <AuthModal
@@ -364,6 +391,57 @@ function App() {
         </div>
         </div>
       </main>
+
+      {/* === LOCKED TAB OVERLAY === */}
+      {lockedTabInfo && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center px-6"
+          style={{ backgroundColor: 'rgba(13,13,15,0.85)', backdropFilter: 'blur(8px)' }}
+          onClick={() => setLockedTabInfo(null)}
+        >
+          <div
+            className="max-w-sm w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Lock icon */}
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(197,165,90,0.08)', border: '1px solid rgba(197,165,90,0.15)' }}
+            >
+              <Lock className="w-7 h-7 text-sa-gold/60" />
+            </div>
+
+            {/* Title */}
+            <h2 className="font-serif text-2xl text-sa-cream mb-3">
+              Activates on Day {lockedTabInfo.requiredDay}
+            </h2>
+
+            {/* Message */}
+            <p className="text-sm text-sa-cream-muted leading-relaxed mb-8">
+              {lockedTabInfo.message}
+            </p>
+
+            {/* Go to Installation button */}
+            <button
+              onClick={() => {
+                setLockedTabInfo(null);
+                setCurrentTab('installation');
+              }}
+              className="sa-btn-primary inline-flex items-center gap-2"
+            >
+              <BookOpen className="w-4 h-4" />
+              Go to Installation
+            </button>
+
+            {/* Dismiss */}
+            <button
+              onClick={() => setLockedTabInfo(null)}
+              className="block mx-auto mt-4 text-xs text-sa-cream-faint hover:text-sa-cream-muted transition-colors"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
