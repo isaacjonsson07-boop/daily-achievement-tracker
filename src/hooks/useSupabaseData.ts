@@ -428,6 +428,13 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
     }
   }, [user]);
 
+  const updateNonNegotiable = useCallback(async (id: string, updates: { title?: string; description?: string }) => {
+    setNonNegotiables(prev => prev.map(n => n.id === id ? { ...n, ...updates, updated_at: new Date().toISOString() } : n));
+    if (user) {
+      await supabase.from('non_negotiables').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
+    }
+  }, [user]);
+
   const addDailyTask = useCallback(async (task: DailyTask) => {
     const finalTask = user ? { ...task, id: newUUID(), user_id: user.id } : task;
     setDailyTasks(prev => [...prev, finalTask]);
@@ -604,6 +611,7 @@ export function useSupabaseData({ user, authLoading }: UseSupabaseDataProps) {
     handleToggleNN,
     addNonNegotiable,
     deleteNonNegotiable,
+    updateNonNegotiable,
     addDailyTask,
     toggleDailyTask,
     deleteDailyTask,

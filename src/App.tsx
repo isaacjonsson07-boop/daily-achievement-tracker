@@ -38,7 +38,7 @@ function App() {
     dailyTasks, journalEntries, systemDocuments,
     savedReviews, systemReports, readPatches,
     installationCompleteDate, recalPending,
-    handleToggleNN, addNonNegotiable, deleteNonNegotiable,
+    handleToggleNN, addNonNegotiable, deleteNonNegotiable, updateNonNegotiable,
     addDailyTask, toggleDailyTask, deleteDailyTask,
     updateJournalEntry, updateSystemDocument,
     saveSavedReview, saveSystemReport,
@@ -366,6 +366,7 @@ function App() {
             nonNegotiables={nonNegotiables}
             onAddNonNegotiable={addNonNegotiable}
             onDeleteNonNegotiable={deleteNonNegotiable}
+            onUpdateNonNegotiable={updateNonNegotiable}
             systemDocuments={systemDocuments}
             onUpdateSystemDocument={updateSystemDocument}
             habits={habits}

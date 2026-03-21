@@ -8,6 +8,7 @@ interface SystemViewProps {
   nonNegotiables: NonNegotiable[];
   onAddNonNegotiable: (nn: NonNegotiable) => void;
   onDeleteNonNegotiable: (id: string) => void;
+  onUpdateNonNegotiable: (id: string, updates: { title?: string; description?: string }) => void;
   systemDocuments: Record<string, string>;
   onUpdateSystemDocument: (key: string, content: string) => void;
   habits: Habit[];
@@ -38,6 +39,7 @@ export function SystemView({
   nonNegotiables,
   onAddNonNegotiable,
   onDeleteNonNegotiable,
+  onUpdateNonNegotiable,
   systemDocuments,
   onUpdateSystemDocument,
   habits,
@@ -52,6 +54,12 @@ export function SystemView({
 
   const [editingDoc, setEditingDoc] = useState<string | null>(null);
   const [editBuffer, setEditBuffer] = useState('');
+
+  // Edit states
+  const [editingNNId, setEditingNNId] = useState<string | null>(null);
+  const [editNNTitle, setEditNNTitle] = useState('');
+  const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
+  const [editHabit, setEditHabit] = useState({ name: '', time: '09:00', days: [] as number[] });
 
   const handleSaveDoc = (key: string) => {
     onUpdateSystemDocument(key, editBuffer);
@@ -94,6 +102,23 @@ export function SystemView({
     onDeleteNonNegotiable(id);
   };
 
+  const handleEditNN = (nn: NonNegotiable) => {
+    setEditingNNId(nn.id);
+    setEditNNTitle(nn.title);
+  };
+
+  const handleSaveNN = () => {
+    if (!editingNNId || !editNNTitle.trim()) return;
+    onUpdateNonNegotiable(editingNNId, { title: editNNTitle.trim() });
+    setEditingNNId(null);
+    setEditNNTitle('');
+  };
+
+  const handleCancelEditNN = () => {
+    setEditingNNId(null);
+    setEditNNTitle('');
+  };
+
   // === Habit Handlers ===
   const handleAddHabit = async () => {
     if (!newHabit.name.trim() || !user) return;
@@ -121,6 +146,33 @@ export function SystemView({
     } catch (e) {
       console.error('Error deleting habit:', e);
     }
+  };
+
+  const handleEditHabit = (h: Habit) => {
+    setEditingHabitId(h.id);
+    setEditHabit({ name: h.name, time: h.time, days: [...h.days_of_week] });
+  };
+
+  const handleSaveHabit = async () => {
+    if (!editingHabitId || !editHabit.name.trim() || !user) return;
+    try {
+      await supabase.from('habits').update({
+        name: editHabit.name.trim(),
+        time: editHabit.time,
+        days_of_week: editHabit.days,
+        updated_at: new Date().toISOString(),
+      }).eq('id', editingHabitId);
+      onHabitsChange();
+      setEditingHabitId(null);
+      setEditHabit({ name: '', time: '09:00', days: [] });
+    } catch (e) {
+      console.error('Error updating habit:', e);
+    }
+  };
+
+  const handleCancelEditHabit = () => {
+    setEditingHabitId(null);
+    setEditHabit({ name: '', time: '09:00', days: [] });
   };
 
   // === Shared Components ===
@@ -253,19 +305,42 @@ export function SystemView({
               {nonNegotiables
                 .filter((n) => n.active)
                 .map((nn) => (
-                  <div
-                    key={nn.id}
-                    className="group flex items-center gap-3 px-4 py-3 bg-sa-bg-warm border border-sa-border rounded-sa"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-sa-gold flex-shrink-0" />
-                    <span className="flex-1 text-sm text-sa-cream">{nn.title}</span>
-                    <button
-                      onClick={() => handleDeleteNN(nn.id)}
-                      className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                  editingNNId === nn.id ? (
+                    <div key={nn.id} className="sa-card space-y-3">
+                      <input
+                        type="text"
+                        value={editNNTitle}
+                        onChange={(e) => setEditNNTitle(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleSaveNN(); if (e.key === 'Escape') handleCancelEditNN(); }}
+                        autoFocus
+                        className="sa-input"
+                      />
+                      <div className="flex justify-end gap-2">
+                        <button onClick={handleCancelEditNN} className="sa-btn-ghost text-xs">Cancel</button>
+                        <button onClick={handleSaveNN} disabled={!editNNTitle.trim()} className="sa-btn-primary text-xs disabled:opacity-30">Save</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      key={nn.id}
+                      className="group flex items-center gap-3 px-4 py-3 bg-sa-bg-warm border border-sa-border rounded-sa"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                      <div className="w-2 h-2 rounded-full bg-sa-gold flex-shrink-0" />
+                      <span className="flex-1 text-sm text-sa-cream">{nn.title}</span>
+                      <button
+                        onClick={() => handleEditNN(nn)}
+                        className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-gold transition-all"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteNN(nn.id)}
+                        className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )
                 ))}
             </div>
 
@@ -312,38 +387,89 @@ export function SystemView({
             </p>
             <div className="space-y-2 mb-4">
               {habits.map((h) => (
-                <div
-                  key={h.id}
-                  className="group flex items-center gap-3 px-4 py-3 bg-sa-bg-warm border border-sa-border rounded-sa"
-                >
-                  <div className="w-2 h-2 rounded-full bg-sa-blue flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm text-sa-cream">{h.name}</span>
-                    <div className="flex gap-1 mt-1">
-                      {DAY_LABELS.map((d) => (
-                        <span
-                          key={d.value}
-                          className={`text-[0.55rem] px-1 rounded ${
-                            h.days_of_week.includes(d.value)
-                              ? 'text-sa-blue bg-sa-blue-soft'
-                              : 'text-sa-cream-faint'
-                          }`}
-                        >
-                          {d.label}
-                        </span>
-                      ))}
+                editingHabitId === h.id ? (
+                  <div key={h.id} className="sa-card space-y-3">
+                    <input
+                      type="text"
+                      value={editHabit.name}
+                      onChange={(e) => setEditHabit({ ...editHabit, name: e.target.value })}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSaveHabit(); if (e.key === 'Escape') handleCancelEditHabit(); }}
+                      autoFocus
+                      className="sa-input"
+                    />
+                    <div className="flex gap-3 items-center">
+                      <input
+                        type="time"
+                        value={editHabit.time}
+                        onChange={(e) => setEditHabit({ ...editHabit, time: e.target.value })}
+                        className="sa-input w-28"
+                      />
+                      <div className="flex gap-1">
+                        {DAY_LABELS.map((d) => (
+                          <button
+                            key={d.value}
+                            onClick={() => {
+                              const days = editHabit.days.includes(d.value)
+                                ? editHabit.days.filter((v) => v !== d.value)
+                                : [...editHabit.days, d.value];
+                              setEditHabit({ ...editHabit, days });
+                            }}
+                            className={`w-7 h-7 rounded-sa-sm text-[0.65rem] font-medium transition-colors ${
+                              editHabit.days.includes(d.value)
+                                ? 'bg-sa-blue-soft text-sa-blue'
+                                : 'text-sa-cream-faint hover:text-sa-cream'
+                            }`}
+                          >
+                            {d.label[0]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <button onClick={handleCancelEditHabit} className="sa-btn-ghost text-xs">Cancel</button>
+                      <button onClick={handleSaveHabit} disabled={!editHabit.name.trim()} className="sa-btn-primary text-xs disabled:opacity-30">Save</button>
                     </div>
                   </div>
-                  {h.time && (
-                    <span className="text-xs text-sa-cream-faint">{h.time}</span>
-                  )}
-                  <button
-                    onClick={() => handleDeleteHabit(h.id)}
-                    className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                ) : (
+                  <div
+                    key={h.id}
+                    className="group flex items-center gap-3 px-4 py-3 bg-sa-bg-warm border border-sa-border rounded-sa"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                    <div className="w-2 h-2 rounded-full bg-sa-blue flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm text-sa-cream">{h.name}</span>
+                      <div className="flex gap-1 mt-1">
+                        {DAY_LABELS.map((d) => (
+                          <span
+                            key={d.value}
+                            className={`text-[0.55rem] px-1 rounded ${
+                              h.days_of_week.includes(d.value)
+                                ? 'text-sa-blue bg-sa-blue-soft'
+                                : 'text-sa-cream-faint'
+                            }`}
+                          >
+                            {d.label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    {h.time && (
+                      <span className="text-xs text-sa-cream-faint">{h.time}</span>
+                    )}
+                    <button
+                      onClick={() => handleEditHabit(h)}
+                      className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-blue transition-all"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteHabit(h.id)}
+                      className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )
               ))}
             </div>
 
