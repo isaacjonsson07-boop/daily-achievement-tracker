@@ -132,24 +132,15 @@ export const LESSON_DATA: LessonData[] =
     "tasks": [
       {
         "name": "Write your direction statement",
-        "description": "One to three sentences describing how you're operating by the end of Day 21. Read it back — can you picture exactly what a day looks like when you're living it? If yes, it's ready. If not, make it more specific.",
+        "description": "One to three sentences describing how you're operating by the end of Day 21. Every element must be within your control and verifiable at the end of any day.",
         "hint": "Start with: \"By Day 21, I…\""
       },
       {
-        "name": "Define 3 to 5 daily indicators",
-        "description": "These are the observable, binary conditions that prove your direction is active on any given day. Each one should be checkable every evening — either it happened or it didn't.",
-        "hint": "\"I completed my morning routine by 8 AM\" or \"No social media before my first work block.\""
-      },
-      {
-        "name": "Stress-test your statement",
-        "description": "Read your direction and indicators one more time. Ask: Is every element within my control? Is anything vague or unmeasurable? Could I verify each indicator at the end of today? Tighten anything that's soft."
-      },
-      {
-        "name": "Record your starting point",
-        "description": "Write down today's date, your direction statement, and your indicators somewhere permanent — notebook, phone notes, or a document you'll keep. This is Day 1 of your installation record. You'll look back at it on Day 21."
+        "name": "Add it to the app",
+        "description": "Go to the <strong>System</strong> tab and paste your direction statement into the Direction Statement field. This is where it lives from now on — you'll see it at the top of your Today view every day."
       }
     ],
-    "tasksSubtitle": "Complete all four tasks before moving to Day 2.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 2.",
     "closingParagraphs": [
       "What you wrote today is the single most referenced piece of your entire operating system. Every lesson, every review, every decision over the next 20 days connects back to this direction statement."
     ],
@@ -230,29 +221,16 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasks": [
       {
-        "name": "Define your morning sequence",
-        "description": "Write down the first 3–5 things you do every morning, in order. Keep it under 45 minutes. It needs to work on your worst day — tired, rushed, low motivation. If it wouldn't survive a bad morning, simplify it.",
-        "hint": "Example: Wake at 7. Water. Read direction statement. Set today's top 3. Begin first task."
-      },
-      {
-        "name": "Set your core execution block",
-        "description": "Choose a 2–4 hour window for your most important daily work. When does it start? When does it end? What type of work belongs here? Write it down and commit to protecting this block from interruptions starting tomorrow."
-      },
-      {
-        "name": "Design your evening close-out",
-        "description": "A 10-minute end-of-day routine with three steps: Review what happened today. Capture anything still on your mind. Set your top 3 priorities for tomorrow. Choose a time and write out the format.",
-        "hint": "This single habit will transform how you start every morning."
-      },
-      {
-        "name": "Write your complete daily structure",
-        "description": "Combine all three anchors into one overview — your operating rhythm for the next 19 days. Post it where you'll see it. This isn't a wish list — it's the shape of your day starting tomorrow."
+        "name": "Design your daily structure",
+        "description": "Write out three anchors: a morning sequence (first 3-5 things you do, under 45 min), a core execution block (2-4 hour window for deep work), and an evening close-out (10 min: review today, plan tomorrow).",
+        "hint": "Design for your worst day. If it requires perfect conditions, it will fail."
       },
       {
         "name": "Run your first close-out tonight",
-        "description": "Don't wait until tomorrow to start. Tonight, spend 10 minutes running through the close-out process. Review today. Set tomorrow's priorities. Start the system now."
+        "description": "Don't wait until tomorrow. Tonight, spend 10 minutes running through the close-out: review today, set tomorrow's top 3 priorities. Start the system now."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 3.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 3.",
     "closingParagraphs": [
       "You now have two foundational components installed: a direction and a structure to move toward it."
     ],
@@ -319,28 +297,16 @@ export const LESSON_DATA: LessonData[] =
     ],
     "tasks": [
       {
-        "name": "List your top 5 time defaults",
-        "description": "Where does your time actually go during a typical day? Include the unconscious patterns — scrolling, snacking, overplanning, unnecessary browsing. Check your phone's screen time data for real numbers. Be brutally honest.",
+        "name": "Map your defaults",
+        "description": "List your top 5 time defaults (where time actually goes), top 3 energy drains, and top 3 decision defaults (what you say yes to that you shouldn't). Check your phone's screen time for real data.",
         "hint": "Focus on the gaps: what do you do in the spaces between planned activities?"
       },
       {
-        "name": "List your top 3 energy drains",
-        "description": "What regularly drains your energy that you keep doing anyway? These could be people, activities, environments, habits, or commitments. For each one, note whether you actively chose it or drifted into it."
-      },
-      {
-        "name": "List your top 3 decision defaults",
-        "description": "What do you consistently say yes to that you shouldn't? What do you avoid or postpone? What does your resistance pattern look like when it shows up — do you distract, rationalize, or numb?"
-      },
-      {
-        "name": "Mark which defaults conflict with your direction",
-        "description": "Open your Day 1 direction statement. Read each default you've identified. For each one, honestly ask: does this help my direction, harm it, or have no effect? Circle every one that actively works against your direction. These are your targets."
-      },
-      {
-        "name": "Choose the one default that costs you the most",
-        "description": "Of all the defaults you've identified, which single one creates the most damage to your direction and structure? Name it. You're not fixing it today — but you need to know what it is. Tomorrow's lesson is the antidote."
+        "name": "Identify your #1 costly default",
+        "description": "Which single default creates the most damage to your direction? Name it clearly. Tomorrow's lesson is built to counter it."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 4.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 4.",
     "closingParagraphs": [
       "Today wasn't about fixing anything. It was about seeing clearly. You can't redesign a system you haven't mapped, and now you have a clear inventory of the automated patterns running your daily behavior."
     ],
@@ -422,27 +388,15 @@ export const LESSON_DATA: LessonData[] =
     "tasks": [
       {
         "name": "Choose 3 to 5 non-negotiable daily actions",
-        "description": "These are the behaviors you commit to doing every single day for the remaining 17 days. Each one must be simple, binary, within your control, and connected to your direction. Write them down.",
+        "description": "Simple, binary, within your control, connected to your direction. Each one must survive your worst day. If it requires perfect conditions, simplify it.",
         "hint": "Test: Would you still do all of these on your worst day? If not, simplify."
       },
       {
-        "name": "Stress-test against your worst day",
-        "description": "Imagine your busiest, most exhausting, most disrupted day. Walk through your non-negotiables mentally. Could you still complete every one? If any would fail under pressure, simplify it further. The floor must hold on the worst day."
-      },
-      {
-        "name": "Connect each non-negotiable to a Day 3 default",
-        "description": "For each non-negotiable, identify which destructive default it directly counters. If a non-negotiable doesn't counter any of your identified defaults, question whether it belongs on the list."
-      },
-      {
-        "name": "Place your non-negotiable list where you'll see it daily",
-        "description": "Phone lock screen, sticky note on your mirror, first page of your notebook, taped to your desk. This list should be impossible to forget. Visibility creates accountability."
-      },
-      {
-        "name": "Commit out loud",
-        "description": "Say your non-negotiables out loud — to yourself, to someone you trust, or record a voice memo. Verbalizing a commitment activates a different level of psychological buy-in than just writing it down. This sounds simple. It matters more than you'd expect."
+        "name": "Add them to the app",
+        "description": "Go to the <strong>System</strong> tab and add each non-negotiable. These will appear in your <strong>Today</strong> view every day as checkboxes. Starting tomorrow, you check them off daily."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 5.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 5.",
     "closingParagraphs": [
       "You now have four components installed: direction, structure, pattern awareness, and behavioral anchors. These four form the foundation of your operating system. They answer the fundamental questions: where am I going, how is my day organized, what's working against me, and what do I do no matter what."
     ],
@@ -514,23 +468,15 @@ export const LESSON_DATA: LessonData[] =
     },
     "tasks": [
       {
-        "name": "Set up your tracker",
-        "description": "Open the Structured Achievement app. Go to <strong>Goals</strong> and enter your direction statement as your primary goal. Then go to <strong>Tasks</strong> and add each of your non-negotiables as a daily task. Take 5 minutes to explore the Dashboard — this is where your data will live."
+        "name": "Complete today's non-negotiables",
+        "description": "Go to the <strong>Today</strong> tab and check off each non-negotiable as you complete it. This is your first tracked day. During your evening close-out, verify everything is logged."
       },
       {
-        "name": "Log today as your first tracked day",
-        "description": "Complete your non-negotiables today. During your evening close-out, open the app and check off your completed <strong>Tasks</strong>. Then go to the <strong>Dashboard</strong> — you'll see your first data point. This is Day 1 of your tracked record."
-      },
-      {
-        "name": "Set a daily reminder for logging",
-        "description": "Put a recurring alarm or calendar event 5 minutes before your evening close-out time. The reminder ensures logging doesn't get skipped. Don't rely on memory — automate the trigger."
-      },
-      {
-        "name": "Commit to logging every day through Day 21",
-        "description": "The tracker only produces value with consistent use. One logged day is a data point. Sixteen consecutive logged days is a dataset. Make the commitment explicit: every day, during close-out, 2 minutes, no exceptions."
+        "name": "Set a daily logging reminder",
+        "description": "Set a recurring alarm 5 minutes before your evening close-out. Every day, 2 minutes, no exceptions. The tracker only works with consistent use."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 6.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 6.",
     "closingParagraphs": [
       "You now have a tool connected to your system. Direction, structure, non-negotiables, and a tracker to make it all visible and accountable. The invisible effort you've been putting in since Day 1 is now captured in data."
     ],
@@ -600,34 +546,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Complete your <strong>Tasks</strong> and write a <strong>Journal</strong> entry about your environment audit.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
-      {
-        "name": "Audit your physical workspace",
-        "description": "Sit at your desk or primary workspace. Look at everything visible. For each item, ask: does this serve my core execution block? Remove or relocate anything that doesn't. Add anything that's missing. Create a clear, focused visual environment.",
-        "hint": "The goal: when you sit down to work, everything you see should pull you toward execution, not away from it."
-      },
-      {
-        "name": "Audit and reconfigure your phone",
-        "description": "Check your screen time data from the past week. Turn off all non-essential notifications. Move distracting apps off your home screen (or delete them). Set your phone to Do Not Disturb during your core execution block. Make the phone a tool that serves your system, not a trap that undermines it."
-      },
-      {
-        "name": "Audit your social environment",
-        "description": "List the 5 people you spend the most time with. For each one, honestly assess: does this relationship support your direction, distract from it, or actively work against it? You don't need to act on this today — but you need to see the pattern clearly."
-      },
+        "tasks": [
       {
         "name": "Make one friction change in each environment",
-        "description": "Physical: one change that removes friction from productive behavior. Digital: one change that adds friction to distraction. Social: one boundary or adjustment that protects your system. Three small changes, implemented today."
+        "description": "Physical: one change that removes friction from productive behavior. Digital: one change that adds friction to distraction. Social: one boundary that protects your system. Three small changes, implemented today."
       },
       {
-        "name": "Design your core execution block environment",
-        "description": "Write down exactly what your environment looks like during your 2–4 hour core block. Phone location, door open or closed, browser tabs allowed, background noise. Create a specific environmental protocol for your most important work window."
-      },
-      {
-        "name": "Write your first Journal entry",
-        "description": "Open the app and go to <strong>Journal</strong>. Write 2-3 sentences about today's environment audit — what you changed in your physical, digital, and social spaces. This is the beginning of your installation record."
+        "name": "Complete today's journal",
+        "description": "Go to the <strong>Installation</strong> tab, open Day 6, and switch to the Journal tab. Answer the prompts about your environment audit."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 7.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 7.",
     "closingParagraphs": [
       "You've spent six days building from the inside out — direction, structure, awareness, discipline, tracking. Today you shaped the outside to match. The environment now supports the system instead of fighting it."
     ],
@@ -697,30 +626,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Open the <strong>Dashboard</strong> to see your first week of data. Check your Task completion rates and streaks.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Run a full 6-day review",
-        "description": "Open the app <strong>Dashboard</strong> and review your data from the past week. Look at your Task completion rates and streaks. For each component — direction, structure, non-negotiables, defaults, environment — rate your consistency: strong, partial, or missed. The Dashboard shows you facts, not feelings."
+        "name": "Run your Week 1 review",
+        "description": "Review Days 1-6. What worked? What didn't? Where did you stay consistent and where did you break? Be specific about moments, not judgments."
       },
       {
-        "name": "Identify your #1 strength and #1 weakness",
-        "description": "What component held up best this week? What fell apart most? Be specific — not 'discipline' but 'I followed my morning sequence 5 out of 6 days' or 'I skipped my evening close-out 4 times because I stayed up too late.'",
-        "hint": "Let the tracker data answer this, not your feelings about the week."
-      },
-      {
-        "name": "Make one specific adjustment",
-        "description": "Based on your review, identify one change that would have the biggest positive impact on next week. Write it down clearly: what you're changing, why, and how it works starting tomorrow."
-      },
-      {
-        "name": "Write your Week 1 status report",
-        "description": "Go to <strong>Journal</strong> in the app. Write 3-5 sentences summarizing your first week. Reference your Dashboard data — what's your actual Task completion rate? What's your streak count? What's your one adjustment for Week 2? This becomes part of your permanent installation record."
-      },
-      {
-        "name": "Acknowledge the foundation you've built",
-        "description": "In six days, you've installed a direction, daily structure, pattern awareness, behavioral anchors, a tracking system, and an optimized environment. That's a complete operating foundation. Review your tracker — the data is proof of what you've built."
+        "name": "Make one adjustment",
+        "description": "Based on your review, choose one specific change to your system for Week 2. Keep it small, clear, and realistic."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 8.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 8.",
     "closingParagraphs": [
       "Phase I is complete. In seven days, you've gone from zero structure to a functioning daily operating system with direction, rhythm, discipline, tracking, and environmental support. That's not nothing. That's the foundation everything else builds on."
     ],
@@ -811,33 +727,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Add your <strong>identity statement</strong> as a new Goal alongside your direction statement.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Write your identity statement",
-        "description": "3–5 sentences in present tense. Describe the person who runs your system — grounded, behavioral, honest. Read it aloud. If it sounds like a social media bio or a motivational poster, rewrite it. It should sound like a description your closest friend would recognize as the best version of you."
+        "description": "One sentence: 'I am the kind of person who...' It must connect to your direction and be something you can act on daily. Not aspirational fluff — operational identity."
       },
       {
-        "name": "Test it against your direction statement",
-        "description": "Read your Day 1 direction statement, then your identity statement. Does the person described in the identity statement naturally produce the direction? If not, adjust one or both until they align."
-      },
-      {
-        "name": "Identify the biggest gap",
-        "description": "Honestly assess: where is the largest gap between your identity statement and your actual behavior over the past 7 days? Name it specifically. This is your primary growth edge for Phase II — the area where identity and behavior are most misaligned."
-      },
-      {
-        "name": "Create a daily identity practice",
-        "description": "Place your identity statement next to your non-negotiable list. Read both every morning during your morning sequence. This takes 30 seconds and anchors your self-concept before the day begins. Over time, the words become automatic — and so does the behavior they describe."
-      },
-      {
-        "name": "Review your tracker data through the identity lens",
-        "description": "Look at your logged days from Phase I. Every completed non-negotiable was a vote for your new identity. Count the votes. You've already started becoming this person — the data proves it."
-      },
-      {
-        "name": "Add your identity statement to the app",
-        "description": "Open <strong>Goals</strong> in the tracker and add your identity statement as a new goal. Now both your direction and your identity are visible every time you open the app — a daily reminder of where you're going and who you're being."
+        "name": "Add it to the app",
+        "description": "Go to the <strong>System</strong> tab and paste your identity statement into the Identity Statement field. It will appear alongside your direction at the top of your Today view."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 9.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 9.",
     "closingParagraphs": [
       "You now have direction, structure, and an identity to operate from. This changes the nature of discipline entirely. It's no longer about forcing yourself to do things you don't want to do. It's about being consistent with who you've decided to be."
     ],
@@ -921,34 +821,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Add your <strong>top 3 priority outcomes</strong> to the Goals section of the tracker.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "List all your life domains",
-        "description": "Write down every area of your life that competes for attention and energy. Be comprehensive — most people have 6–10 domains. Include everything from career to relationships to personal projects to health."
+        "name": "Define your top 3 priorities with outcomes",
+        "description": "Choose 3 life domains that matter most right now. For each one, write one clear outcome you're working toward. These priorities stack-rank everything else."
       },
       {
-        "name": "Choose your top 3 active priorities",
-        "description": "Which 3 areas would create the most meaningful impact on your direction if you focused on them for the next 14 days? Rank them 1–2–3. This is not about what's most important in general — it's about where concentrated effort right now would produce the biggest result."
-      },
-      {
-        "name": "Define one clear outcome for each priority",
-        "description": "For each of your top 3, write one specific, observable outcome you're working toward by Day 21. Not a feeling — a result. Not a direction — a destination. Something you can look at on Day 21 and clearly say: I did this, or I didn't.",
-        "hint": "\"Exercise 4x/week for the next 14 days\" not \"get healthier.\""
-      },
-      {
-        "name": "Write your \"not now\" list",
-        "description": "Everything that didn't make the top 3 goes here. Write each one down explicitly. This isn't abandonment — it's intentional deferral. Give your brain permission to stop worrying about these areas during the installation period."
-      },
-      {
-        "name": "Test your priorities against your identity",
-        "description": "Read your identity statement, then your top 3 priorities. Does the person described in your identity naturally focus on these areas? If there's a disconnect, adjust until they align."
-      },
-      {
-        "name": "Add your priority outcomes to the app",
-        "description": "Open <strong>Goals</strong> and add your three specific priority outcomes. Your Goals section now holds your complete strategic layer: direction, identity, and priority targets. This is the reference point for every weekly review."
+        "name": "Add them to the app",
+        "description": "Go to the <strong>System</strong> tab and enter your priority stack. This becomes your decision filter for the rest of the installation."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 10.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 10.",
     "closingParagraphs": [
       "You now have direction, identity, and a focused priority stack. These three together form the strategic core of your operating system. They answer the three most important questions: where am I going, who am I being, and what deserves my concentrated energy?"
     ],
@@ -1032,30 +915,21 @@ export const LESSON_DATA: LessonData[] =
       "description": "Open the <strong>Habits</strong> feature and add your keystone habits with their cue-routine-reward formulas.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Identify 2–3 keystone habits tied to your priorities",
-        "description": "For each of your top 3 priorities, identify the single daily behavior that would drive the most progress. Select the 2–3 that feel most impactful. These become your keystone habits."
+        "name": "Identify 2-3 keystone habits",
+        "description": "Choose habits that create chain reactions — when you do them, other positive behaviors follow naturally. Each one must tie directly to your priorities."
       },
       {
-        "name": "Design each habit using cue-routine-reward",
-        "description": "For each keystone habit, write the complete formula: \"After [specific cue], I [specific routine], then [specific reward].\" Be precise. The more specific the cue, the more automatic the habit becomes.",
-        "hint": "Stack onto existing anchors: morning sequence, core block, or evening close-out."
+        "name": "Design each using cue-routine-reward",
+        "description": "For each habit: what triggers it (cue), what exactly you do (routine), and what makes it satisfying (reward). Be specific — vague cues produce vague habits."
       },
       {
-        "name": "Keep every routine under 30 minutes",
-        "description": "If any routine feels long or ambitious, shrink it. A 15-minute routine you do every day for 14 days produces more results than a 60-minute routine you do 3 times and abandon. Consistency first. Scale later."
-      },
-      {
-        "name": "Add your keystone habits to the tracker",
-        "description": "Open the <strong>Habits</strong> section in the app and add each keystone habit. Include the cue-routine-reward formula in the description so you see it every time. From today, you're tracking both Tasks (non-negotiables) and Habits (growth engine). The Dashboard will show both."
-      },
-      {
-        "name": "Run your first keystone habit today",
-        "description": "Don't wait until tomorrow. Pick one of your new habits and do it today, using the exact cue-routine-reward formula you designed. The first repetition is the most important one — it transforms the habit from an idea into an action."
+        "name": "Add them to the app",
+        "description": "Go to the <strong>System</strong> tab and add each keystone habit with its scheduled days and time. They'll appear in your <strong>Today</strong> view on the right days."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 11.",
+    "tasksSubtitle": "Complete all three tasks before moving to Day 11.",
     "closingParagraphs": [
       "You've now bridged the gap between strategy and execution. Your system has a strategic layer — direction, identity, priorities — and an operational layer — structure, non-negotiables, keystone habits, tracking. The two layers are connected: the strategy determines what the operations focus on, and the operations produce the results that validate the strategy."
     ],
@@ -1125,34 +999,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Review your <strong>streaks</strong> and completion patterns to identify energy-related trends.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Map your energy pattern",
-        "description": "Sketch a rough energy curve for a typical day. Mark your peak windows (sharpest focus), mid-energy windows (capable but not peak), and valleys (foggy, low willpower). Use your tracker notes from past days for real data rather than guessing.",
-        "hint": "Simple format: Morning 6-9: __, 9-12: __, Afternoon 12-3: __, 3-6: __, Evening 6-9: __, 9+: __"
+        "description": "Track your energy levels throughout today: when are you sharpest, when do you crash, when do you recover? Note the pattern."
       },
       {
         "name": "Align your structure to your energy",
-        "description": "Compare your Day 2 daily structure to your energy map. Is your core execution block during a peak window? If not, adjust it. Move your most cognitively demanding work to your highest-energy hours and routine tasks to mid-energy windows."
-      },
-      {
-        "name": "Build one recovery point into your day",
-        "description": "Add a specific time for genuine recovery — not phone scrolling or passive entertainment. A walk, quiet time, a nap, or a screen-free meal. Make it a fixed element in your structure, not an optional luxury."
-      },
-      {
-        "name": "Identify your #1 energy leak",
-        "description": "What single habit, pattern, or commitment costs you the most energy relative to what it returns? Name it specifically. This could be poor sleep, a draining commitment, a digital habit, or a relationship. You identified drains on Day 3 — revisit with 11 days of new data."
-      },
-      {
-        "name": "Assess your sleep",
-        "description": "How many hours of sleep did you average this past week? If it's consistently under 7, this is your highest-priority adjustment. Write down a specific lights-out time that gives you 7–8 hours and commit to it for the next 10 days."
-      },
-      {
-        "name": "Journal your energy map",
-        "description": "Open <strong>Journal</strong> and write your energy map — peak windows, mid-energy windows, and valleys. Include how you plan to realign your daily structure. Having this in the app means you can reference it during every weekly review."
+        "description": "Move your most important work to your peak energy window. Build one recovery point into your day. Adjust your daily structure if needed."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 12.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 12.",
     "closingParagraphs": [
       "Energy is the multiplier that makes everything else in your system more effective. The same structure, habits, and priorities — performed at the right energy levels — produce dramatically better results with less strain."
     ],
@@ -1236,33 +1093,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Remove or simplify <strong>Tasks</strong> and <strong>Habits</strong> that didn't earn their place.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Audit your non-negotiables",
-        "description": "Look at your Day 4 list and your tracker data. Which ones are you hitting consistently? Which are you missing? Drop or simplify any that aren't sticking. Better to have 3 you complete daily than 5 you complete sometimes."
+        "name": "Audit your full system in the app",
+        "description": "Open the <strong>System</strong> tab. Review every component: direction, identity, NNs, habits, structure. Is anything outdated, too complex, or not being used? Edit or remove what's not working."
       },
       {
-        "name": "Audit your keystone habits",
-        "description": "Review the habits from Day 10. Keep the ones driving real results. Pause any that feel forced or aren't connecting to your priorities. You can always reinstall them later — but right now, only what works stays."
-      },
-      {
-        "name": "Audit your daily structure",
-        "description": "Is your Day 2 framework still realistic given what you now know about your energy (Day 11) and your actual patterns? Adjust timing, simplify routines, remove any structural elements that consistently fail."
-      },
-      {
-        "name": "Create your one-page system overview",
-        "description": "Write a clean, updated summary of everything currently active: direction, identity, top 3 priorities, daily structure, non-negotiables, keystone habits, energy notes. If it doesn't fit on one page, simplify further."
-      },
-      {
-        "name": "Identify what you're eliminating and why",
-        "description": "For everything you're cutting, write one sentence about why. This prevents you from second-guessing the decision later and creates a record of your engineering process."
-      },
-      {
-        "name": "Audit and clean up the app",
-        "description": "Open the tracker and go through your <strong>Tasks</strong>, <strong>Habits</strong>, and <strong>Goals</strong>. Remove anything you're eliminating today. Simplify anything that's staying. When you're done, every item in the app should be something you're actively doing — no dead weight."
+        "name": "Simplify until it's tight",
+        "description": "If you have more than 5 NNs, cut to 3-5. If habits aren't sticking, reduce or redesign them. A lean system you run beats a complex system you abandon."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 13.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 13.",
     "closingParagraphs": [
       "Your system should feel lighter now. Not weaker — leaner. Every component that remains has earned its place through 12 days of real use and honest evaluation."
     ],
@@ -1332,34 +1173,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Write your decision rules and if-then protocols in the <strong>Journal</strong> for easy reference.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Identify your top 5 recurring decisions",
-        "description": "What choices do you face repeatedly — daily or weekly — that consume energy through deliberation? List them. These might include: what to eat, when to exercise, whether to check your phone, how to respond to requests, what to work on first."
+        "name": "Create decision rules for your top 5 recurring decisions",
+        "description": "What decisions drain your energy repeatedly? For each one, write a clear rule so you never have to think about it again. Example: 'If it's not a priority, the answer is no.'"
       },
       {
-        "name": "Create a rule for each one",
-        "description": "For each recurring decision, write a clear rule that eliminates the deliberation. Keep it simple and absolute. The less ambiguity, the more automatic it becomes."
-      },
-      {
-        "name": "Write 3-5 if-then rules for your weak points",
-        "description": "Revisit your Day 3 defaults. For each pattern that still shows up, create an if-then rule: 'If [trigger], then [response].' Focus on the situations where you're most likely to fall back into old patterns.",
-        "hint": "\"If I feel like checking social media during core block, then I note the urge and return to my task.\""
-      },
-      {
-        "name": "Test one rule today",
-        "description": "Choose the rule that addresses your most frequent recurring decision. Apply it today. Notice how it feels to not deliberate — to simply execute the rule. The initial discomfort is normal. The energy savings are immediate."
-      },
-      {
-        "name": "Add your rules to your system overview",
-        "description": "Decision rules are now part of your operating manual. Add them to the one-page overview from Day 12. They sit alongside your structure, non-negotiables, and habits as part of your daily operating infrastructure."
-      },
-      {
-        "name": "Record your rules in the app",
-        "description": "Open <strong>Journal</strong> and write a dedicated entry with your decision rules and if-then statements. Title it \"Decision Rules\" so you can find it quickly. When you're in a situation covered by a rule, you want to reference it in seconds, not search through notes."
+        "name": "Add your decision framework to the app",
+        "description": "Go to the <strong>System</strong> tab and enter your rules in the Decision Framework field. Reference these whenever you're stuck."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 14.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 14.",
     "closingParagraphs": [
       "You've just eliminated dozens of future energy drains. Every decision rule you created today is one less negotiation with yourself tomorrow, next week, and next month."
     ],
@@ -1429,29 +1253,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Open the <strong>Dashboard</strong> for your midpoint assessment. 10 days of tracked data tells the real story.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Review your full tracker data",
-        "description": "Open the <strong>Dashboard</strong> and study your full data set from Day 5 through today. Look at Task completion rates, Habit consistency, and your streak history. Calculate your overall percentages. The Dashboard shows the real story of your past 10 days — not the story your feelings tell."
+        "name": "Run your Phase II review",
+        "description": "Review your full tracker data in the <strong>Reviews</strong> tab. Check your completion rates, streaks, and consistency. What patterns do you see across the last 7 days?"
       },
       {
-        "name": "Reassess your direction and identity statements",
-        "description": "Read both out loud. Update either one based on what you've learned over 14 days. The direction can sharpen. The identity can become more grounded. Both should feel truer now than they did when you wrote them."
-      },
-      {
-        "name": "Do a full system audit",
-        "description": "List every active component: structure, non-negotiables, habits, decision rules, priorities. For each one, mark: keep as-is, adjust (and how), or remove. Then make the changes."
-      },
-      {
-        "name": "Identify your 2-3 targeted adjustments",
-        "description": "Based on the audit, what are the 2-3 changes that would produce the biggest improvement going into Phase III? Write them down clearly with specific implementation plans."
-      },
-      {
-        "name": "Write your midpoint status report",
-        "description": "Open <strong>Journal</strong> and write your midpoint status report. Reference specific numbers from the Dashboard: Task completion rate, longest streak, Habit consistency. Compare to your Day 7 journal entry. This is your most data-rich assessment yet."
+        "name": "Define 2-3 targeted adjustments",
+        "description": "Based on the data, what specific changes will you make for Phase III? Update your direction, identity, or priorities in the <strong>System</strong> tab if they've evolved."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 15.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 15.",
     "closingParagraphs": [
       "Phase II is complete. Over the past week, you rebuilt your operating system from the inside out — identity, priorities, habits, energy, simplification, decision-making, and now a thorough recalibration. The system is no longer being held together by effort alone. It has real architecture."
     ],
@@ -1521,29 +1333,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Your <strong>streaks</strong> are your accountability made visible. Check them daily — they're harder to break than to maintain.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Choose at least 2 accountability layers",
-        "description": "Self-accountability through the tracker is already in place. Add at least one external layer. Social (tell someone and set up weekly check-ins), public (make a visible commitment), or consequence-based (define real stakes). Choose what fits your personality and situation."
+        "name": "Set up external accountability",
+        "description": "Choose at least 2 accountability layers: tell someone your commitments, find an accountability partner, or set public stakes. Set one up today."
       },
       {
-        "name": "Set up your external accountability today",
-        "description": "If social: message or call that person today. Tell them what you're doing and ask if they'll check in with you weekly. If public: write and post your commitment. If consequence-based: define the specific consequence and write it down. Don't delay — the setup itself is the first act of accountability."
-      },
-      {
-        "name": "Design your failure protocol",
-        "description": "Write a specific rule: 'If I miss a day, I [exact recovery action] the next morning.' Make it concrete, immediate, and non-negotiable. The key rule: never miss twice in a row."
-      },
-      {
-        "name": "Review your tracker streak",
-        "description": "Open the Dashboard and look at your <strong>streaks</strong>. How many consecutive days of completed Tasks? How about Habits? Streaks are accountability made visible — each day you maintain one, the cost of breaking it grows. Use this data to inform which additional accountability layers you need."
-      },
-      {
-        "name": "Activate today",
-        "description": "Whatever accountability layers you chose, activate them now. Not tomorrow. Not after you've 'prepared.' The activation itself is the commitment. Telling your accountability partner today is more powerful than planning to tell them next week."
+        "name": "Write your failure protocol",
+        "description": "What do you do when you miss a day? Write a clear protocol and add it to the <strong>System</strong> tab under Failure Protocol. This removes the decision of 'what now' when things go wrong."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 16.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 16.",
     "closingParagraphs": [
       "Your system now has structural support beyond your own willpower. On strong days, you won't need it. On weak days — the days that determine whether a system survives or dies — the accountability layer holds you in place when motivation can't."
     ],
@@ -1623,30 +1423,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Add your minimum viable day and restart protocol to the <strong>Journal</strong> for emergency access.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Design your minimum viable day",
-        "description": "Write down 2–3 actions that take 15–20 minutes total and are doable in any condition — sick, traveling, exhausted, emotionally drained. At minimum: read your direction in <strong>Goals</strong>, complete one small <strong>Task</strong>, and log in the <strong>Journal</strong>. The app stays open even on your worst day."
-      },
-      {
-        "name": "Define your trigger conditions",
-        "description": "When does the minimum viable day activate instead of your normal routine? Write specific scenarios: 'If I'm sick... If I'm traveling... If my schedule gets completely disrupted... If I'm emotionally overwhelmed...'",
-        "hint": "Be specific. Vague triggers lead to vague execution."
+        "description": "What's the absolute minimum version of your system that still counts as showing up? Write it down — this is what you run on your worst days."
       },
       {
         "name": "Write your restart protocol",
-        "description": "A 3-step morning routine for the day after a total miss: Acknowledge (one sentence about what happened), Reset (full morning sequence), Log (open the app and write a <strong>Journal</strong> entry noting the miss and the reason, then complete your <strong>Tasks</strong> as normal). Write it down and add it to your system overview."
-      },
-      {
-        "name": "Set the 'never miss twice' rule",
-        "description": "This is your ultimate non-negotiable. After any miss — whether partial or complete — the next day is a full execution day. No exceptions. No 'easing back in.' Write this rule and commit to it."
-      },
-      {
-        "name": "Mentally rehearse a bad day",
-        "description": "Pick a realistic stress scenario (travel, illness, schedule explosion). Walk through exactly how you'd execute the minimum viable day in that situation. Step by step. The mental rehearsal makes the real execution faster when you need it."
+        "description": "If you fall off for multiple days, what are the exact steps to get back on? Write the protocol. Set the rule: never miss twice."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 17.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 17.",
     "closingParagraphs": [
       "Your system now has a contingency layer. Good days get your full structure, habits, and energy alignment. Bad days get the minimum viable version. Total misses trigger the restart protocol. In every scenario, the system has a response."
     ],
@@ -1716,30 +1503,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Write your sabotage scripts and replacements in the <strong>Journal</strong> — seeing them side by side is the antidote.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Identify your top 3 sabotage scripts",
-        "description": "Which internal narratives most frequently pull you away from your system? Write them down word for word — exactly as the voice says them. Don't sanitize or summarize. Capture the actual script."
+        "description": "What does your internal resistance sound like? 'I'll start Monday,' 'One day off won't matter,' 'I'm too tired.' Name the exact phrases."
       },
       {
-        "name": "Write a replacement for each one",
-        "description": "For each sabotage script, write an operational response — short, direct, and grounded in evidence from the past 17 days. The replacement should be something you genuinely believe based on what you've done, not a platitude."
-      },
-      {
-        "name": "Create your personal mantra",
-        "description": "One sentence that captures your operating identity and cuts through resistance. Short enough to say in 3 seconds. Powerful enough to redirect your focus. Test it: does it feel true? Would the person in your identity statement say this?",
-        "hint": "\"I execute, then I feel. Not the other way around.\""
-      },
-      {
-        "name": "Practice the replacement today",
-        "description": "For the rest of today, notice when a sabotage script runs. Catch it. Name it. Consciously replace it with your new response. This is a skill — it gets easier with practice, but it requires intentional repetition at first."
-      },
-      {
-        "name": "Write your scripts where you'll see them",
-        "description": "Open <strong>Journal</strong> and write a dedicated entry titled \"Script Replacements.\" List each sabotage script on the left and its operational replacement on the right. Also add your personal mantra. When resistance hits, open this entry — seeing the old script next to the replacement makes the choice obvious."
+        "name": "Write a replacement for each",
+        "description": "For each sabotage script, write a counter-script that's short and true. Not motivational — factual. Practice saying them today."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 18.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 18.",
     "closingParagraphs": [
       "You've just addressed the most personal — and often the most powerful — component of the entire system. The external architecture is solid. Now the internal dialogue matches it."
     ],
@@ -1809,33 +1583,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Add your weekly review as a recurring <strong>Task</strong> so it shows up every week automatically.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Choose your weekly review day and time",
-        "description": "Pick a specific, consistent slot — Sunday evening, Saturday morning, Friday afternoon. The day matters less than the consistency. Choose what works for your schedule and commit to it permanently."
+        "name": "Set up your weekly review",
+        "description": "Choose a day and time (we recommend Sunday). Go to the <strong>Reviews</strong> tab and run your first weekly review using the built-in template. Set a recurring calendar reminder."
       },
       {
-        "name": "Write out your review template",
-        "description": "Copy or adapt the 10-minute structure: data review, direction/identity check, priority check, one adjustment, next week's intention. Format it in a way you'll actually use — phone notes, notebook page, tracker section."
-      },
-      {
-        "name": "Run a practice review right now",
-        "description": "Use today as a trial run. Go through all 5 sections using your data from the past week. Time yourself. Adjust the format until it feels natural and fast. The practice run reveals whether the template works before you rely on it."
-      },
-      {
-        "name": "Set a recurring calendar reminder",
-        "description": "Put the weekly review in your calendar as a recurring event. Set a notification 15 minutes before. The review must be triggered externally until it becomes habitual — don't rely on memory."
-      },
-      {
-        "name": "Write the rule",
-        "description": "'Every [day] at [time], I run my 10-minute weekly review. Non-negotiable.' Add this to your system overview alongside your other non-negotiables. This is the habit that maintains all the other habits."
-      },
-      {
-        "name": "Add weekly review as a recurring task",
-        "description": "Open <strong>Tasks</strong> in the app and add \"Weekly Review\" as a recurring task on your chosen day. Include a note with the 10-minute template: data review, direction check, priority check, one adjustment, next week's intention. The app now triggers and tracks your reviews."
+        "name": "Complete the review now",
+        "description": "Don't just set it up — run through the full review right now as practice. Answer every question honestly. This 10-minute habit is what keeps the system alive."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 19.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 19.",
     "closingParagraphs": [
       "You've just built the single most important retention mechanism in the entire program. The weekly review is what transforms 21 days of installation into a permanent operating system. Without it, the system has an expiration date. With it, the system has a heartbeat."
     ],
@@ -1905,33 +1663,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "Add your monthly recalibration as a recurring <strong>Task</strong> in the tracker.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
-        "name": "Choose your monthly recalibration date",
-        "description": "Pick a specific day each month — first Sunday, last Saturday, the 1st. The date matters less than the consistency. Add it to your calendar as a recurring event with a reminder."
-      },
-      {
-        "name": "Write out your recalibration template",
-        "description": "The 5-step process with time allocations: monthly review synthesis (5 min), direction reassessment (5 min), identity reassessment (5 min), priority reassessment (5 min), next month's focus (10 min). Format it alongside your weekly review template."
-      },
-      {
-        "name": "Run a practice recalibration now",
-        "description": "Treat the past 19 days as your first month. Walk through all 5 steps with real data. Update your direction and identity if they've evolved. Reassess your priorities. Set a focus for the final 2 days and beyond."
+        "name": "Set up your quarterly recalibration",
+        "description": "Go to the <strong>Reviews</strong> tab and run a practice quarterly recalibration. Choose a monthly date for future recalibrations and set a calendar reminder."
       },
       {
         "name": "Document your evolution since Day 1",
-        "description": "Write a brief paragraph about how your thinking has changed. What do you understand about yourself now that you didn't on Day 1? What priorities have shifted? What surprised you? This becomes part of your permanent installation record."
-      },
-      {
-        "name": "Confirm your complete operating rhythm",
-        "description": "Write out your three cycles in one place: daily (execute + log), weekly (10-min review), monthly (30-min recalibration). This is the engine that runs your system indefinitely. Make sure all three have calendar entries."
-      },
-      {
-        "name": "Add monthly recalibration to the app",
-        "description": "Open <strong>Tasks</strong> and add \"Monthly Recalibration\" as a task on your chosen date. Include a note with the 5-step template. Your app now contains triggers for both maintenance cycles — weekly and monthly. The system maintains itself."
+        "description": "Compare where you are now to where you were on Day 1. What's changed in your direction, identity, habits, and execution? Write it down."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 20.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 20.",
     "closingParagraphs": [
       "You now have every maintenance mechanism in place. Daily execution keeps the system moving. Weekly reviews keep it calibrated. Monthly recalibrations keep it evolving. Three nested cycles, each serving a different time horizon, together creating a self-sustaining operating rhythm."
     ],
@@ -2001,29 +1743,17 @@ export const LESSON_DATA: LessonData[] =
       "description": "The <strong>Dashboard</strong> is part of your operating manual. All your Goals, Habits, Tasks, and Journal entries — consolidated.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Assemble your operating manual",
-        "description": "Go through all 12 sections listed above. For each one, write or compile the current version. Much of it already lives in the app — your direction and identity in <strong>Goals</strong>, your execution data in <strong>Tasks</strong> and <strong>Habits</strong>, your reflections and protocols in <strong>Journal</strong>, and your aggregate data in the <strong>Dashboard</strong>. Pull from these sources as you compile."
+        "description": "Go to the <strong>System</strong> tab. Enter your operating manual — the consolidation of everything: direction, identity, priorities, decision rules, failure protocol, daily structure, NNs, habits, review rhythm."
       },
       {
         "name": "Review the complete system",
-        "description": "Read through the entire manual start to finish. Then open the app and cross-reference: do your <strong>Goals</strong> match your written direction and identity? Do your <strong>Tasks</strong> and <strong>Habits</strong> match your written non-negotiables and keystone habits? Update anything that's out of sync."
-      },
-      {
-        "name": "Create the one-page summary",
-        "description": "Distill the full manual into a single-page overview: direction (2 sentences), identity (2 sentences), priorities (3 lines), daily structure (3 anchors), non-negotiables (3-5 items), maintenance rhythm (weekly + monthly). This is your quick-reference page."
-      },
-      {
-        "name": "Store it permanently",
-        "description": "Put the full manual and the one-page summary somewhere you can access within 30 seconds. Consider storing it as a dedicated <strong>Journal</strong> entry in the app titled \"Operating Manual\" — that way it lives alongside all your other system data in one place."
-      },
-      {
-        "name": "Read it once more tonight",
-        "description": "Read the full manual before bed. Let the complete picture of your system settle in. Tomorrow is the final day. You walk into it knowing exactly what you've built and exactly how it works."
+        "description": "Read your full operating manual once through. Does every piece still fit? Is anything missing? This is the document you'll reference whenever you need to recalibrate."
       }
     ],
-    "tasksSubtitle": "Complete all tasks before moving to Day 21.",
+    "tasksSubtitle": "Complete both tasks before moving to Day 21.",
     "closingParagraphs": [
       "Your system is now documented, complete, and consolidated. Everything you've built over 20 days lives in one place — organized, accessible, and ready for permanent use."
     ],
@@ -2093,33 +1823,21 @@ export const LESSON_DATA: LessonData[] =
       "description": "Open the <strong>Dashboard</strong> one last time as installation. Your streaks, data, and Journal tell the story of 21 days.",
       "url": "https://structured-achieve-operating-system.netlify.app/"
     },
-    "tasks": [
+        "tasks": [
       {
         "name": "Run your final installation review",
-        "description": "Open your operating manual. Read through every section. Confirm everything is current, clear, and accurate. This is your last check before operational mode begins. Make any final updates now."
+        "description": "Go to the <strong>Reviews</strong> tab. Review your complete data from 21 days. Check your scores, streaks, and completion rates across all categories."
       },
       {
         "name": "Compare Day 1 to Day 21",
-        "description": "Read your original Day 1 direction statement then your current version. Open the <strong>Dashboard</strong> — look at your streaks, your completion rates, your consistency across 17 tracked days. Open <strong>Journal</strong> and read your Day 7 and Day 14 entries. The evolution is documented. Write down what's changed."
+        "description": "Open your Day 1 direction statement and journal. Read them. Then read today's system. Notice how far the system has come."
       },
       {
-        "name": "Log your final installation entry",
-        "description": "Open <strong>Journal</strong> and write your final installation entry. Reference your Dashboard data: overall Task completion rate, longest streak, Habit consistency, total Journal entries. This is your operational baseline — the benchmark for every future monthly recalibration."
-      },
-      {
-        "name": "Confirm your first weekly review",
-        "description": "Verify the day, time, and calendar entry. Your first operational weekly review happens this week. It's the bridge between installation and permanent operation."
-      },
-      {
-        "name": "Confirm your first monthly recalibration",
-        "description": "Put the exact date in your calendar. One month from today. This is non-negotiable. The monthly recalibration is what keeps the system evolving with you."
-      },
-      {
-        "name": "Make a commitment to yourself",
-        "description": "Write one sentence — a commitment to continue operating this system. Not forever. Just until your next monthly recalibration. One month at a time. That's how permanent systems are built: one renewable commitment at a time."
+        "name": "Commit to operational mode",
+        "description": "The installation is complete. Your system is live. From tomorrow: daily execution in the <strong>Today</strong> tab, weekly reviews on your chosen day, monthly recalibrations on your chosen date. The system runs. You maintain it."
       }
     ],
-    "tasksSubtitle": "Complete all tasks to finalize your installation.",
+    "tasksSubtitle": "Installation complete. System activated.",
     "closingParagraphs": [
       "You built this. Every component. Every day. Every decision. Yours."
     ]
