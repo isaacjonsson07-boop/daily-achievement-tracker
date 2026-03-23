@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircle, BookOpen, BarChart3, Trophy, Layers, Settings, User, LogOut, Lock } from 'lucide-react';
 import { TabType } from '../types';
 import { getTabLockInfo } from '../utils/progressUtils';
+import { UnlockState } from '../hooks/useUnlocks';
 
 interface NavigationProps {
   currentTab: TabType;
@@ -13,7 +14,7 @@ interface NavigationProps {
   onSignOut: () => void;
   onShowAuth?: () => void;
   installationDay?: number;
-  highestCompletedDay: number;
+  unlocks: UnlockState;
 }
 
 const tabs: { id: TabType; label: string; mobileLabel: string; icon: React.ElementType }[] = [
@@ -35,12 +36,12 @@ export function Navigation({
   onSignOut,
   onShowAuth,
   installationDay,
-  highestCompletedDay,
+  unlocks,
 }: NavigationProps) {
   const isTrialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false;
 
   const handleTabClick = (tabId: TabType) => {
-    const lockInfo = getTabLockInfo(tabId, highestCompletedDay);
+    const lockInfo = getTabLockInfo(tabId, unlocks);
     if (lockInfo.locked) {
       onLockedTabClick(tabId);
     } else {
@@ -69,7 +70,7 @@ export function Navigation({
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
-            const lockInfo = getTabLockInfo(tab.id, highestCompletedDay);
+            const lockInfo = getTabLockInfo(tab.id, unlocks);
             const isLocked = lockInfo.locked;
 
             return (
@@ -174,7 +175,7 @@ export function Navigation({
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
-            const lockInfo = getTabLockInfo(tab.id, highestCompletedDay);
+            const lockInfo = getTabLockInfo(tab.id, unlocks);
             const isLocked = lockInfo.locked;
 
             return (

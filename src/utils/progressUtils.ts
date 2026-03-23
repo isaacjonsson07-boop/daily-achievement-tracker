@@ -1,14 +1,16 @@
 import { JournalEntry } from '../types';
 import { TabType } from '../types';
+import { UnlockState } from '../hooks/useUnlocks';
 
 // ============================================
-// PROGRESSIVE UNLOCK — Installation Progress
+// PROGRESSIVE UNLOCK — Tab & Section Locking
+// Tabs are locked until their first relevant
+// unlock is triggered via a lesson action button.
 // ============================================
 
 /**
  * Returns the highest installation day where the user has written journal content.
- * This is the source of truth for what's been "completed."
- * Returns 0 if no days have been completed.
+ * Used for the installation progress counter, not for locking.
  */
 export function getHighestCompletedDay(journalEntries: JournalEntry[]): number {
   let highest = 0;
@@ -25,18 +27,16 @@ export function getHighestCompletedDay(journalEntries: JournalEntry[]): number {
 }
 
 /**
- * Tab unlock rules based on installation progress.
- * Returns the minimum completed day required to access each tab.
- * A tab is accessible when highestCompletedDay >= the required day.
+ * Tab unlock rules — which unlock ID must be triggered to access the tab.
  * null = always accessible.
  */
-const TAB_UNLOCK_REQUIREMENTS: Record<TabType, number | null> = {
-  installation: null,
-  settings: null,
-  system: null,
-  today: null,
-  achievements: null,
-  reviews: null,
+const TAB_UNLOCK_REQUIREMENTS: Record<TabType, { unlockId: string | null; day: number; message: string }> = {
+  installation: { unlockId: null, day: 0, message: '' },
+  settings: { unlockId: null, day: 0, message: '' },
+  system: { unlockId: 'system-direction', day: 1, message: 'Complete Day 1 to start building your system.' },
+  today: { unlockId: 'today', day: 5, message: 'Complete Day 5 to activate your daily execution view.' },
+  achievements: { unlockId: 'today', day: 5, message: 'Complete Day 5 to start tracking your milestones.' },
+  reviews: { unlockId: 'reviews-weekly', day: 7, message: 'Complete Day 7 to unlock your review tools.' },
 };
 
 export interface TabLockInfo {
@@ -46,45 +46,38 @@ export interface TabLockInfo {
 }
 
 /**
- * Get lock status for a specific tab.
+ * Get lock status for a specific tab based on unlock state.
  */
-export function getTabLockInfo(tab: TabType, highestCompletedDay: number): TabLockInfo {
-  const required = TAB_UNLOCK_REQUIREMENTS[tab];
+export function getTabLockInfo(tab: TabType, unlocks: UnlockState): TabLockInfo {
+  const req = TAB_UNLOCK_REQUIREMENTS[tab];
 
-  if (required === null) {
+  if (req.unlockId === null) {
     return { locked: false, requiredDay: null, message: '' };
   }
 
-  if (highestCompletedDay >= required) {
-    return { locked: false, requiredDay: required, message: '' };
+  if (unlocks[req.unlockId]) {
+    return { locked: false, requiredDay: req.day, message: '' };
   }
-
-  // Build a contextual unlock message
-  const messages: Record<string, string> = {
-    today: `Complete Day 2 to activate your daily execution view.`,
-    system: `Complete Day 1 to start building your system.`,
-    reviews: `Complete Day 7 to unlock your review tools.`,
-    achievements: `Complete Day 5 to start tracking your milestones.`,
-  };
 
   return {
     locked: true,
-    requiredDay: required,
-    message: messages[tab] || `Activates after Day ${required}.`,
+    requiredDay: req.day,
+    message: req.message,
   };
 }
 
 /**
- * Check if any tab is locked given current progress.
+ * Check if a tab is locked.
  */
-export function isTabLocked(tab: TabType, highestCompletedDay: number): boolean {
-  return getTabLockInfo(tab, highestCompletedDay).locked;
+export function isTabLocked(tab: TabType, unlocks: UnlockState): boolean {
+  return getTabLockInfo(tab, unlocks).locked;
 }
 
 /**
- * Get the default tab for a user based on their progress.
- * New users (day 0) go to Installation. Everyone else goes to Today (if unlocked) or Installation.
+ * Get the default tab for a user based on their unlocks.
+ * If Today is unlocked, go there. Otherwise Installation.
  */
-export function getDefaultTab(highestCompletedDay: number): TabType {
-  return 'today';
+export function getDefaultTab(unlocks: UnlockState): TabType {
+  if (unlocks['today']) return 'today';
+  return 'installation';
 }

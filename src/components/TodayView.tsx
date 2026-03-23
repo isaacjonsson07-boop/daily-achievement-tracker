@@ -348,6 +348,7 @@ interface TodayViewProps {
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string) => void;
   onNavigate?: (tab: string, subTab?: string) => void;
+  isUnlocked: (id: string) => boolean;
 }
 
 export function TodayView({
@@ -355,6 +356,7 @@ export function TodayView({
   habits, habitCompletions, onToggleHabit,
   dailyTasks, onAddTask, onToggleTask, onDeleteTask,
   onNavigate,
+  isUnlocked,
 }: TodayViewProps) {
   const [dayOffset, setDayOffset] = useState(0);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -628,12 +630,13 @@ export function TodayView({
           )}
 
           {/* Empty/no-system status */}
-          {isToday && totalItems === 0 && (activeNNs.length > 0 || habitsForDay.length > 0) && (() => {
+          {isToday && totalItems === 0 && (() => {
             const hasNNs = activeNNs.length > 0;
             const hasHabits = habitsForDay.length > 0;
             let msg = '';
-            if (!hasNNs) msg = 'No non-negotiables set. Add your daily commitments in the System tab.';
-            else if (!hasHabits) msg = 'No habits installed for today. Add keystone habits in the System tab.';
+            if (!hasNNs && isUnlocked('system-nns')) msg = 'No non-negotiables set. Add your daily commitments in the System tab.';
+            else if (!hasHabits && isUnlocked('system-habits')) msg = 'No habits installed for today. Add keystone habits in the System tab.';
+            else if (!isUnlocked('system-nns')) msg = 'Your system is being installed. Continue with the Installation tab to configure this view.';
             if (!msg) return null;
             return (
               <div className="mb-10 px-5 py-3.5 rounded-sa border flex items-start gap-3" style={{

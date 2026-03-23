@@ -25,7 +25,7 @@ const ACTION_CONFIG: Record<TaskAction, { label: string; tab: string; subTab?: s
 
 interface LessonRendererProps {
   lesson: LessonData;
-  onNavigate?: (tab: string, subTab?: string) => void;
+  onNavigate?: (tab: string, subTab?: string, unlockId?: string) => void;
 }
 
 function PhaseAccentColor(phase: 1 | 2 | 3): string {
@@ -257,7 +257,7 @@ export function LessonRenderer({ lesson, onNavigate }: LessonRendererProps) {
               )}
               {actionCfg && onNavigate && (
                 <button
-                  onClick={() => onNavigate(actionCfg.tab, actionCfg.subTab)}
+                  onClick={() => onNavigate(actionCfg.tab, actionCfg.subTab, task.action)}
                   className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sa text-xs font-medium transition-colors duration-150"
                   style={{
                     backgroundColor: 'rgba(197,165,90,0.1)',

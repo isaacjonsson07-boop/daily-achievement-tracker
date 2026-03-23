@@ -227,7 +227,7 @@ interface JournalingViewProps {
   onUpdateReadPatches: (patches: string[]) => void;
   installationCompleteDate: string | null;
   onUpdateInstallationDate: (date: string) => void;
-  onNavigate?: (tab: string, subTab?: string) => void;
+  onNavigate?: (tab: string, subTab?: string, unlockId?: string) => void;
 }
 
 export function JournalingView({
@@ -491,12 +491,13 @@ export function JournalingView({
         {/* === LESSON TAB === */}
         {activeTab === 'lesson' && lesson && (
           <>
-            <LessonRenderer lesson={lesson} onNavigate={(tab, subTab) => {
+            <LessonRenderer lesson={lesson} onNavigate={(tab, subTab, unlockId) => {
               if (tab === '_journal') {
                 setActiveTab('journal');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (onNavigate && unlockId) onNavigate(tab, subTab, unlockId);
               } else if (onNavigate) {
-                onNavigate(tab, subTab);
+                onNavigate(tab, subTab, unlockId);
               }
             }} />
 

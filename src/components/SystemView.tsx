@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, ChevronDown, ChevronUp, Pencil, FileText, Target, Shield, Compass, Brain } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronUp, Pencil, FileText, Target, Shield, Compass, Brain, Lock } from 'lucide-react';
 import { NonNegotiable, Habit, SystemDocument } from '../types';
 import { uid } from '../utils/dateUtils';
 import { supabase } from '../lib/supabase';
@@ -14,7 +14,18 @@ interface SystemViewProps {
   habits: Habit[];
   onHabitsChange: () => void;
   user?: { id?: string } | null;
+  isUnlocked: (id: string) => boolean;
 }
+
+// Map doc_type keys to unlock IDs
+const DOC_UNLOCK_MAP: Record<string, string> = {
+  direction: 'system-direction',
+  identity: 'system-identity',
+  priorities: 'system-priorities',
+  decision_rules: 'system-decisions',
+  failure_protocol: 'system-failure',
+  operating_manual: 'system-manual',
+};
 
 const DAY_LABELS = [
   { value: 1, label: 'Mon' },
@@ -45,6 +56,7 @@ export function SystemView({
   habits,
   onHabitsChange,
   user,
+  isUnlocked,
 }: SystemViewProps) {
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['documents']));
   const [showAddNN, setShowAddNN] = useState(false);
@@ -225,6 +237,24 @@ export function SystemView({
               const content = systemDocuments[doc.key];
               const hasContent = content && content.trim().length > 0;
               const isEditing = editingDoc === doc.key;
+              const unlockId = DOC_UNLOCK_MAP[doc.key];
+              const locked = unlockId ? !isUnlocked(unlockId) : false;
+
+              if (locked) {
+                return (
+                  <div key={doc.key} className="sa-card opacity-40">
+                    <div className="flex items-center gap-3">
+                      <Lock className="w-4 h-4 flex-shrink-0 text-sa-cream-faint" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-sa-cream-faint">{doc.label}</span>
+                          <span className="text-[0.55rem] text-sa-cream-faint uppercase tracking-wider">Installs on {doc.day}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <div key={doc.key} className="sa-card">
@@ -290,6 +320,16 @@ export function SystemView({
 
       {/* ── Non-Negotiables ── */}
       <div className="animate-rise delay-2">
+        {!isUnlocked('system-nns') ? (
+          <div className="py-4 px-1 border-b border-sa-border opacity-40">
+            <div className="flex items-center gap-3">
+              <Lock className="w-4 h-4 text-sa-cream-faint" />
+              <span className="sa-section-subtitle text-sa-cream-faint">Non-Negotiables</span>
+              <span className="text-[0.55rem] text-sa-cream-faint uppercase tracking-wider">Installs on Day 4</span>
+            </div>
+          </div>
+        ) : (
+        <>
         <SectionHeader
           id="non-negotiables"
           title="Non-Negotiables"
@@ -375,10 +415,22 @@ export function SystemView({
             )}
           </div>
         )}
+        </>
+        )}
       </div>
 
       {/* ── Keystone Habits ── */}
       <div className="animate-rise delay-3">
+        {!isUnlocked('system-habits') ? (
+          <div className="py-4 px-1 border-b border-sa-border opacity-40">
+            <div className="flex items-center gap-3">
+              <Lock className="w-4 h-4 text-sa-cream-faint" />
+              <span className="sa-section-subtitle text-sa-cream-faint">Keystone Habits</span>
+              <span className="text-[0.55rem] text-sa-cream-faint uppercase tracking-wider">Installs on Day 10</span>
+            </div>
+          </div>
+        ) : (
+        <>
         <SectionHeader id="habits" title="Keystone Habits" count={habits.length} color="var(--blue)" />
         {openSections.has('habits') && (
           <div className="py-4">
@@ -534,6 +586,8 @@ export function SystemView({
               </button>
             )}
           </div>
+        )}
+        </>
         )}
       </div>
 

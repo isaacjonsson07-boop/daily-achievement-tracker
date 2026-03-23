@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TabType, Habit, HabitCompletion, Goal,
 } from './types';
@@ -15,7 +15,10 @@ import { JournalingView } from './components/JournalingView';
 import { ReviewsView } from './components/ReviewsView';
 import { SystemView } from './components/SystemView';
 import { AchievementsView } from './components/AchievementsView';
-import { getHighestCompletedDay, getDefaultTab, getTabLockInfo } from './utils/progressUtils';
+import { getDefaultTab, getTabLockInfo } from './utils/progressUtils';
+import { useUnlocks } from './hooks/useUnlocks';
+import { UnlockPopup } from './components/UnlockPopup';
+import { getUnlockDef, UnlockDef } from './data/unlockContent';
 import { Lock, BookOpen } from 'lucide-react';
 
 function App() {
@@ -31,6 +34,10 @@ function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [lockedTabInfo, setLockedTabInfo] = useState<{ tab: TabType; message: string; requiredDay: number } | null>(null);
   const [defaultTabSet, setDefaultTabSet] = useState(false);
+  const [activeUnlockPopup, setActiveUnlockPopup] = useState<UnlockDef | null>(null);
+
+  // Unlock state (localStorage)
+  const { unlocks, isUnlocked, triggerUnlock } = useUnlocks();
 
   // Dual-mode data (localStorage + Supabase)
   const {
@@ -69,22 +76,16 @@ function App() {
     if (user && plan === 'paid') setShowAuthModal(false);
   }, [user, plan]);
 
-  // === PROGRESSIVE UNLOCK ===
-  const highestCompletedDay = useMemo(
-    () => getHighestCompletedDay(journalEntries),
-    [journalEntries]
-  );
-
-  // Set default tab based on installation progress (once data loads)
+  // Set default tab based on unlock state (once data loads)
   useEffect(() => {
     if (!dataLoading && !defaultTabSet) {
-      setCurrentTab(getDefaultTab(highestCompletedDay));
+      setCurrentTab(getDefaultTab(unlocks));
       setDefaultTabSet(true);
     }
-  }, [dataLoading, defaultTabSet, highestCompletedDay]);
+  }, [dataLoading, defaultTabSet, unlocks]);
 
   const handleLockedTabClick = (tab: TabType) => {
-    const info = getTabLockInfo(tab, highestCompletedDay);
+    const info = getTabLockInfo(tab, unlocks);
     if (info.locked && info.requiredDay) {
       setLockedTabInfo({ tab, message: info.message, requiredDay: info.requiredDay });
     }
@@ -276,7 +277,7 @@ function App() {
         trialEndsAt={trialEndsAt}
         onSignOut={handleSignOut}
         onShowAuth={() => setShowAuthModal(true)}
-        highestCompletedDay={highestCompletedDay}
+        unlocks={unlocks}
       />
 
       <AuthModal
@@ -309,6 +310,7 @@ function App() {
               }
               setCurrentTab(tab as TabType);
             }}
+            isUnlocked={isUnlocked}
           />
         )}
 
@@ -324,9 +326,20 @@ function App() {
             onUpdateReadPatches={updateReadPatches}
             installationCompleteDate={installationCompleteDate}
             onUpdateInstallationDate={updateInstallationDate}
-            onNavigate={(tab, subTab) => {
-              if (subTab) setReviewsInitialTab(subTab as 'snapshot' | 'weekly' | 'quarterly');
-              setCurrentTab(tab as any);
+            onNavigate={(tab, subTab, unlockId) => {
+              // Trigger unlock popup if this is a new unlock
+              if (unlockId) {
+                const isNew = triggerUnlock(unlockId);
+                if (isNew) {
+                  const def = getUnlockDef(unlockId);
+                  if (def) setActiveUnlockPopup(def);
+                }
+              }
+              // Navigate (skip for _journal — handled internally by JournalingView)
+              if (tab !== '_journal') {
+                if (subTab) setReviewsInitialTab(subTab as 'snapshot' | 'weekly' | 'quarterly');
+                setCurrentTab(tab as any);
+              }
             }}
           />
         )}
@@ -376,6 +389,7 @@ function App() {
             habits={habits}
             onHabitsChange={() => loadHabits(true)}
             user={user}
+            isUnlocked={isUnlocked}
           />
         )}
 
@@ -446,6 +460,14 @@ function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* === UNLOCK POPUP === */}
+      {activeUnlockPopup && (
+        <UnlockPopup
+          unlock={activeUnlockPopup}
+          onDismiss={() => setActiveUnlockPopup(null)}
+        />
       )}
     </div>
   );
