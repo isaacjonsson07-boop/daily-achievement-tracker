@@ -773,7 +773,7 @@ export function TodayView({
                   </span>
                   {task.time && <span className="text-[0.75rem] text-sa-cream-faint">{task.time}</span>}
                   <button onClick={() => onDeleteTask(task.id)}
-                    className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all">
+                    className="p-1 text-sa-cream-faint md:opacity-0 md:group-hover:opacity-100 hover:text-sa-rose transition-all flex-shrink-0">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>

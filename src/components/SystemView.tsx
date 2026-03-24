@@ -383,16 +383,16 @@ export function SystemView({
                       className="group flex items-center gap-3 px-4 py-3 bg-sa-bg-warm border border-sa-border rounded-sa"
                     >
                       <div className="w-2 h-2 rounded-full bg-sa-gold flex-shrink-0" />
-                      <span className="flex-1 text-sm text-sa-cream">{nn.title}</span>
+                      <span className="flex-1 text-sm text-sa-cream break-all">{nn.title}</span>
                       <button
                         onClick={() => handleEditNN(nn)}
-                        className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-gold transition-all"
+                        className="p-1 text-sa-cream-faint md:opacity-0 md:group-hover:opacity-100 hover:text-sa-gold transition-all flex-shrink-0"
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteNN(nn.id)}
-                        className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                        className="p-1 text-sa-cream-faint md:opacity-0 md:group-hover:opacity-100 hover:text-sa-rose transition-all flex-shrink-0"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -466,14 +466,14 @@ export function SystemView({
                       autoFocus
                       className="sa-input"
                     />
-                    <div className="flex gap-3 items-center">
+                    <div className="flex flex-wrap gap-3 items-center">
                       <input
                         type="time"
                         value={editHabit.time}
                         onChange={(e) => setEditHabit({ ...editHabit, time: e.target.value })}
                         className="sa-input w-28"
                       />
-                      <div className="flex gap-1">
+                      <div className="flex flex-wrap gap-1">
                         {DAY_LABELS.map((d) => (
                           <button
                             key={d.value}
@@ -506,8 +506,8 @@ export function SystemView({
                   >
                     <div className="w-2 h-2 rounded-full bg-sa-blue flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm text-sa-cream">{h.name}</span>
-                      <div className="flex gap-1 mt-1">
+                      <span className="text-sm text-sa-cream break-all">{h.name}</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
                         {DAY_LABELS.map((d) => (
                           <span
                             key={d.value}
@@ -523,17 +523,17 @@ export function SystemView({
                       </div>
                     </div>
                     {h.time && (
-                      <span className="text-xs text-sa-cream-faint">{h.time}</span>
+                      <span className="text-xs text-sa-cream-faint flex-shrink-0">{h.time}</span>
                     )}
                     <button
                       onClick={() => handleEditHabit(h)}
-                      className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-blue transition-all"
+                      className="p-1 text-sa-cream-faint md:opacity-0 md:group-hover:opacity-100 hover:text-sa-blue transition-all flex-shrink-0"
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteHabit(h.id)}
-                      className="p-1 text-sa-cream-faint opacity-0 group-hover:opacity-100 hover:text-sa-rose transition-all"
+                      className="p-1 text-sa-cream-faint md:opacity-0 md:group-hover:opacity-100 hover:text-sa-rose transition-all flex-shrink-0"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -552,14 +552,14 @@ export function SystemView({
                   autoFocus
                   className="sa-input"
                 />
-                <div className="flex gap-3 items-center">
+                <div className="flex flex-wrap gap-3 items-center">
                   <input
                     type="time"
                     value={newHabit.time}
                     onChange={(e) => setNewHabit({ ...newHabit, time: e.target.value })}
                     className="sa-input w-28"
                   />
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {DAY_LABELS.map((d) => (
                       <button
                         key={d.value}
