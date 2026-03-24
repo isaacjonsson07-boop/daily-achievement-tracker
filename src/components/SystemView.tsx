@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Plus, Trash2, ChevronDown, ChevronUp, Pencil, FileText, Target, Shield, Compass, Brain, Lock } from 'lucide-react';
 import { NonNegotiable, Habit, SystemDocument } from '../types';
 import { uid } from '../utils/dateUtils';
 import { supabase } from '../lib/supabase';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface SystemViewProps {
   nonNegotiables: NonNegotiable[];
@@ -73,6 +74,9 @@ export function SystemView({
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
   const [editHabit, setEditHabit] = useState({ name: '', time: '09:00', days: [] as number[] });
 
+  // Confirm-delete state
+  const [confirmDelete, setConfirmDelete] = useState<{ type: 'habit' | 'nn'; id: string; name: string } | null>(null);
+
   const handleSaveDoc = (key: string) => {
     onUpdateSystemDocument(key, editBuffer);
     setEditingDoc(null);
@@ -111,7 +115,8 @@ export function SystemView({
   };
 
   const handleDeleteNN = (id: string) => {
-    onDeleteNonNegotiable(id);
+    const nn = nonNegotiables.find(n => n.id === id);
+    setConfirmDelete({ type: 'nn', id, name: nn?.title || 'this non-negotiable' });
   };
 
   const handleEditNN = (nn: NonNegotiable) => {
@@ -151,14 +156,25 @@ export function SystemView({
   };
 
   const handleDeleteHabit = async (id: string) => {
-    if (!user) return;
-    try {
-      await supabase.from('habits').delete().eq('id', id);
-      onHabitsChange();
-    } catch (e) {
-      console.error('Error deleting habit:', e);
-    }
+    const h = habits.find(h => h.id === id);
+    setConfirmDelete({ type: 'habit', id, name: h?.name || 'this habit' });
   };
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!confirmDelete) return;
+    if (confirmDelete.type === 'nn') {
+      onDeleteNonNegotiable(confirmDelete.id);
+    } else {
+      if (!user) return;
+      try {
+        await supabase.from('habits').delete().eq('id', confirmDelete.id);
+        onHabitsChange();
+      } catch (e) {
+        console.error('Error deleting habit:', e);
+      }
+    }
+    setConfirmDelete(null);
+  }, [confirmDelete, onDeleteNonNegotiable, user, onHabitsChange]);
 
   const handleEditHabit = (h: Habit) => {
     setEditingHabitId(h.id);
@@ -209,6 +225,7 @@ export function SystemView({
   const docsWithContent = DOC_TYPES.filter(d => systemDocuments[d.key]?.trim()).length;
 
   return (
+    <>
     <div className="max-w-3xl mx-auto">
 
       {/* Header handled by TabCover */}
@@ -593,5 +610,14 @@ export function SystemView({
 
       </div>
     </div>
+
+    <ConfirmDialog
+      open={!!confirmDelete}
+      title={confirmDelete?.type === 'habit' ? 'Delete habit?' : 'Delete non-negotiable?'}
+      message={`"${confirmDelete?.name}" and all its history will be permanently removed. This can't be undone.`}
+      onConfirm={handleConfirmDelete}
+      onCancel={() => setConfirmDelete(null)}
+    />
+    </>
   );
 }
